@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="preconnect" th:href="@{https://fonts.googleapis.com}">
+<link rel="preconnect" th:href="@{https://fonts.gstatic.com}"
+	crossorigin>
+<link
+	th:href="@{https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap}"
+	rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/updateprofileadmin.css}" />
+</head>
+<body>
+<a th:href="@{/logout}" class="logoutbutton">Log out</a>
+	<div class="userboard">
+		<div class="menubar">
+			<h3 class="hellouser">Hello, Admin</h3>
+			<a th:href="@{/admin/updateUserProfile}">Update
+				user profile</a> <a th:href="@{/admin/addAndUpdateMenu}">Add
+				and Update menu</a> <a
+				th:href="@{/admin/viewPreviousOrders}">View
+				Previous orders</a> <a
+				th:href="@{/admin/viewUpcomingOrders}">View
+				Upcoming orders</a> <a th:href="@{/admin/viewFeedbacks}">View
+				Feedbacks</a>
+		</div>
+		<div class="maincontent">
+			<h2>Update profile of any user</h2>
+
+			<form th:action="@{/admin/findUserProfile}" class="searchuserform">
+				<h3>Search for a user</h3>
+				<input type="text" placeholder="Enter the user email" name="userEmail"/> <input
+					type="submit" value="Search User" class="button" />
+			</form>
+
+			<form th:action="@{/admin/updateUserProfileRout}" method="post" class="updateprofileform" th:object="${update_user}">
+				<h2>Enter the details</h2>
+				<div class="updatedform">
+				<div class="first">
+					<input type="text" placeholder="Enter your Name" name="name"
+						th:value="${user.name}" /> <input type="email"
+						placeholder="Enter your Email" name="token_email"
+						th:value="${user.email}" style="display:none;" />
+						<input type="email"
+						placeholder="Enter your Email" name="email"
+						th:value="${user.email}" disabled />
+				</div>
+				
+
+				<div class="second">
+					<input type="password" placeholder="Enter new password"
+						name="newpassword" /> <input type="tel"
+						placeholder="Enter your phone number" name="phone"
+						th:value="${user.phone}" />
+				</div>
+				<div class="buttondiv">
+					<input type="submit" value="Save Changes" class="button" />
+				</div>
+				</div>
+
+			</form>
+		</div>
+	</div>
+</body>
+</html>

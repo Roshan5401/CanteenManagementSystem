@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="preconnect" th:href="@{https://fonts.googleapis.com}">
+<link rel="preconnect" th:href="@{https://fonts.gstatic.com}"
+	crossorigin>
+<link
+	th:href="@{https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap}"
+	rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/addandupdatemenu.css}" />
+</head>
+<body>
+	<a th:href="@{/logout}" class="logoutbutton">Log out</a>
+	<div class="userboard">
+		<div class="menubar">
+			<h3 class="hellouser">Hello, Admin</h3>
+			<a th:href="@{/admin/updateUserProfile}">Update user profile</a> <a
+				th:href="@{/admin/addAndUpdateMenu}">Add and Update menu</a> <a
+				th:href="@{/admin/viewPreviousOrders}">View Previous orders</a> <a
+				th:href="@{/admin/viewUpcomingOrders}">View Upcoming orders</a> <a
+				th:href="@{/admin/viewFeedbacks}">View Feedbacks</a>
+		</div>
+		<div class="maincontent">
+
+			<div class="menuInputForm">
+				<form th:action="@{/admin/addfood}" class = "actualForm" th:object="${new_food}" method="post">
+				<h1>Add a new Item</h1>
+					<input type="text" placeholder="Enter the item name"
+						class="inputField" name = "name" /> <input type="text"
+						placeholder="Enter the price" class="inputField" name = "price" />
+					
+					 <input type="date"
+						placeholder="Enter the date" class="inputField" name ="foodServedDate" />
+						
+						<div class="radioBtns inputField"  >
+						<input type="radio" id="red" name="type" value="Nonveg">
+					 <label for="red">Non-Veg</label>
+					<input type="radio" id="green" name="type" value="Veg">
+					<label for="green">Veg</label>
+						</div>
+					<div class="submitButton">
+						<input type="submit"  value="Add Item" class = "button"/>
+					</div>
+				</form>
+
+			</div>
+
+
+
+			<h2>Current Menu</h2>
+			<table class="styled-table">
+				<thead>
+					<tr>
+						<th>Food Id</th>
+						<th>Available From</th>
+						<th>Item Name</th>
+						<th>Type</th>
+						<th>Price</th>
+						<th>Action</th>
+						
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="item :  ${menuItems}" >
+						<td th:text="${item.ID}"></td>
+						<td th:text="${item.foodServedDate}"></td>
+						<td th:text="${item.name}"></td>
+						<td th:text="${item.type}"></td>
+						<td th:text="Rs +${item.Price}"></td>
+						<td><a th:href="@{'/admin/deletefood/'+${item.ID}}" class = "deletefooditem">Delete Food item</a></td>
+					</tr>
+
+
+				</tbody>
+			</table>
+
+		</div>
+	</div>
+</body>
+</html>
+

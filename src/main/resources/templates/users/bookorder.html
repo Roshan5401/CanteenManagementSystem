@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<link rel="stylesheet" th:href="@{/css/bookorder.css}" />
+</head>
+<body>
+	<a th:href="@{/logout}" class="logoutbutton">Log out</a>
+	<div class="userboard">
+		<div class="menubar">
+			<h3 class="hellouser">
+				Hello, <span th:text="${user.name}"></span>
+			</h3>
+			<a th:href="@{/user/bookOrder}">Book Order</a> <a
+				th:href="@{/user/viewPreviousOrders}">View Previous Order</a> <a
+				th:href="@{/user/addMoneyToWallet}">Add Money to Wallet</a> <a
+				th:href="@{/user/updateProfile}">Update Profile</a>
+		</div>
+		<div class="maincontent">
+			<div class="menuInputForm">
+				<form th:action="@{/user/bookOrderByType}" class="actualForm">
+					<div class="header">
+						<div class="title">
+						<h1>Book your Order</h1>
+						<h3 class="chooseType">Choose your type</h3>
+					</div>
+					<div class="walletbalance">
+						<h2>Wallet Balance</h2>
+						<h1>
+							<span>₹ </span><span th:text=${user.wallet}></span>
+						</h1>
+					</div>
+					</div>
+
+					<div class="mainInput">
+						<input type="radio" id="red" name="type" value="Nonveg"> <label
+							for="red">Non-Veg</label> <input type="radio" id="green"
+							name="type" value="Veg"> <label for="green">Veg</label> <input
+							type="radio" id="all" name="type" value="All"> <label
+							for="all">All</label> <input type="submit" value="Search result"
+							class="button searchItemButton" />
+					</div>
+
+
+				</form>
+
+
+
+			</div>
+
+
+
+			<div class="currentmenu">
+
+				<h2>Current Menu</h2>
+				<table class="styled-table">
+					<thead>
+						<tr>
+							<th>Item Name</th>
+							<th>Price</th>
+							<th>Type</th>
+							<th>Available From</th>
+							<th>Action</th>
+
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="food :  ${foodItems}">
+
+							<td th:text="${food.name}"></td>
+							<td th:text="${food.price}"></td>
+							<td th:text="${food.type}"></td>
+							<td th:text="${food.foodServedDate}"></td>
+							<td><a
+								th:href="@{'/user/selectDates/'+${food.ID}+'/'+${food.foodServedDate}}"
+								class="bookorderbtn">Book Order</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="upcomingOrders">
+				<h2>Upcoming Orders</h2>
+				<table class="styled-table">
+					<thead>
+						<tr>
+							<th>Order Id</th>
+							<th>Order Date</th>
+							<th>Item Name</th>
+							<th>Type</th>
+							<th>Price</th>
+							<th>Quantity</th>
+							<th>Action</th>
+
+						</tr>
+					</thead>
+					<tbody>
+						<!-- <tr th:each="order :  ${orders}">
+
+							<td th:text="${order.canteenUsers.name}"></td>
+							<td th:text="${order.orderDate}"></td>
+							<td th:text="${order.orderId}"></td>
+							<td th:text="${order.food.name}"></td>
+							<td th:text="${order.food.price}"></td>
+						</tr> -->
+
+						<tr th:each="order :  ${user_orders}">
+							<td th:text="${order.orderId}"></td>
+							<td th:text="${order.orderDate}"></td>
+							<td th:text="${order.food.name}"></td>
+							<td th:text="${order.food.type}"></td>
+							<td th:text="${order.totalPrice}"></td>
+							<td th:text="${order.quantity}"></td>
+							<td><a th:href="@{'/user/cancelOrder/'+${order.orderId}}"
+								class="cancleorderbtn">Cancel Order</a></td>
+						</tr>
+
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<script
+		th:src="@{https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js}"
+		integrity="sha512-f8mwTB+Bs8a5c46DEm7HQLcJuHMBaH/UFlcgyetMqqkvTcYg4g5VXsYR71b3qC82lZytjNYvBj2pf0VekA9/FQ=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script type="text/javascript" th:src="@{/js/style.js}"></script>
+</body>
+</html>

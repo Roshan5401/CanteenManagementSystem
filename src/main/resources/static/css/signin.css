@@ -1,0 +1,130 @@
+*{
+	margin: 0;
+	padding :0;
+	box-sizing: border-box;
+	font-family: 'Poppins', sans-serif;
+}
+
+.content{
+	height:100vh;
+	width:100%;
+	display:flex;
+	justify-content: center;
+	align-items: center;
+		position: relative;
+}
+
+.hero{
+
+	height : 80vh;
+	width: 70%;
+	margin:auto;
+	display:flex;
+	flex-direction:row;
+	background: #FFFFFF;
+	align-items: center;
+	align-self: center;
+	padding: 20px;
+}
+
+.left{
+	flex: 50;
+	padding: 15px;
+	margin-left: 100px;
+	margin-bottom: 30px;
+}
+
+.rigth{
+	flex: 50;
+	padding: 15px;
+}
+
+form{
+	display:flex;
+	flex-direction : column;
+	
+}
+
+input{
+	margin-bottom: 20px;
+	margin-top: 20px;
+	background: #FDFFF0;
+	border-radius: 15px;
+	border:none;
+	padding: 20px;
+	width:500px;
+}
+
+.button{
+	width: 500px;
+	padding:20px;
+	background: #34704a;
+	color:#f1fbbd;
+	border-radius: 15px;
+	border:none;
+	color:white;
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+
+a{
+	color:white;
+	text-decoration:none;
+}
+
+h1{
+	font-size:50px;
+}
+
+.title{
+	font-size: 4em;
+	color:#34704a;
+}
+.welcome{
+	margin-bottom:10px;
+	font-size: 2em;
+}
+
+.newuserlink{
+	color: #34704a;
+}
+
+.newuser{
+	margin-left:30px;
+}
+
+.slider{
+	position:absolute;
+	top:0;
+	left:0;
+	width:50%;
+	height:100vh;
+	background: #34704a;  /* fallback for old browsers */
+/* background: -webkit-linear-gradient(to right, #6dd5ed, #2193b0);  Chrome 10-25, Safari 5.1-6
+background: linear-gradient(to right, #6dd5ed, #2193b0); W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+	
+	opacity:1;
+	z-index:-1;
+}
+
+.food{
+	position: absolute;
+	right: 35px;
+	bottom:40px;
+	z-index: 100;
+	width: 100%;
+	max-width: 200px;
+	
+}
+
+.cook{
+	position: absolute;
+	left: 24px;
+	bottom:16px;
+	z-index: 100;
+	width: 100%;
+	max-width: 180px;
+}
+
+
+

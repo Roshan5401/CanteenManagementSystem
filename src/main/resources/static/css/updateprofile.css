@@ -1,0 +1,123 @@
+@charset "UTF-8";
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Poppins', sans-serif;
+}
+
+.userboard {
+	display: flex;
+	flex-direction: row;
+	height: 100vh;
+	width: 100%;
+}
+
+.menubar {
+	flex: 20;
+	height: 100vh;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	background-color: #FDFFF0;
+}
+
+.menubar>a {
+	padding: 25px;
+	color: #34704a;
+	text-decoration: none;
+	font-size: 1.3rem;
+}
+
+.menubar>h3 {
+	padding: 25px;
+	color: white;
+	background-color: #34704a;
+	font-size: 1.3rem;
+}
+
+.maincontent {
+	flex : 80;
+	height: 100vh;
+	width: 100%;
+	padding-top: 20px;
+	padding-right:20px;
+	padding-left:20px;
+	padding-bottom:0;
+	overflow-y:scroll; 
+}
+
+.maincontent>h2 {
+	height: 10vh;
+	width: 100%;
+}
+
+.updateprofileform {
+	display: flex;
+	flex-direction: column;
+}
+
+input {
+	margin-bottom: 20px;
+	margin-top: 20px;
+	background: #FDFFF0;
+	border-radius: 15px;
+	border: none;
+	padding: 15px;
+	width: 400px;
+}
+
+.button {
+	width: 400px;
+	padding: 20px;
+	background: #34704a;
+	border-radius: 15px;
+	border: none;
+	color: white;
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+
+.updateprofileform > h2{
+padding : 15px;
+margin-bottom: 20px;
+	color: #34704a;
+}
+
+.logoutbutton{
+	position : absolute;
+	bottom: 0;
+	left :80px;
+	background-color: #34704a;
+	padding : 15px;
+	color : white;
+	border : none;
+	border-radius: 5px;
+	margin : 25px;
+}
+
+.logoutbutton:hover{
+	color : white;
+}
+
+a{
+	text-decoration: none;
+}
+
+.content{
+	display:flex;
+	justify-content: space-between;
+}
+
+img.updateprofile {
+	width:27rem;
+	margin-top:80px;
+	margin-right: 100px;
+   animation: mover 1s infinite  alternate;
+}
+
+@keyframes mover {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-40px); }
+}

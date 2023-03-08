@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" th:href="@{/css/feedback.css}" />
+<link rel="preconnect" th:href="@{https://fonts.googleapis.com}">
+<link rel="preconnect" th:href="@{https://fonts.gstatic.com}"
+	crossorigin>
+<link
+	th:href="@{https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap}"
+	rel="stylesheet">
+</head>
+<body>
+	<div class="content">
+
+
+		<div class="hero" th:object="${order}">
+
+			<div class="left">
+				<h1 class="feedbackform">Feedback Form</h1>
+				<h1 class="welcome">
+					Order date - <span th:text="${order.orderDate}"></span>
+				</h1>
+				<h1 class="welcome">
+					Item Name - <span  th:text="${order.food.name}"></span>
+				</h1>
+				<h1 class="welcome">
+					Price - <span  th:text="${order.totalPrice}"></span>
+				</h1>
+			</div>
+			<div class="right">
+				<form th:action="@{'/user/savefeedback/'+${order.orderId}}" class = "forminput">
+					<h4>Enter your feedback here</h4>
+					<textarea id="feedbackdata" name="feedbackdata"  th:text="${order.feedback}">
+
+</textarea>
+					<input type="submit" value="Submit Feedback" class="button" />
+
+				</form>
+
+			</div>
+
+		</div>
+	</div>
+
+	<div class="slider"></div>
+
+	<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js}" integrity="sha512-f8mwTB+Bs8a5c46DEm7HQLcJuHMBaH/UFlcgyetMqqkvTcYg4g5VXsYR71b3qC82lZytjNYvBj2pf0VekA9/FQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script type="text/javascript" th:src="@{/js/style.js}"></script>
+</body>
+</html>

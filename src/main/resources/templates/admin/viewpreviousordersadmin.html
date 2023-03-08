@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="preconnect" th:href="@{https://fonts.googleapis.com}">
+<link rel="preconnect" th:href="@{https://fonts.gstatic.com}"
+	crossorigin>
+<link
+	th:href="@{https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap}"
+	rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/viewpreviousordersadmin.css}" />
+</head>
+<body>
+<a th:href="@{/logout}" class="logoutbutton">Log out</a>
+	<div class="userboard">
+		<div class="menubar">
+			<h3 class="hellouser">Hello, Admin</h3>
+			<a th:href="@{/admin/updateUserProfile}">Update
+				user profile</a> <a th:href="@{/admin/addAndUpdateMenu}">Add
+				and Update menu</a> <a
+				th:href="@{/admin/viewPreviousOrders}">View
+				Previous orders</a> <a
+				th:href="@{/admin/viewUpcomingOrders}">View
+				Upcoming orders</a> <a th:href="@{/admin/viewFeedbacks}">View
+				Feedbacks</a>
+		</div>
+		<div class="maincontent">
+			<h2>View Previous Orders</h2>
+			<form th:action="@{/admin/previousorderbyfilter}" >
+				<h2>View previous orders for a specific date and for a specific user</h2>
+				<input type="date" name="vieworderbydate" class = "inputField"/> 
+				<input type="text"  placeholder = "userId" id = "userIdinput" name = "userId" class = "inputField"/>
+				<div class="viewbtn">
+					<input type="submit"
+					value="View orders" class="button" />
+					
+				</div>
+			</form>
+
+			
+			<div class="viewpreviousordersheader">
+			<h3 class="orderstitle">Previous Orders</h3>
+			<form th:action="@{/admin/previousordersdownload}" class="downloadPDF">
+				<input type="text" name= "date" th:value="${date}" class = "disabled"/>
+				<input type="text" name="id" th:value="${id}" class = "disabled"/>
+				<input type="submit"  value = "Download pdf" class = "button downloadbtn"/>
+			</form>
+			</div>
+			<table class="styled-table">
+				<thead>
+					<tr>
+					<th>User Id</th>
+						<th>Date</th>
+						<th>order Id</th>
+						<th>Item Name</th>
+						<th>Price</th>
+					</tr>
+				</thead>
+				<tbody >
+					<tr th:each="order :  ${orders}">
+					
+						<td th:text="${order.canteenUsers.name}"></td>
+						<td th:text ="${order.orderDate}"></td>
+						<td th:text = "${order.orderId}"></td>
+						<td th:text = "${order.food.name}"></td>
+						<td th:text = "${order.food.price}"></td>
+					</tr>
+					
+
+				</tbody>
+			</table>
+
+		</div>
+	</div>
+</body>
+</html>
