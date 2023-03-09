@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.canteen.entities.CanteenUsers;
@@ -108,7 +109,7 @@ public class UserController {
 		int id = current_user.getId();
 		List<OrderEntity> orders= this.orderService.getAllOrders("Booked");
 		List<OrderEntity> userOrders = orders.stream().filter(order -> order.getCanteenUsers().getId() == id).collect(Collectors.toList());
-		
+		System.out.println(current_user.getWallet());
 		model.addAttribute("foodItems",finalFoodItems);
 		model.addAttribute("user",current_user);
 		model.addAttribute("user_orders",userOrders);
@@ -175,17 +176,20 @@ public class UserController {
 	
 	// It will update current user wallet balance by taking input and again redirect to addmoneytowalletpage
 		@GetMapping("/user/addBalance")
-		public RedirectView addBalance(Model model,Principal principal,@ModelAttribute("amount") String amount) {
+		public RedirectView addBalance(Model model,Principal principal,@ModelAttribute("amount") String amount,RedirectAttributes attributes) {
 			String userName=principal.getName();
+			
 			Double d = Double.valueOf(amount);
 			DecimalFormat defor = new DecimalFormat("0.00");
 			String val = defor.format(d);
 			Double finalVal = Double.valueOf(val);
 			CanteenUsers current_user=canteenUserRepository.findByEmail(userName);
 			Double oldBalance=current_user.getWallet();
+			System.out.println(oldBalance);
 			current_user.setWallet(oldBalance+finalVal);
 			canteenUserRepository.save(current_user);
 			model.addAttribute("user",current_user);
+			attributes.addAttribute("success",1);
 			return new RedirectView("/user/addMoneyToWallet");
 		}
 	
@@ -202,7 +206,7 @@ public class UserController {
 	}
 	// Save Changes Button Handler - it will update the user data and again return the same page
 	@PostMapping("/user/updateUserProfile")
-	public RedirectView updateUserProfile(Model model,Principal principal,@ModelAttribute("oldpassword")String oldPassword,@ModelAttribute("newpassword")String newPasword,@ModelAttribute("update_user")CanteenUsers users) {
+	public RedirectView updateUserProfile(Model model,Principal principal,@ModelAttribute("oldpassword")String oldPassword,@ModelAttribute("newpassword")String newPasword,@ModelAttribute("update_user")CanteenUsers users,RedirectAttributes attributes) {
 		String userName=principal.getName();
 		CanteenUsers current_user=canteenUserRepository.findByEmail(userName);
 		current_user.setName(users.getName());
@@ -212,6 +216,13 @@ public class UserController {
 			if(bCryptPasswordEncoder.matches(oldPassword, current_user.getPassword()))
 			{
 				current_user.setPassword(bCryptPasswordEncoder.encode(newPasword));
+				attributes.addAttribute("success","1");
+				return new RedirectView("/user/updateProfile");
+			}
+			else
+			{
+				attributes.addAttribute("error","1");
+				return new RedirectView("/user/updateProfile");
 			}
 		}
 		canteenUserRepository.save(current_user);

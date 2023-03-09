@@ -55,6 +55,7 @@ public class HomeController {
 			{
 				System.out.println("You are not our employee, Contact Hr to solve your issue");
 				httpSession.setAttribute("message",new Message("You are not our employee, Contact Hr to solve your issue", "alert-error"));
+				return "loginFailed";
 			}
 			else {
 				canteenUsers.setPassword(bCryptPasswordEncoder.encode(canteenUsers.getPassword()));
@@ -63,10 +64,9 @@ public class HomeController {
 				canteenUserRepository.save(canteenUsers);
 				model.addAttribute("canteenUsers", canteenUsers);
 				httpSession.setAttribute("message",new Message("Successfully Registered!!", "alert-success"));
-				return "signin";
+				return "signup";
 			}
 			
-			return "signup";
 		}
 		catch (Exception e) {
 			// TODO: handle exception
@@ -95,5 +95,10 @@ public class HomeController {
 		model.addAttribute("userName", userName);
 		System.out.println("login Successful");
 		return new RedirectView("/admin/addAndUpdateMenu");
+	}
+	@GetMapping("/signin/error")
+	public String failureLogin()
+	{
+		return "loginFailed";
 	}
 }
