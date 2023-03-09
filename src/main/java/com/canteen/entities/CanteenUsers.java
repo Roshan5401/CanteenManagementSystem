@@ -57,6 +57,7 @@ public class CanteenUsers {
 	
 	@Column(length = 10, nullable = false)
 	private BigInteger phone;
+	
 	private Double wallet;
 	
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "canteenUsers")

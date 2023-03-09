@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.canteen.entities.CanteenUsers;
@@ -148,7 +149,7 @@ public class AdminController {
 	@PostMapping("/admin/updateUserProfileRout")
 	public RedirectView updateUserProfile(Model model, Principal principal,
 			@ModelAttribute("newpassword") String newPasword, @ModelAttribute("update_user") CanteenUsers users,
-			@ModelAttribute("token_email") String tokenEmail) {
+			@ModelAttribute("token_email") String tokenEmail,RedirectAttributes attributes) {
 		System.out.println("****");
 		System.out.println(tokenEmail);
 		CanteenUsers current_user = canteenUserRepository.findByEmail(tokenEmail);
@@ -159,6 +160,7 @@ public class AdminController {
 			current_user.setPassword(bCryptPasswordEncoder.encode(newPasword));
 		}
 		canteenUserRepository.save(current_user);
+		attributes.addAttribute("success",1);
 		return new RedirectView("/admin/updateUserProfile");
 	}
 

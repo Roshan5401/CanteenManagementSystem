@@ -53,7 +53,9 @@ public class MyConfig{
 		.loginPage("/signin")
 		.loginProcessingUrl("/dologin")
 		.defaultSuccessUrl("/",true)
-		.failureUrl("/signin?popup");
+		//***************Login failure*********************************
+		.failureUrl("/signin/error");
 		return httpSecurity.build();
+		
 	}
 }
