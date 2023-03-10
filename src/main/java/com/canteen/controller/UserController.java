@@ -266,13 +266,6 @@ public class UserController {
 		String email = principal.getName();
 		CanteenUsers canteenUser = canteenUserRepository.findByEmail(email);
 		model.addAttribute("user", canteenUser);
-		if(day < servedDay) {
-			model.addAttribute("token", true);
-		}
-		else {
-			model.addAttribute("token", false);
-		}
-		
 		model.addAttribute("ordersTotal", ordersTotal);
 		
 		return "/users/selectdates";
@@ -284,7 +277,7 @@ public class UserController {
 		System.out.println(date);
 //		System.out.println(quantity);
 		LocalDate requestedDate = LocalDate.parse(date , DateTimeFormatter.ISO_DATE); 
-		
+		LocalDate foodservedDate = LocalDate.parse(foodServedDate, DateTimeFormatter.ISO_DATE);
 		
 		// Check if user is ordering for previous days or next month
 		LocalDate today = LocalDate.now();
@@ -294,12 +287,15 @@ public class UserController {
 		Month requestedMonth = requestedDate.getMonth();
 		int requestedDay = requestedDate.getDayOfMonth();
 		
+		int servedDay = foodservedDate.getDayOfMonth();
+		
 		DayOfWeek requestedDayOfWeek = requestedDate.getDayOfWeek();
 		String day = requestedDayOfWeek.toString();
 		
 		
 		
-		
+		System.out.println(requestedDay);
+		System.out.println(servedDay);
 		
 		int id = Integer.parseInt(foodId);
 		menuCanteen food = menuRepository.findById(id);
@@ -315,8 +311,8 @@ public class UserController {
 		 
 		
 		
-		if(requestedMonth == currentMonth && requestedDay >= currentDay  && (!day.equals("SATURDAY"))  && (!day.equals("SUNDAY"))) {
-			 if(requestedDay == currentDay && time1.compareTo(time2) > 0) {
+		if(requestedMonth == currentMonth && requestedDay >= currentDay &&  requestedDay >= servedDay  && (!day.equals("SATURDAY"))  && (!day.equals("SUNDAY"))) {
+			 if(requestedDay == currentDay && time1.compareTo(time2) > 0 ) {
 				 	
 			 }
 			 else {
