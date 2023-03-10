@@ -24,20 +24,15 @@
 				<div class="itemdetails">
 		 			<h2>Item name - <span th:text=${food.name}></span></h2>
 					<h2 class = "margin">Price -  <span th:text=${food.price}></span></h2> 
-					<a th:href="@{'/user/confirmOrder/'+${food.ID}}" class = "button" th:classappend="${token == true} ? 'erase' : 'show'">Confirm Order</a>
+					<a th:href="@{'/user/confirmOrder/'+${food.ID}}" class = "button" >Confirm Order</a>
 				</div>
 				
-				<div class="walletDetails" th:classappend="${token == true} ? 'erase' : 'show'">
+				<div class="walletDetails" >
 					<h2>Wallet Balance - <span th:text="${user.wallet}"></span></h2>
 					<h2 class = "orderTotal">Order Total - <span th:text="${ordersTotal}"></span></h2>
 				</div>
 				
 				
-			</div>
-			
-			<div class="errorbox" th:classappend="${token == true} ? 'show' : 'erase'">
-				<h2>You can not book this order</h2>
-				<h1>This Item will be served from <span th:text=${food.foodServedDate}></span></h1>
 			</div>
 			
 			<div class="pageContent" th:classappend="${token == true} ? 'erase' : 'show'">
