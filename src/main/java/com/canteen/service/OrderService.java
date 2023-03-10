@@ -41,7 +41,9 @@ public class OrderService {
 	public List<OrderEntity> getAllOrdersByDateAndUserId(LocalDate date , String userId, String status){
 		int id = Integer.parseInt(userId);
 		List<OrderEntity> orders = this.orderRepository.findByStatusAndOrderDate(status, date);
-		List<OrderEntity> finalOrders = orders.stream().filter(order -> order.getCanteenUsers().getId() == id).collect(Collectors.toList());
+		System.out.println(orders);
+		List<OrderEntity> finalOrders = orders.stream().filter(order -> order.getCanteenUsers().getId()== id).collect(Collectors.toList());
+		System.out.println(finalOrders);
 		return finalOrders;
 	}
 	

@@ -20,21 +20,30 @@
 	width: 100%;
 	display: flex;
 	flex-direction: column;
-	background-color: #FDFFF0;
+	background-color: #272c48;
 }
 
 .menubar>a {
-	padding: 25px;
-	color: #34704a;
+	padding: 20px;
+	color: white;
 	text-decoration: none;
-	font-size: 1.3rem;
+	font-size: 1.2rem;
+	font-weight: bold;
+	margin-bottom: 20px;
 }
 
 .menubar>h3 {
 	padding: 25px;
 	color: white;
-	background-color: #34704a;
+	background-color: #272c48;
 	font-size: 1.3rem;
+	font-weight: bold;
+}
+
+.active{
+	background-color : white;
+	color:black !important;
+
 }
 
 .maincontent {
@@ -48,44 +57,60 @@
 .maincontent>h2 {
 	height: 12vh;
 	width: 100%;
+	font-weight: bold;
+	color: #f76c28;
 }
 
 .updateprofileform {
 	display: flex;
 	flex-direction: column;
+	background-color:#ffeee7;
+	padding:30px;
+	border-radius:20px;
+	margin-top:20px;
 }
 
 input {
 	margin-bottom: 20px;
 	margin-top: 20px;
-	background: #FDFFF0;
+	background: white;
 	border-radius: 15px;
 	border: none;
 	padding: 15px;
 	width: 400px;
 }
 
+.userInput{
+	background-color: #ffeee7;
+}
 .button {
+	width: 150px;
 	padding: 20px;
-	background: #34704a;
+	background: #f76c28;
 	border-radius: 15px;
 	border: none;
 	color: white;
 	margin-bottom: 20px;
 	margin-top: 20px;
-
+	margin-left : 15px;
+	font-weight: bold;
 }
-
 .searchuserform > .button{
 	width : 200px;
 	margin-left : 20px;
 
 }
 
+.searchuserform>h3{
+	font-weight: bold;
+}
+
 .updateprofileform > h2{
 padding : 15px;
+margin:auto;
 margin-bottom: 20px;
-	color: #34704a;
+	color: #272c48;
+	font-weight: bold;
 }
 
 .updatedform{
@@ -109,16 +134,14 @@ margin-bottom: 20px;
 	position : absolute;
 	bottom: 0;
 	left :80px;
-	background-color: #34704a;
+	background-color: #fbded2;
 	padding : 15px;
-	color : white;
+	color : black;
 	border : none;
 	border-radius: 5px;
 	margin : 25px;
-}
-
-.logoutbutton:hover{
-	color : white;
+	z-index: 100;
+	font-weight: bold;
 }
 
 a{

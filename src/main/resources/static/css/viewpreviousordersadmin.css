@@ -6,14 +6,6 @@
 	font-family: 'Poppins', sans-serif;
 }
 
-:root{
-	--green-1: #26643b;
-	--green-2: #a2de96;
-	--lightGreen-1:#d6e5d8;
-	--lightGreen-2:#f5fcf4;
-}
-
-
 .userboard {
 	display: flex;
 	flex-direction: row;
@@ -27,21 +19,31 @@
 	width: 100%;
 	display: flex;
 	flex-direction: column;
-	background-color: #FDFFF0; 
+	background-color: #272c48;
 }
 
 .menubar>a {
-	padding: 25px;
-	color: #34704a;
+	padding: 20px;
+	color: white;
 	text-decoration: none;
-	font-size: 1.3rem;
+	font-size: 1.2rem;
+	font-weight: bold;
+	margin-bottom: 20px;
 }
 
-.menubar>h3 {
+.hellouser {
 	padding: 25px;
 	color: white;
-	background-color: #34704a;
+	background-color: #272c48;
 	font-size: 1.3rem;
+	font-weight: bold;
+	
+}
+
+.active{
+	background-color : white;
+	color:black !important;
+
 }
 
 .maincontent {
@@ -52,15 +54,23 @@
 	overflow-y : scroll;
 }
 
-.maincontent>h2 {
+.formInput{
+	background-color:#ffeee7;
+	padding:30px;
+	border-radius: 20px;
+}
+
+.formInput>h1 {
 	height: 12vh;
 	width: 100%;
+	font-weight: bold;
+	color :#f76c28;
 }
 
 .inputField{
 	margin-bottom: 20px;
 	margin-top: 20px;
-	background: #FDFFF0; 
+	background: white; 
 	border-radius: 15px;
 	border: none;
 	padding: 15px;
@@ -69,15 +79,16 @@
 
 
 .button {
-	width: auto;
-	padding: 13px 15px;
-	 background: #34704a; 
+	width: 150px;
+	padding: 20px;
+	background: #f76c28;
 	border-radius: 15px;
 	border: none;
 	color: white;
 	margin-bottom: 20px;
 	margin-top: 20px;
 	margin-left : 15px;
+	font-weight: bold;
 }
 
 
@@ -86,13 +97,13 @@
     margin: 25px 0;
     font-size: 0.9em;
     font-family: sans-serif;
-  /*   min-width: 400px; */
-  width : 100%;
+  	width : 100%;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    
 }
 
 .styled-table thead tr {
-    background-color: #34704a;
+    background-color: #272c48;
     color: #ffffff;
     text-align: left;
 }
@@ -107,15 +118,14 @@
 }
 
 .styled-table tbody tr:nth-of-type(even) {
-    background-color: #f3f3f3;
+    background-color: #ffeee7;
 }
 
 .styled-table tbody tr:last-of-type {
-    border-bottom: 2px solid #009879;
+    border-bottom: 2px solid #f76c28;
 }
 
 a{
-	color : black;
 	text-decoration : none;
 }
 #userIdinput{
@@ -126,17 +136,16 @@ a{
 	position : absolute;
 	bottom: 0;
 	left :80px;
-	background-color: #34704a;
+	background-color: #fbded2;
 	padding : 15px;
-	color : white;
+	color : black;
 	border : none;
 	border-radius: 5px;
- 	margin : 25px; 
+	margin : 25px;
+	z-index: 100;
+	font-weight: bold;
 }
 
-.logoutbutton:hover{
-	color : white;
-}
 
 .disabledInput{
 	display:none;

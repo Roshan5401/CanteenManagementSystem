@@ -158,7 +158,7 @@ public class UserController {
 			String userId = Integer.toString(id);
 			LocalDate date1 = LocalDate.parse(date , DateTimeFormatter.ISO_DATE); 
 			
-			List<OrderEntity> orders = this.orderService.getAllOrdersByDateAndUserId(date1, userId, "Delievered");
+			List<OrderEntity> orders = this.orderService.getAllOrdersByDateAndUserId(date1, userId, "Delivered");
 			model.addAttribute("userOrders", orders);
 			
 			return "users/viewpreviousorders";
