@@ -6,6 +6,9 @@
 	font-family: 'Poppins', sans-serif;
 }
 
+a{
+	text-decoration: none;
+}
 
 .userboard {
 	display: flex;
@@ -20,21 +23,30 @@
 	width: 100%;
 	display: flex;
 	flex-direction: column;
-	background-color: #FDFFF0;
+	background-color: #272c48;
 }
 
 .menubar>a {
-	padding: 25px;
-	color: #34704a;
+	padding: 20px;
+	color: white;
 	text-decoration: none;
-	font-size: 1.3rem;
+	font-size: 1.2rem;
+	font-weight: bold;
+	margin-bottom: 20px;
 }
 
 .menubar>h3 {
 	padding: 25px;
 	color: white;
-	background-color: #34704a;
+	background-color: #272c48;
 	font-size: 1.3rem;
+	font-weight: bold;
+}
+
+.active{
+	background-color : white;
+	color:black !important;
+
 }
 
 .maincontent {
@@ -45,15 +57,24 @@
 	overflow-y : scroll;
 }
 
-.maincontent>h2 {
+.formInput{
+	background-color:#ffeee7;
+	padding:30px;
+	border-radius: 20px;
+}
+
+.formInput>h1 {
 	height: 12vh;
 	width: 100%;
+	font-weight: bold;
+	color :#f76c28;
 }
+
 
 input {
 	margin-bottom: 20px;
 	margin-top: 20px;
-	background: #FDFFF0;
+	background: white;
 	border-radius: 15px;
 	border: none;
 	padding: 15px;
@@ -63,16 +84,16 @@ input {
 
 .button {
 	width: auto;
-	padding: 13px 15px;
-	background: #34704a;
+	padding: 20px;
+	background: #f76c28;
 	border-radius: 15px;
 	border: none;
 	color: white;
 	margin-bottom: 20px;
 	margin-top: 20px;
 	margin-left : 15px;
+	font-weight: bold;
 }
-
 
 a{
 	color : black;
@@ -88,11 +109,11 @@ a{
 	margin-top: 20px;
 	border-radius: 15px;
 	border: none;
-	background : #FDFFF0;
+	background : #ffeee7;
 	position : relative;
 }
 
-.feedback:after {
+ .feedback:after {
         position: absolute;
         content: '';
         height: 2px;
@@ -100,14 +121,14 @@ a{
         margin: 0 auto;
 		  left: 0;
         right: 0;
-		  width: 100%;
-		  background: green;
+		  width: 75%;
+		  background: #f76c28;
 		  -o-transition:.5s;
   		  -ms-transition:.5s;
         -moz-transition:.5s;
         -webkit-transition:.5s;
         transition:.5s;
-    }
+    } 
 
 
 
@@ -133,16 +154,14 @@ a{
 	position : absolute;
 	bottom: 0;
 	left :80px;
-	background-color: #34704a;
+	background-color: #fbded2;
 	padding : 15px;
-	color : white;
+	color : black;
 	border : none;
 	border-radius: 5px;
 	margin : 25px;
-}
-
-.logoutbutton:hover{
-	color : white;
+	z-index: 100;
+	font-weight: bold;
 }
 
 .viewpreviousordersheader{
@@ -159,6 +178,7 @@ a{
 .feedbackfoodname{
 	margin-left:10px;
 	font-size: 1rem;
+	color:#f76c28;
 } 
 
 .line{
@@ -166,7 +186,7 @@ a{
 }
 
 .feedprovider{
-	color:  #34704a;
+	color:  #272c48;
 	font-size: 1.3rem;
 }
 

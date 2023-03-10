@@ -1,3 +1,21 @@
+// Get all the menu items
+const menuItems = document.querySelectorAll('.menubar a');
+
+// Add a click event listener to each menu item
+menuItems.forEach(item => {
+  item.addEventListener('click', () => {
+    // Remove the active class from all menu items
+    menuItems.forEach(item => {
+      item.classList.remove('active');
+    });
+
+    // Add the active class to the clicked menu item
+    item.classList.add('active');
+
+    // Change the background color of the body
+    document.body.style.backgroundColor = 'white';
+  });
+});
 
 
 

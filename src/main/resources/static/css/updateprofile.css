@@ -20,22 +20,32 @@
 	width: 100%;
 	display: flex;
 	flex-direction: column;
-	background-color: #FDFFF0;
+	background-color: #272c48;
 }
 
 .menubar>a {
-	padding: 25px;
-	color: #34704a;
+	padding: 20px;
+	color: white;
 	text-decoration: none;
-	font-size: 1.3rem;
+	font-size: 1.2rem;
+	font-weight: bold;
+	margin-bottom: 20px;
 }
 
 .menubar>h3 {
 	padding: 25px;
 	color: white;
-	background-color: #34704a;
+	background-color: #272c48;
 	font-size: 1.3rem;
+	font-weight: bold;
 }
+
+.active{
+	background-color : white;
+	color:black !important;
+
+}
+
 
 .maincontent {
 	flex : 80;
@@ -48,10 +58,6 @@
 	overflow-y:scroll; 
 }
 
-.maincontent>h2 {
-	height: 10vh;
-	width: 100%;
-}
 
 .updateprofileform {
 	display: flex;
@@ -61,7 +67,7 @@
 input {
 	margin-bottom: 20px;
 	margin-top: 20px;
-	background: #FDFFF0;
+	background: white;
 	border-radius: 15px;
 	border: none;
 	padding: 15px;
@@ -69,37 +75,38 @@ input {
 }
 
 .button {
-	width: 400px;
+	width: 150px;
 	padding: 20px;
-	background: #34704a;
+	background: #f76c28;
 	border-radius: 15px;
 	border: none;
 	color: white;
 	margin-bottom: 20px;
 	margin-top: 20px;
+	margin-left : 15px;
+	font-weight: bold;
 }
 
 .updateprofileform > h2{
-padding : 15px;
 margin-bottom: 20px;
-	color: #34704a;
+	color: #272c48;
+	font-weight: bold;
 }
 
 .logoutbutton{
 	position : absolute;
 	bottom: 0;
 	left :80px;
-	background-color: #34704a;
+	background-color: #fbded2;
 	padding : 15px;
-	color : white;
+	color : black;
 	border : none;
 	border-radius: 5px;
 	margin : 25px;
+	z-index: 100;
+	font-weight: bold;
 }
 
-.logoutbutton:hover{
-	color : white;
-}
 
 a{
 	text-decoration: none;
@@ -108,12 +115,20 @@ a{
 .content{
 	display:flex;
 	justify-content: space-between;
+	background-color:#ffeee7;
+	padding: 30px;
+	border-radius: 20px;
+}
+
+.maincontent>h2{
+	color:#f76c28;
+	font-weight: bold;
+	margin-bottom: 50px;
 }
 
 img.updateprofile {
 	width:27rem;
 	margin-top:80px;
-	margin-right: 100px;
    animation: mover 1s infinite  alternate;
 }
 

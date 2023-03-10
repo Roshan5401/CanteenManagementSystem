@@ -21,7 +21,7 @@
 	margin:auto;
 	display:flex;
 	flex-direction:row;
-	background: #FFFFFF;
+	background: #ffeee7;
 	align-items: center;
 	align-self: center;
 	padding: 20px;
@@ -48,23 +48,24 @@ form{
 input{
 	margin-bottom: 20px;
 	margin-top: 20px;
-	background: #FDFFF0;
+	background-color: white ;
 	border-radius: 15px;
 	border:none;
 	padding: 20px;
 	width:500px;
 }
 
-.button{
+.button {
 	width: 500px;
-	padding:20px;
-	background: #34704a;
-	color:#f1fbbd;
+	padding: 20px;
+	background: #f76c28;
 	border-radius: 15px;
-	border:none;
-	color:white;
+	border: none;
+	color: white;
 	margin-bottom: 20px;
 	margin-top: 20px;
+	margin-left : 15px;
+	font-weight: bold;
 }
 
 a{
@@ -78,7 +79,7 @@ h1{
 
 .title{
 	font-size: 4em;
-	color:#34704a;
+	color:#f76c28;
 }
 .welcome{
 	margin-bottom:10px;
@@ -86,7 +87,7 @@ h1{
 }
 
 .newuserlink{
-	color: #34704a;
+	color: #f76c28;
 }
 
 .newuser{
@@ -99,7 +100,7 @@ h1{
 	left:0;
 	width:50%;
 	height:100vh;
-	background: #34704a;  /* fallback for old browsers */
+	background: #272c48;  /* fallback for old browsers */
 /* background: -webkit-linear-gradient(to right, #6dd5ed, #2193b0);  Chrome 10-25, Safari 5.1-6
 background: linear-gradient(to right, #6dd5ed, #2193b0); W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 	

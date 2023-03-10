@@ -9,48 +9,65 @@
 <link
 	th:href="@{https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap}"
 	rel="stylesheet">
-<link rel="stylesheet" th:href="@{/css/viewfeedbackadmin.css}" />
+
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+	crossorigin="anonymous">
+	
+	<link rel="stylesheet" th:href="@{/css/viewfeedbackadmin.css}" />
+	<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+	crossorigin="anonymous"></script>
+	
+	
 </head>
 <body>
-<a th:href="@{/logout}" class="logoutbutton">Log out</a>
+	<a th:href="@{/logout}" class="logoutbutton">Log out</a>
 	<div class="userboard">
 		<div class="menubar">
 			<h3 class="hellouser">Hello, Admin</h3>
-			<a th:href="@{/admin/updateUserProfile}">Update
-				user profile</a> <a th:href="@{/admin/addAndUpdateMenu}">Add
-				and Update menu</a> <a
-				th:href="@{/admin/viewPreviousOrders}">View
-				Previous orders</a> <a
-				th:href="@{/admin/viewUpcomingOrders}">View
-				Upcoming orders</a> <a th:href="@{/admin/viewFeedbacks}">View
-				Feedbacks</a>
+			<a th:href="@{/admin/updateUserProfile}">Update user profile</a> <a
+				th:href="@{/admin/addAndUpdateMenu}">Add and Update menu</a> <a
+				th:href="@{/admin/viewPreviousOrders}">View Previous orders</a> <a
+				th:href="@{/admin/viewUpcomingOrders}">View Upcoming orders</a> <a
+				th:href="@{/admin/viewFeedbacks}" class="active">View Feedbacks</a>
 		</div>
 		<div class="maincontent">
-			<h2>View Feedbacks</h2>
-			<form th:action="@{/admin/viewfeedbackbyname}">
+
+			<form th:action="@{/admin/viewfeedbackbyname}" class="formInput">
+				<h1>View Feedbacks</h1>
 				<h2>View feedbacks for a specific food item</h2>
-				<input type="text" name="food" placeholder="Enter food Name" />
-				<input type="submit" value="View feedbacks" class="button" />
+				<input type="text" name="food" placeholder="Enter food Name" /> <input
+					type="submit" value="View feedbacks" class="button" />
 			</form>
 
 			<div class="viewpreviousordersheader">
-			<h3 class="orderstitle">All Feedbacks</h3>
-			<form th:action="@{/admin/feedbackdownload}" class="downloadPDF">
+				<h3 class="orderstitle">All Feedbacks</h3>
+				<form th:action="@{/admin/feedbackdownload}" class="downloadPDF">
 
-				<input type="text" name= food th:value="${food}" class = "disabled"/>
-				<input type="submit"  value = "Download pdf" class = "button downloadbtn"/>
-			</form>
+					<input type="text" name=food th:value="${food}" class="disabled" />
+					<input type="submit" value="Download pdf"
+						class="button downloadbtn" />
+				</form>
 			</div>
 			<div class="allfeedbacks" th:object="${feedbacks}">
 				<div class="feedback " th:each="f :  ${feedbacks}">
 					<p th:text="${f.feedback}"></p>
-						
-						<div class="below">
+
+					<div class="below">
 						<!-- <div class="details"><h3 class = "feedprovider" th:text="${f.canteenUsers.name}">   |   <span th:text=${f.food.name}></span></h3>
 						</div> -->
-						<h3><span th:text="${f.canteenUsers.name}" class = "feedprovider"></span> <span class="line">|</span><span th:text="${f.food.name}" class = "feedbackfoodname"></span></h3>
-						<a th:href="@{'/admin/deleteOrderFeedback/'+${f.orderId}}">Delete Feedback</a>
-						</div>
+						<h3>
+							<span th:text="${f.canteenUsers.name}" class="feedprovider"></span>
+							<span class="line">|</span><span th:text="${f.food.name}"
+								class="feedbackfoodname"></span>
+						</h3>
+						<a th:href="@{'/admin/deleteOrderFeedback/'+${f.orderId}}">Delete
+							Feedback</a>
+					</div>
 
 				</div>
 			</div>
@@ -58,5 +75,10 @@
 
 		</div>
 	</div>
+	<script
+		th:src="@{https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js}"
+		integrity="sha512-f8mwTB+Bs8a5c46DEm7HQLcJuHMBaH/UFlcgyetMqqkvTcYg4g5VXsYR71b3qC82lZytjNYvBj2pf0VekA9/FQ=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script type="text/javascript" th:src="@{/js/style.js}"></script>
 </body>
 </html>
