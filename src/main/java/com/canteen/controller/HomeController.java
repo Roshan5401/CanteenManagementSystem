@@ -42,6 +42,9 @@ public class HomeController {
 	@Autowired
 	BCryptPasswordEncoder bCryptPasswordEncoder;
 	
+	@Autowired
+	private EmailSenderService emailSenderService;
+	
 	@GetMapping("/signup")
 	public String signup(Model model) {
 		model.addAttribute("canteenUser", new CanteenUsers());
@@ -64,6 +67,8 @@ public class HomeController {
 				canteenUserRepository.save(canteenUsers);
 				model.addAttribute("canteenUsers", canteenUsers);
 				httpSession.setAttribute("message",new Message("Successfully Registered!!", "alert-success"));
+				String message="You Have Successfully Registerd for Canteen Services.\nUsername:"+canteenUsers.getEmail()+"\nWallet Balance: Rs0.00";
+				emailSenderService.sendEmail(canteenUsers.getEmail(), "Message from Canteen Management", message);
 				return "signup";
 			}
 			
