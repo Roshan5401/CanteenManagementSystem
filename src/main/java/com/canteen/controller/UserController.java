@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -33,6 +34,7 @@ import com.canteen.entities.menuCanteen;
 import com.canteen.repository.CanteenUserRepository;
 import com.canteen.repository.MenuRepository;
 import com.canteen.repository.OrderRepository;
+import com.canteen.service.EmailSenderService;
 import com.canteen.service.OrderService;
 
 @Controller
@@ -181,23 +183,52 @@ public class UserController {
 	
 	// It will update current user wallet balance by taking input and again redirect to addmoneytowalletpage
 		@GetMapping("/user/addBalance")
-		public RedirectView addBalance(Model model,Principal principal,@ModelAttribute("amount") String amount,RedirectAttributes attributes) {
+		public RedirectView addBalance(Model model,Principal principal,@ModelAttribute("amount") String amount,RedirectAttributes attributes,@RequestParam("validUpto")String validUpto,@RequestParam("cardNumber")String card,@RequestParam("cvv") String cvv) {
 			String userName=principal.getName();
-			
+			// Card number
+			int count=(int) card.chars().filter(Character::isDigit).count();
+            if(count!=16)
+                return new RedirectView("/user/addMoneyToWallet");
+            // Cvv
+            int qan=(int)cvv.chars().filter(Character::isDigit).count();
+            if(qan!=3)
+                return new RedirectView("/user/addMoneyToWallet");
+            
+            
 			Double d = Double.valueOf(amount);
 			DecimalFormat defor = new DecimalFormat("0.00");
 			String val = defor.format(d);
 			Double finalVal = Double.valueOf(val);
 			CanteenUsers current_user=canteenUserRepository.findByEmail(userName);
-			Double oldBalance=current_user.getWallet();
-			System.out.println(oldBalance);
-			current_user.setWallet(oldBalance+finalVal);
+			
+			
+			if(d<0 || d>5000) {
+                return new RedirectView("/user/addMoneyToWallet");
+            }
+            else{
+                Double oldBalance=current_user.getWallet();
+            System.out.println(oldBalance);
+            current_user.setWallet(oldBalance+finalVal);
+            }
+			
+			LocalDate currentDate = LocalDate.now();
+            String localdate=currentDate.toString();
+            
+            int monthtrimlocal=Integer.parseInt(localdate.substring(5, 7));
+            int yeartrimlocal=Integer.parseInt(localdate.substring(2,4));
+            
+            
+            int monthinput=Integer.parseInt(validUpto.substring(0,2));
+            int yearinput=Integer.parseInt(validUpto.substring(3));
+
 			canteenUserRepository.save(current_user);
 			model.addAttribute("user",current_user);
 			attributes.addAttribute("success",1);
 			String message="Money added to Wallet.\nUsername:"+current_user.getEmail()+"\nPresent Wallet Balance: Rs"+current_user.getWallet();
 			emailSenderService.sendEmail(current_user.getEmail(), "Message from Canteen Management", message);
 			return new RedirectView("/user/addMoneyToWallet");
+			
+            
 		}
 	
 	
