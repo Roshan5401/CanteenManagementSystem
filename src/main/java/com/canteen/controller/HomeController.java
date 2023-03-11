@@ -24,6 +24,7 @@ import com.canteen.entities.CanteenUsers;
 import com.canteen.entities.GlobalEmployees;
 import com.canteen.repository.CanteenUserRepository;
 import com.canteen.repository.GlobalRepository;
+import com.canteen.service.EmailSenderService;
 import com.project.helper.Message;
 
 import jakarta.servlet.http.HttpSession;
