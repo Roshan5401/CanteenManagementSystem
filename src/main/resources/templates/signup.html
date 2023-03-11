@@ -29,11 +29,12 @@
 				<h3>part of our Canteen</h3>
 				<form th:action="@{/do_register}" method="post"
 					th:object="${canteenUser}">
-					<input type="text" placeholder="Enter your Name" name="name" /> <input
+					<input type="text" placeholder="Enter your Name" name="name" minlength="3"/> <input
 						type="email" placeholder="Enter your Email" name="email" /> <input
-						type="password" placeholder="Choose a password" name="password" />
+						type="password" placeholder="Choose a password" name="password"  pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+  title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters" />
 					<input type="tel" placeholder="Enter your phone number"
-						name="phone" /> <input type="submit" value="Submit" class="button" />
+						name="phone" minlength="10" maxlength="10" /> <input type="submit" value="Submit" class="button" />
 
 				</form>
 
