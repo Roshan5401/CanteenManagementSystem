@@ -12,5 +12,6 @@ import com.canteen.entities.GlobalEmployees;
 public interface CanteenUserRepository extends JpaRepository<CanteenUsers, Integer>{
 
 	public CanteenUsers findByEmail(String email);
+	public CanteenUsers findByRole(String r);
 	
 }

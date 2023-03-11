@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<link rel="stylesheet" th:href="@{/css/selectdates.css}" />
+</head>
+<body>
+	<a th:href="@{/logout}" class="logoutbutton">Log out</a>
+	<div class="userboard">
+		<div class="menubar">
+			<h3 class="hellouser">
+				<!-- 	Hello, <span th:text="${user.name}"></span> -->
+				Hello , Anurag
+			</h3>
+			<a th:href="@{/user/bookOrder}" class = "active">Book Order</a> <a
+				th:href="@{/user/viewPreviousOrders}">View Previous Order</a> <a
+				th:href="@{/user/addMoneyToWallet}">Add Money to Wallet</a> <a
+				th:href="@{/user/updateProfile}">Update Profile</a>
+		</div>
+		<div class="maincontent">
+			<div class="header">
+				<div class="itemdetails">
+		 			<h2>Item name - <span th:text=${food.name}></span></h2>
+					<h2 class = "margin">Price -  <span th:text=${food.price}></span></h2> 
+					<a th:href="@{'/user/confirmOrder/'+${food.ID}}" class = "button" >Confirm Order</a>
+				</div>
+				
+				<div class="walletDetails" >
+					<h2>Wallet Balance - <span th:text="${user.wallet}"></span></h2>
+					<h2 class = "orderTotal">Order Total - <span th:text="${ordersTotal}"></span></h2>
+				</div>
+				
+				
+			</div>
+			
+			<div class="pageContent" th:classappend="${token == true} ? 'erase' : 'show'">
+			
+			
+			<div class="inputdate">
+				<h1 style="margin-bottom:10px; margin-left:20px;">Add new date</h1>
+						<form class = "dateform" th:action="@{/user/addDateOfOrder}">
+							<input type="date" name="dateinput" class = "inputField" required/>
+							<input type="number" name="quantityinput"   class = "inputField" placeholder="Enter the quantity" min = "1" required/>
+							<input type="text"  name = "foodId" class = "inputField" th:value = "${food.ID}" style="display:none;"/>
+							<input type="text" name ="foodServedDate" th:value="${food.foodServedDate}" style="display:none;"/>
+							<input type="submit" value="Add Date"  class ="button"/>
+						</form>
+				</div>
+			
+			<div class="selecteddatesheader">
+				<h3>Dates</h3>
+				<h3>Quantity</h3>
+				<h3>Actions</h3>
+			</div>
+
+				<div class="showselecteddates" >
+				<form th:action="@{/user/updateQuantityOfOrder}" class = "selecteddates" th:each="key:${treeMap.keySet()}">
+					<input type="text" th:value = "${key}" name="selecteddate" class = "transparentInput"  />
+					<input type="text" th:value="${food.ID}" name ="foodId" style="display:none;"/>
+					<input type="text" th:value="${food.price}" name ="price" style="display:none;"/>
+					<input type="number"  th:value="${treeMap.get(key)}" name ="selectedquantity" class = "transparentInput"  min = "1"/>
+					<div class="actions">
+								<input type="submit" value = "Update Quantity"  class = "button"/>
+					<a th:href="@{'/user/deleteDates/'+${key}+'/'+${food.ID}}" class = "button cancle">Cancel date</a>
+					</div>
+				</form>
+				
+		</div>
+			
+				
+			</div>
+			
+			</div>
+			
+		</div>
+
+	<script
+		th:src="@{https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js}"
+		integrity="sha512-f8mwTB+Bs8a5c46DEm7HQLcJuHMBaH/UFlcgyetMqqkvTcYg4g5VXsYR71b3qC82lZytjNYvBj2pf0VekA9/FQ=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script type="text/javascript" th:src="@{/js/style.js}"></script>
+</body>
+</html>

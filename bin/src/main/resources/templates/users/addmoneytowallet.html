@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="preconnect" th:href="@{https://fonts.googleapis.com}">
+<link rel="preconnect" th:href="@{https://fonts.gstatic.com}"
+	crossorigin>
+<link
+	th:href="@{https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap}"
+	rel="stylesheet">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+	crossorigin="anonymous">
+
+<link rel="stylesheet" th:href="@{/css/addmoneytowallet.css}" />
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+	crossorigin="anonymous"></script>
+
+</head>
+<body>
+	<a th:href="@{/logout}" class="logoutbutton">Log out</a>
+	<div class="userboard">
+		<div class="menubar">
+			<h3 class="hellouser">
+				Hello, <span th:text="${user.name}"></span>
+			</h3>
+			<a th:href="@{/user/bookOrder}">Book Order</a> <a
+				th:href="@{/user/viewPreviousOrders}">View Previous Order</a> <a
+				th:href="@{/user/addMoneyToWallet}" class="active">Add Money to
+				Wallet</a> <a th:href="@{/user/updateProfile}">Update Profile</a>
+		</div>
+		<div class="maincontent">
+			<div class="header">
+				<h2>Add money to your wallet</h2>
+				<div class="currentbalance">
+					<h3>Current Balance</h3>
+					<h2 class="walletbalance">
+						<span>Rs- </span><span th:text="${user.wallet}"></span>
+					</h2>
+				</div>
+			</div>
+			<div class="walletpage">
+				<div class="carddetails">
+					<h2>Enter your Card Details</h2>
+
+					<form th:action="@{/user/addBalance}" class="carddataform">
+
+						<input type="text" placeholder="Card holder name"
+							name="accountHolderName" required /> <input type="text"
+							placeholder="Enter your card number" name="cardNumber" required />
+						<input type="text" placeholder="Enter your cvv" required /> <input
+							type="string" placeholder="Enter the amount" name="amount"
+							required /> <input type="text" placeholder="Valid Upto - MM/YY"
+							required /> <input type="submit" value="Add to wallet"
+							class=button />
+					</form>
+
+				</div>
+
+				<div class="image">
+					<img th:src="@{/images/money.png}" class="moneybag" alt="" />
+				</div>
+
+
+			</div>
+		</div>
+	</div>
+	<div class="toast" id="toast"
+		style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%)">
+		<div class="toast-header">
+			<strong class="mr-auto">Money Added to wallet</strong>
+		</div>
+		<div class="toast-body">Success</div>
+	</div>
+	<script type="text/javascript">
+	const queryString = window.location.search;
+	console.log(queryString);
+	const urlParams = new URLSearchParams(queryString);
+	const success = urlParams.get('success')
+	console.log(typeof success);
+	function showToast() {
+		if(success==="1"){
+			
+			var myAlert = document.getElementById('toast');//select id of toast
+		      var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
+		      bsAlert.show();//show it
+		}
+	}
+	window.onload = () => showToast();
+	
+	function delayPopup()
+	{
+		if(success==="1"){
+			const url = window.location.href;
+			console.log(url);
+			const urlobj = new URL(url);
+			urlobj.searchParams.delete("success");
+			console.log(urlobj.toString());	
+			window.location.assign(urlobj.toString());
+		}
+	}
+	
+	setTimeout(delayPopup,2000)
+	</script>
+	<script
+		th:src="@{https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js}"
+		integrity="sha512-f8mwTB+Bs8a5c46DEm7HQLcJuHMBaH/UFlcgyetMqqkvTcYg4g5VXsYR71b3qC82lZytjNYvBj2pf0VekA9/FQ=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script type="text/javascript" th:src="@{/js/style.js}"></script>
+</body>
+</html>
