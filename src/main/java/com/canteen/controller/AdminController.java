@@ -10,10 +10,15 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.hibernate.sql.results.graph.instantiation.internal.ArgumentDomainResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,10 +54,13 @@ import com.canteen.service.OrderService;
 import com.canteen.util.FeedbackPDFGenerator;
 import com.canteen.util.PreviousOrdersPDFGenerator;
 import com.canteen.util.UpcomingOrdersPDFGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lowagie.text.DocumentException;
+import com.mysql.cj.x.protobuf.MysqlxCrud.Order;
 
+import jakarta.persistence.criteria.CriteriaBuilder.In;
 import jakarta.servlet.http.HttpServletResponse;
 import net.bytebuddy.asm.Advice.OffsetMapping.ForOrigin.Renderer.ForReturnTypeName;
 
@@ -149,7 +157,7 @@ public class AdminController {
 	@PostMapping("/admin/updateUserProfileRout")
 	public RedirectView updateUserProfile(Model model, Principal principal,
 			@ModelAttribute("newpassword") String newPasword, @ModelAttribute("update_user") CanteenUsers users,
-			@ModelAttribute("token_email") String tokenEmail,RedirectAttributes attributes) {
+			@ModelAttribute("token_email") String tokenEmail, RedirectAttributes attributes) {
 		System.out.println("****");
 		System.out.println(tokenEmail);
 		CanteenUsers current_user = canteenUserRepository.findByEmail(tokenEmail);
@@ -160,7 +168,7 @@ public class AdminController {
 			current_user.setPassword(bCryptPasswordEncoder.encode(newPasword));
 		}
 		canteenUserRepository.save(current_user);
-		attributes.addAttribute("success",1);
+		attributes.addAttribute("success", 1);
 		return new RedirectView("/admin/updateUserProfile");
 	}
 
@@ -245,11 +253,11 @@ public class AdminController {
 		Optional<CanteenUsers> optional = canteenUserRepository.findById(id);
 		CanteenUsers canteenUsers = optional.get();
 		Double tempPrice = canteenUsers.getWallet() + price;
-		
+
 		DecimalFormat dfor = new DecimalFormat("0.00");
 		String s = dfor.format(tempPrice);
 		Double finalPrice = Double.valueOf(s);
-		
+
 		canteenUsers.setWallet(finalPrice);
 		canteenUserRepository.save(canteenUsers);
 		m.addAttribute("orders", orders);
@@ -423,6 +431,117 @@ public class AdminController {
 
 		generator.generate(ordersList, response);
 		return "/admin/viewupcomingordersadmin";
+	}
+
+	@GetMapping("/admin/analytics")
+	public String analytics(Model model) {
+
+		// The whole Order List
+		List<OrderEntity> totalOrders = (List<OrderEntity>) this.orderRepository.findAll();
+
+		// Total Orders / Veg Orders / Non-Veg Orders Count
+		List<OrderEntity> vegFood = totalOrders.stream().filter(order -> order.getFood().getType().equals("Veg"))
+				.collect(Collectors.toList());
+		List<OrderEntity> nonVegFood = totalOrders.stream().filter(order -> order.getFood().getType().equals("Nonveg"))
+				.collect(Collectors.toList());
+		int totalOrdersCount = totalOrders.size();
+		int noOfVegOrders = vegFood.size();
+		int noOfNonVegOrders = nonVegFood.size();
+
+		model.addAttribute("totalOrdersCount", totalOrdersCount);
+		model.addAttribute("vegNum", noOfVegOrders);
+		model.addAttribute("nonVegNum", noOfNonVegOrders);
+
+		// Upcoming Orders Count
+		List<OrderEntity> upcomingOrders = totalOrders.stream().filter(order -> order.getStatus().equals("Booked"))
+				.collect(Collectors.toList());
+		int upcomingOrdersCount = upcomingOrders.size();
+
+		model.addAttribute("upcomingOrdersCount", upcomingOrdersCount);
+
+		// Total Numbers of Active Users
+
+		List<CanteenUsers> users = this.canteenUserRepository.findAll();
+		int totalUsers = users.size();
+
+		model.addAttribute("totalUsers", totalUsers);
+
+		// Totals number of food Items Present
+
+		List<menuCanteen> items = this.menuRepository.findAll();
+
+		Date currentDate = new Date();
+		@SuppressWarnings("deprecation")
+		int currentMonth = currentDate.getMonth();
+		@SuppressWarnings("deprecation")
+		List<menuCanteen> itemsThisMonth = items.stream()
+				.filter(order -> order.getFoodServedDate().getMonth() == currentMonth).collect(Collectors.toList());
+		System.out.println(itemsThisMonth);
+		int currentMonthItems = itemsThisMonth.size();
+
+		model.addAttribute("currentMonthItems", currentMonthItems);
+
+		// Food Item Bar (Sell)
+
+		TreeMap<Integer, Integer> map = new TreeMap<Integer, Integer>();
+		//Orders that are already delivered
+		List<OrderEntity> ordersDelivered = totalOrders.stream().filter(order->order.getStatus().equals("Delivered")).collect(Collectors.toList());
+		
+		for (int i = 0; i < ordersDelivered.size(); i++) {
+			OrderEntity order = ordersDelivered.get(i);
+			int new_key = order.getFood().getID();
+
+			if (map.containsKey(new_key)) {
+				map.put(new_key, map.get(new_key) + 1);
+			} else {
+				map.put(new_key, 1);
+			}
+		}
+
+
+
+		TreeMap<String, Integer> resultMap = new TreeMap<>();
+
+		for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+			int key = entry.getKey();
+			menuCanteen singleOrder = this.menuRepository.findById(key);
+			resultMap.put(singleOrder.getName(), map.get(key));
+		}
+
+		// Extracting Item names and orderscount
+		
+		List<String> itemNames = new ArrayList<>();
+		List<Integer> ordersCount = new ArrayList<>();
+		
+		for (Entry<String, Integer> entry : resultMap.entrySet())
+		{
+			itemNames.add(entry.getKey());
+			ordersCount.add(entry.getValue());
+			
+		}
+		
+		model.addAttribute("barNames", itemNames);
+		model.addAttribute("barHeight", ordersCount);
+		
+		// Passsing the month details i.e. how many orders delievered for a single month
+		// orders Delivered 
+		List<Integer> monthsData = new ArrayList<>();
+		for(int i = 0; i<=11;i++) {
+			monthsData.add(0);
+		}
+		
+		
+		for(int i = 0 ; i < ordersDelivered.size(); i++) {
+			OrderEntity currOrder = ordersDelivered.get(i);
+			Date currOrderDate = currOrder.getOrderDate();
+			@SuppressWarnings("deprecation")
+			int currOrderMonth = currOrderDate.getMonth();
+			monthsData.set(currOrderMonth, monthsData.get(currOrderMonth)+1);
+		}
+		
+		model.addAttribute("sellPerMonth", monthsData);
+
+		return "/admin/analytics";
 	}
 
 }
