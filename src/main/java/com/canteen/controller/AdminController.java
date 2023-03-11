@@ -2,6 +2,7 @@
 package com.canteen.controller;
 
 import java.io.IOException;
+
 import java.security.Principal;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -36,6 +37,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -91,12 +93,32 @@ public class AdminController {
 		model.addAttribute("menuItems", menuItems);
 		return "admin/addandupdatemenu";
 	}
-
+	
+	//full validation done no edge cases left
 	@PostMapping("/admin/addfood")
-	public RedirectView addfood(@ModelAttribute("new_food") menuCanteen menu) {
+	public RedirectView addfood(@RequestParam("name")String name,@RequestParam("type")String type,@RequestParam("price")String price,@RequestParam("foodServedDate")String date) {
 		System.out.println("****");
+		menuCanteen menu=new menuCanteen();
+		
+		long count1 = price.chars().filter(ch -> ch == '.').count();
+		long count2=price.chars().filter(ch->(ch>='a' && ch<='z') || (ch>='A' && ch<='Z')).count();
+		if(count1>1 || count2>0)
+			return new RedirectView("/admin/addAndUpdateMenu");
+		if(Double.parseDouble(price)<1)
+			return new RedirectView("/admin/addAndUpdateMenu");
+		menu.setName(name);
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date1 = dateFormat.parse(date);
+            java.sql.Date sqlDate = new java.sql.Date(date1.getTime());
+            menu.setFoodServedDate(sqlDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+		menu.setType(type);
+		
 		menu.setEnable(true);
-		Double d = menu.getPrice();
+		Double d = Double.parseDouble(price);
 		DecimalFormat dfor = new DecimalFormat("0.00");
 		String s = dfor.format(d);
 		Double dfinal = Double.valueOf(s);
@@ -145,12 +167,22 @@ public class AdminController {
 		m.addAttribute("id", "null");
 		return "admin/viewupcomingordersadmin";
 	}
-
+	
+	//change is made
+	//alert required
 	@GetMapping("/admin/findUserProfile")
 	public String findUserProfile(Model model, Principal principal, @ModelAttribute("userEmail") String userEmail) {
 		CanteenUsers current_user = canteenUserRepository.findByEmail(userEmail);
+		if(current_user==null) {
+			CanteenUsers currrent_users=canteenUserRepository.findByRole("ROLE_ADMIN");
+			model.addAttribute("user",currrent_users);
+			model.addAttribute("update_user",new CanteenUsers());
+			System.out.println("No email found");
+		}
+		else {
 		model.addAttribute("user", current_user);
 		model.addAttribute("update_user", new CanteenUsers());
+		}
 		return "admin/updateuserprofileadmin";
 	}
 

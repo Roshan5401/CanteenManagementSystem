@@ -1,0 +1,225 @@
+@charset "UTF-8";
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Poppins', sans-serif;
+}
+
+
+.userboard {
+	display: flex;
+	flex-direction: row;
+	height: 100vh;
+	width: 100%;
+}
+
+.menubar {
+	flex: 20;
+	height: 100vh;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	background-color: #272c48;
+}
+
+.menubar>a {
+	padding: 20px;
+	color: white;
+	text-decoration: none;
+	font-size: 1.2rem;
+	font-weight: bold;
+	margin-bottom: 20px;
+}
+
+.menubar>h3 {
+	padding: 25px;
+	color: white;
+	background-color: #272c48;
+	font-size: 1.3rem;
+	font-weight: bold;
+}
+
+.active{
+	background-color : white;
+	color:black !important;
+
+}
+
+.maincontent {
+	flex: 80;
+	height: 100vh;
+	width: 100%;
+	padding: 25px;
+	overflow-y : scroll;
+
+}
+
+.maincontent > h2{
+	margin-top:30px;
+}
+
+
+.inputField{
+	margin-bottom: 20px;
+	margin-top: 20px;
+	background: white;
+	border-radius: 15px;
+	border: none;
+	padding: 15px;
+	width: 300px;
+	margin-left : 20px;
+	margin-right: 20px;
+}
+
+
+
+.button {
+	width:auto;
+	padding: 20px;
+	background: #f76c28;
+	border-radius: 15px;
+	border: none;
+	color: white;
+	margin-bottom: 20px;
+	margin-top: 20px;
+	margin-left : 15px;
+	font-weight: bold;
+}
+
+
+
+
+.orderstitle{
+	margin-top: 20px;
+}
+
+a{
+	color : black;
+	text-decoration : none;
+}
+#userIdinput{
+	margin-left : 15px;
+}
+
+.logoutbutton{
+	position : absolute;
+	bottom: 0;
+	left :80px;
+	background-color: #fbded2;
+	padding : 15px;
+	color : black;
+	border : none;
+	border-radius: 5px;
+	margin : 25px;
+	z-index: 100;
+	font-weight: bold;
+}
+
+
+
+.disabledInput{
+	display:none;
+}
+
+.cancleButton{
+	padding: 15px;
+	background: #34704a;
+	border-radius: 15px;
+	border: none;
+	color: white;
+}
+
+.chooseType{
+	margin-top: 20px;
+}
+
+.mainInput{
+	margin-top:20px;
+}
+.header{
+	display:flex;
+	justify-content: space-between;
+}
+
+.itemdetails{
+	display: flex;
+}
+
+.margin{
+	margin-left: 60px;
+}
+
+.selecteddates{
+ 	display:flex; 
+	justify-content: space-between;
+	padding:10px;
+}
+
+.selecteddatesheader{
+		display:flex;
+	justify-content: space-between;
+	background-color:#272c48;
+	color:white;
+	padding:20px;
+	margin-top:50px;
+}
+
+.transparentInput{
+	border:none;
+}
+
+input:focus{
+	border:none;
+	outline:none;
+}
+
+.cancle{
+	background-color:red;
+}
+
+.errorbox{
+	margin-top:50px;
+	
+}
+
+
+.inputdate{
+	margin-top:50px;
+}
+
+.header{
+	display:flex;
+	flex-direction:column;
+	
+}
+
+.itemdetails{
+	display:flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.itemdetails>h2{
+	font-weight: bold;
+}
+
+.inputdate > h1{
+	font-weight: bold;
+	color:#f76c28;
+}
+
+.walletDetails{
+	padding:20px;
+	color : white ;
+	background-color: #272c48;
+	display:flex;
+	justify-content: space-between;
+}
+
+.orderTotal{
+	margin-left:30px;
+}
+.erase{
+	display:none;
+}

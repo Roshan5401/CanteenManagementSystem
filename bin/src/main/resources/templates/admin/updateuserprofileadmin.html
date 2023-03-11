@@ -31,15 +31,15 @@
 				Update menu</a> <a th:href="@{/admin/viewPreviousOrders}">View
 				Previous orders</a> <a th:href="@{/admin/viewUpcomingOrders}">View
 				Upcoming orders</a> <a th:href="@{/admin/viewFeedbacks}">View
-				Feedbacks</a><a th:href="@{/admin/analytics}">Analytics</a>
+				Feedbacks</a>
 		</div>
 		<div class="maincontent">
 			<h2>Update profile of any user</h2>
 
 			<form th:action="@{/admin/findUserProfile}" class="searchuserform">
 				<h3>Search for a user</h3>
-				<input type="email" placeholder="Enter the user email"
-					name="userEmail" class="userInput" required/> <input type="submit"
+				<input type="text" placeholder="Enter the user email"
+					name="userEmail" class="userInput" /> <input type="submit"
 					value="Search User" class="button" />
 			</form>
 
