@@ -270,9 +270,10 @@ public class UserController {
 		
 		return "/users/selectdates";
 	}
+		
 	
 	@GetMapping("user/addDateOfOrder")
-	public String addDateOfOrder( Principal principal ,Model model,@ModelAttribute("dateinput")String date,@ModelAttribute("quantityinput")Integer quantity, @ModelAttribute("foodId") String foodId, @ModelAttribute("foodServedDate")String foodServedDate) throws ParseException
+	public String addDateOfOrder( Principal principal ,Model model,@ModelAttribute("dateinput")String date,@ModelAttribute("quantityinput")Integer quantity, @ModelAttribute("foodId") String foodId, @ModelAttribute("foodServedDate")String foodServedDate,RedirectAttributes attributes) throws ParseException
 	{
 		System.out.println(date);
 //		System.out.println(quantity);
@@ -308,8 +309,6 @@ public class UserController {
 		 
 		 time1 = LocalTime.of(localTime.getHour(), localTime.getMinute(), localTime.getMinute());
 		 time2 = LocalTime.of(15,00,00);
-		 
-		
 		
 		if(requestedMonth == currentMonth && requestedDay >= currentDay &&  requestedDay >= servedDay  && (!day.equals("SATURDAY"))  && (!day.equals("SUNDAY"))) {
 			 if(requestedDay == currentDay && time1.compareTo(time2) > 0 ) {
@@ -321,7 +320,7 @@ public class UserController {
 			 }
 			
 		}
-		
+
 		model.addAttribute("food", food);
 		model.addAttribute("treeMap",treeMap);
 		model.addAttribute("ordersTotal",ordersTotal);
@@ -390,7 +389,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/user/confirmOrder/{foodId}")
-	public RedirectView confirmOrder(Principal principal, @PathVariable("foodId")String foodId) {
+	public RedirectView confirmOrder(Principal principal, @PathVariable("foodId")String foodId,RedirectAttributes attributes) {
 		int id = Integer.parseInt(foodId);
 		menuCanteen food = menuRepository.findById(id);
 		String email = principal.getName();
@@ -436,10 +435,12 @@ public class UserController {
         	
         }
         
-        else {
-        	return new RedirectView("/user/addDate/"+foodId);
-        }
-        
+       
+        	 else {
+             	attributes.addAttribute("lowBal",1);
+             	return new RedirectView("/user/addDate/"+foodId);
+             }
+     
         
 		
 		return new RedirectView("/user/bookOrder");
