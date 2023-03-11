@@ -154,12 +154,12 @@ public OrderEntity(int orderId, CanteenUsers canteenUsers, menuCanteen food, Dat
 
 
 
-/*
- * @Override public String toString() { return "OrderEntity [orderId=" + orderId
- * + ", canteenUsers=" + canteenUsers + ", food=" + food + ", orderDate=" +
- * orderDate + ", quantity=" + quantity + ", totalPrice=" + totalPrice +
- * ", status=" + status + ", feedback=" + feedback + "]"; }
- */
+
+  @Override public String toString() { return "OrderEntity [orderId=" + orderId
+  + ", canteenUsers=" + canteenUsers + ", food=" + food + ", orderDate=" +
+  orderDate + ", quantity=" + quantity + ", totalPrice=" + totalPrice +
+  ", status=" + status + ", feedback=" + feedback + "]"; }
+ 
 
 
 
