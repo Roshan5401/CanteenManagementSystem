@@ -53,6 +53,9 @@ public class UserController {
 	MenuRepository menuRepository;
 	// Display bookOrder Page 	
 	
+	@Autowired
+	private EmailSenderService emailSenderService;
+	
 	@GetMapping("/user/bookOrderByType")
 	public String bookOrderByType(@ModelAttribute("type")String type, Model model , Principal principal) {
 		System.out.println(type);
@@ -131,6 +134,8 @@ public class UserController {
 		current_user.setWallet(final_wallet);
 		canteenUserRepository.save(current_user);
 		orderRepository.deleteById(id);
+		String message="Order Deleted Successfully.\nUsername:"+current_user.getEmail()+"\nOrder Date"+String.valueOf(orderEntity.getOrderDate())+"\nMoney Refunded back to Wallet.";
+		emailSenderService.sendEmail(current_user.getEmail(), "Message from Canteen Management", message);
 		return new RedirectView("/user/bookOrder");
 	}
 	
@@ -190,6 +195,8 @@ public class UserController {
 			canteenUserRepository.save(current_user);
 			model.addAttribute("user",current_user);
 			attributes.addAttribute("success",1);
+			String message="Money added to Wallet.\nUsername:"+current_user.getEmail()+"\nPresent Wallet Balance: Rs"+current_user.getWallet();
+			emailSenderService.sendEmail(current_user.getEmail(), "Message from Canteen Management", message);
 			return new RedirectView("/user/addMoneyToWallet");
 		}
 	
@@ -418,7 +425,7 @@ public class UserController {
         	
         	canteenUser.setWallet(finalWallet);
         	canteenUserRepository.save(canteenUser);
-        	
+        	String allDates="Dates Are:\n";
         	
         	// for-each loop to book order for all dates
             for(LocalDate key : set1) {
@@ -430,10 +437,12 @@ public class UserController {
             	order.setQuantity(treeMap.get(key));
             	order.setStatus("Booked");
             	order.setTotalPrice(treeMap.get(key) * food.getPrice());
-            	
+            	allDates+= String.valueOf(order.getOrderDate())+" - "+String.valueOf(order.getQuantity())+"P";
+            	allDates+="\n";
             	orderRepository.save(order);
             }
-        	
+        	String message="Order Booked.\nUsername:"+canteenUser.getEmail()+"\nfood name: "+food.getName()+"\nWallet Balance: "+finalWallet+"\n"+allDates;
+    		emailSenderService.sendEmail(canteenUser.getEmail(), "Message from Canteen Management", message);
         }
         
         else {
