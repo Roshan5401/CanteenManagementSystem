@@ -3,8 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
 
 <link rel="stylesheet" th:href="@{/css/selectdates.css}" />
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+
 </head>
 <body>
 	<a th:href="@{/logout}" class="logoutbutton">Log out</a>
@@ -75,7 +78,133 @@
 			</div>
 			
 		</div>
+	<div class="toast" id="lowBal" style="position: absolute; top: 10px; left: 50%;transform:translateX(-50%)">
+	    <div class="toast-header">
+	      <strong class="mr-auto">Wallet Balance low</strong>
+	    </div>
+	    <div class="toast-body">
+	     Add money first
+	    </div>
+	</div> 
+	<div class="toast" id="Saturday" style="position: absolute; top: 10px; left: 50%;transform:translateX(-50%)">
+	    <div class="toast-header">
+	      <strong class="mr-auto">Saturday is holiday</strong>
+	    </div>
+	    <div class="toast-body">
+	     Food is not served
+	    </div>
+	</div>
+	<div class="toast" id="Sunday" style="position: absolute; top: 10px; left: 50%;transform:translateX(-50%)">
+	    <div class="toast-header">
+	      <strong class="mr-auto">Sunday is holiday</strong>
+	    </div>
+	    <div class="toast-body">
+	     Food is not served
+	    </div>
+	</div>
+	<div class="toast" id="todayTimeOver" style="position: absolute; top: 10px; left: 50%;transform:translateX(-50%)">
+	    <div class="toast-header">
+	      <strong class="mr-auto">Time over for today</strong>
+	    </div>
+	    <div class="toast-body">
+	     Book for next day
+	    </div>
+	</div>
+	<div class="toast" id="wrongMonth" style="position: absolute; top: 10px; left: 50%;transform:translateX(-50%)">
+	    <div class="toast-header">
+	      <strong class="mr-auto">Wrong Month</strong>
+	    </div>
+	    <div class="toast-body">
+	     You can only book for the current month
+	    </div>
+	</div>
+	<script type="text/javascript">
+	const queryString = window.location.search;
+	console.log(queryString);
+	const urlParams = new URLSearchParams(queryString);
+	const lowBal = urlParams.get('lowBal')
+	function showWalletToast() {
+		if(lowBal==="1"){
+			console.log("reached")
+			var myAlert = document.getElementById('lowBal');//select id of toast
+		      var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
+		      bsAlert.show();//show it
+		}
+	}
+	
+	
+	
+	function delayPopup()
+	{
+		if(lowBal==="1"){
+			const url = window.location.href;
+			console.log(url);
+			const urlobj = new URL(url);
+			urlobj.searchParams.delete("lowBal");
+			console.log(urlobj.toString());	
+			window.location.assign(urlobj.toString());
+		}
+	}
+	
+	setTimeout(delayPopup,2000)
+	</script>
+	<script type="text/javascript">
+	
+	function getDate({passedDate}){
+		
+		let date;
+		if(passedDate)
+			date = new Date(passedDate);
+		else{
+			date = new Date()};
+			
+		let day = date.getDate();
+		let month = date.getMonth() + 1;
+		let year = date.getFullYear();
+		
+		// This arrangement can be altered based on how we want the date's format to appear.
+		let currentDate = `${day}-${month}-${year}`;
+		return currentDate;
+	}
+	function showToastSelectOder(){
+		const dateinput = urlParams.get('dateinput')
+		
+		const todayDate = getDate({})
+		const prevDate = getDate({passedDate:dateinput})
+		
+		
+		if(typeof dateinput==="string"&&new Date(dateinput).getDay()===6)
+			{
 
+			var myAlert = document.getElementById('Saturday');//select id of toast
+		      var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
+		      bsAlert.show();//show it
+			}
+		else if(typeof dateinput==="string"&&new Date(dateinput).getDay()===0)
+		{
+		var myAlert = document.getElementById('Sunday');//select id of toast
+	      var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
+	      bsAlert.show();//show it
+		}
+		else if(typeof dateinput==="string"&&todayDate===prevDate&&new Date().getHours()>=15)
+		{
+		var myAlert = document.getElementById('todayTimeOver');//select id of toast
+	      var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
+	      bsAlert.show();//show it
+		}
+		else if(typeof dateinput==="string"&&new Date(dateinput).getMonth()!=new Date().getMonth())
+		{
+			var myAlert = document.getElementById('wrongMonth');//select id of toast
+	     	 var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
+	      	bsAlert.show();//show it
+		}
+		
+	}
+	window.onload=()=>{
+		showToastSelectOder();
+		showWalletToast();
+	};
+	</script>
 	<script
 		th:src="@{https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js}"
 		integrity="sha512-f8mwTB+Bs8a5c46DEm7HQLcJuHMBaH/UFlcgyetMqqkvTcYg4g5VXsYR71b3qC82lZytjNYvBj2pf0VekA9/FQ=="
