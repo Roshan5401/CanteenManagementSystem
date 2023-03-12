@@ -122,7 +122,7 @@ public class UserController {
 	}
 	
 	@GetMapping("user/cancelOrder/{Id}")
-	public RedirectView cancelOrder(@PathVariable("Id")int id,Principal principal)
+	public RedirectView cancelOrder(@PathVariable("Id")int id,Principal principal,RedirectAttributes attributes)
 	{
 		String userName=principal.getName();
 		CanteenUsers current_user=canteenUserRepository.findByEmail(userName);
@@ -136,6 +136,9 @@ public class UserController {
 		current_user.setWallet(final_wallet);
 		canteenUserRepository.save(current_user);
 		orderRepository.deleteById(id);
+		
+		attributes.addAttribute("cancel",1);
+		
 		String message="Order Deleted Successfully.\nUsername:"+current_user.getEmail()+"\nOrder Date"+String.valueOf(orderEntity.getOrderDate())+"\nMoney Refunded back to Wallet.";
 		emailSenderService.sendEmail(current_user.getEmail(), "Message from Canteen Management", message);
 		return new RedirectView("/user/bookOrder");
@@ -482,7 +485,7 @@ public class UserController {
              }
      
         
-		
+        attributes.addAttribute("bookingComplete",1);
 		return new RedirectView("/user/bookOrder");
 	}
 	
