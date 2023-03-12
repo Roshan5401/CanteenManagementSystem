@@ -129,6 +129,65 @@
 		</div>
 		<div class="toast-body">Welcome!!</div>
 	</div>
+	<div class="toast" id="bookingComplete" style="position: absolute; top: 10px; left: 50%;transform:translateX(-50%)">
+	    <div class="toast-header">
+	      <strong class="mr-auto">Order Booked</strong>
+	    </div>
+	</div>
+	<div class="toast" id="cancel" style="position: absolute; top: 10px; left: 50%;transform:translateX(-50%)">
+	    <div class="toast-header">
+	      <strong class="mr-auto">Order cancelled</strong>
+	    </div>
+	</div>
+	<script type="text/javascript">
+	const queryString = window.location.search;
+	console.log(queryString);
+	const urlParams = new URLSearchParams(queryString);
+	const bookingComplete = urlParams.get('bookingComplete')
+	const cancel = urlParams.get('cancel')
+	function showBookedToast() {
+		if(bookingComplete==="1"){
+			var myAlert = document.getElementById('bookingComplete');//select id of toast
+		      var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
+		      bsAlert.show();//show it
+		}
+	}
+	function showCancelToast() {
+		if(cancel==="1"){
+			var myAlert = document.getElementById('cancel');//select id of toast
+		      var bsAlert = new bootstrap.Toast(myAlert,{delay:500});//inizialize it
+		      bsAlert.show();//show it
+		}
+	}
+	
+	window.onload= ()=>{
+		showBookedToast();
+		showCancelToast();
+	}
+	
+	function delayPopup()
+	{
+		if(bookingComplete==="1"){
+			const url = window.location.href;
+			console.log(url);
+			const urlobj = new URL(url);
+			urlobj.searchParams.delete("bookingComplete");
+			console.log(urlobj.toString());	
+			window.location.assign(urlobj.toString());
+		}
+		else if(cancel==="1"){
+			const url = window.location.href;
+			console.log(url);
+			const urlobj = new URL(url);
+			urlobj.searchParams.delete("cancel");
+			console.log(urlobj.toString());	
+			window.location.assign(urlobj.toString());
+		}
+		
+	}
+	
+	setTimeout(delayPopup,2000)
+	</script>
 	<script
 		th:src="@{https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js}"
 		integrity="sha512-f8mwTB+Bs8a5c46DEm7HQLcJuHMBaH/UFlcgyetMqqkvTcYg4g5VXsYR71b3qC82lZytjNYvBj2pf0VekA9/FQ=="

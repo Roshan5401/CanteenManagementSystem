@@ -118,6 +118,22 @@
 	     You can only book for the current month
 	    </div>
 	</div>
+	<div class="toast" id="datePassed" style="position: absolute; top: 10px; left: 50%;transform:translateX(-50%)">
+	    <div class="toast-header">
+	      <strong class="mr-auto">Date already passed</strong>
+	    </div>
+	    <div class="toast-body">
+	     No booking for this date
+	    </div>
+	</div>
+	<div class="toast" id="foodServed" style="position: absolute; top: 10px; left: 50%;transform:translateX(-50%)">
+	    <div class="toast-header">
+	      <strong class="mr-auto">Cannot serve on this date</strong>
+	    </div>
+	    <div class="toast-body">
+	    	Food will be served from a later date
+	    </div>
+	</div>
 	<script type="text/javascript">
 	const queryString = window.location.search;
 	console.log(queryString);
@@ -163,17 +179,25 @@
 		let year = date.getFullYear();
 		
 		// This arrangement can be altered based on how we want the date's format to appear.
-		let currentDate = `${day}-${month}-${year}`;
+		let currentDate = `${year}-${month}-${day}`;
 		return currentDate;
 	}
 	function showToastSelectOder(){
 		const dateinput = urlParams.get('dateinput')
-		
+		const foodServed = urlParams.get('foodServedDate')
 		const todayDate = getDate({})
 		const prevDate = getDate({passedDate:dateinput})
+		const foodserved = getDate({passedDate:foodServed})
 		
+		console.log(foodserved)
 		
-		if(typeof dateinput==="string"&&new Date(dateinput).getDay()===6)
+		if(typeof dateinput==="string"&&todayDate===prevDate&&new Date().getHours()>=15)
+		{
+		var myAlert = document.getElementById('todayTimeOver');//select id of toast
+	      var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
+	      bsAlert.show();//show it
+		}
+		else if(typeof dateinput==="string"&&new Date(dateinput).getDay()===6)
 			{
 
 			var myAlert = document.getElementById('Saturday');//select id of toast
@@ -186,15 +210,21 @@
 	      var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
 	      bsAlert.show();//show it
 		}
-		else if(typeof dateinput==="string"&&todayDate===prevDate&&new Date().getHours()>=15)
-		{
-		var myAlert = document.getElementById('todayTimeOver');//select id of toast
-	      var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
-	      bsAlert.show();//show it
-		}
 		else if(typeof dateinput==="string"&&new Date(dateinput).getMonth()!=new Date().getMonth())
 		{
 			var myAlert = document.getElementById('wrongMonth');//select id of toast
+	     	 var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
+	      	bsAlert.show();//show it
+		}
+		else if(typeof dateinput==="string"&&new Date(prevDate)<new Date(todayDate))
+		{
+			var myAlert = document.getElementById('datePassed');//select id of toast
+	     	 var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
+	      	bsAlert.show();//show it
+		}
+		else if(typeof dateinput==="string"&&new Date(prevDate)<new Date(foodserved))
+		{
+			var myAlert = document.getElementById('foodServed');//select id of toast
 	     	 var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
 	      	bsAlert.show();//show it
 		}
