@@ -1,4 +1,3 @@
-
 package com.canteen.controller;
 
 import java.io.IOException;
@@ -81,6 +80,9 @@ public class AdminController {
 	CanteenService canteenService;
 	@Autowired
 	OrderRepository orderRepository;
+	
+	@Autowired
+	private EmailSenderService emailSenderService;
 
 	// Display Add and Update menu page
 	@GetMapping("/admin/addAndUpdateMenu")
@@ -290,6 +292,8 @@ public class AdminController {
 		Double finalPrice = Double.valueOf(s);
 
 		canteenUsers.setWallet(finalPrice);
+		String message="Order Cancelled By admin.\nUsername:"+canteenUsers.getEmail()+"\nfood name: "+orderEntity.getFood().getName()+"\nAmount Refunded to Wallet:Rs"+orderEntity.getTotalPrice()+"\nWallet Balance: Rs"+finalPrice+"\nOrder Date:"+orderEntity.getOrderDate();
+		emailSenderService.sendEmail(canteenUsers.getEmail(), "Message from Canteen Management", message);
 		canteenUserRepository.save(canteenUsers);
 		m.addAttribute("orders", orders);
 		return "admin/viewupcomingordersadmin";
@@ -379,6 +383,8 @@ public class AdminController {
 		System.out.println(order);
 		order.setStatus("Delivered");
 		this.orderRepository.save(order);
+		String message="Order Delivered.\nUsername:"+order.getCanteenUsers().getEmail()+"\nfood name: "+order.getFood().getName()+"\nTotal Price:Rs"+order.getTotalPrice()+"\nOrder Date:"+order.getOrderDate();
+		emailSenderService.sendEmail(order.getCanteenUsers().getEmail(), "Message from Canteen Management", message);
 		return new RedirectView("/admin/viewUpcomingOrders");
 	}
 
