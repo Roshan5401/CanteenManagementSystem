@@ -70,7 +70,9 @@ public class HomeController {
 				httpSession.setAttribute("message",new Message("Successfully Registered!!", "alert-success"));
 				String message="You Have Successfully Registerd for Canteen Services.\nUsername:"+canteenUsers.getEmail()+"\nWallet Balance: Rs0.00";
 				emailSenderService.sendEmail(canteenUsers.getEmail(), "Message from Canteen Management", message);
-				return "signup";
+
+		return "signin";
+
 			}
 			
 		}

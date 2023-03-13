@@ -1,4 +1,3 @@
-
 package com.canteen.controller;
 
 import java.io.IOException;
@@ -50,14 +49,20 @@ import com.canteen.repository.MenuRepository;
 import com.canteen.repository.OrderRepository;
 import com.canteen.service.CanteenService;
 
-import com.canteen.entities.OrderEntity;
-import com.canteen.repository.CanteenUserRepository;
+
 import com.canteen.service.OrderService;
 import com.canteen.util.FeedbackExcelGenerator;
 import com.canteen.util.FeedbackPDFGenerator;
 import com.canteen.util.PreviousOrdersExcelGenerator;
 import com.canteen.util.PreviousOrdersPDFGenerator;
 import com.canteen.util.UpcomingOrdersExcelGenerator;
+
+import com.canteen.service.EmailSenderService;
+import com.canteen.entities.OrderEntity;
+import com.canteen.repository.CanteenUserRepository;
+import com.canteen.service.OrderService;
+import com.canteen.util.FeedbackPDFGenerator;
+import com.canteen.util.PreviousOrdersPDFGenerator;
 import com.canteen.util.UpcomingOrdersPDFGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -85,6 +90,8 @@ public class AdminController {
 	CanteenService canteenService;
 	@Autowired
 	OrderRepository orderRepository;
+	@Autowired
+	private EmailSenderService emailSenderService;
 
 	// Display Add and Update menu page
 	@GetMapping("/admin/addAndUpdateMenu")
@@ -105,6 +112,7 @@ public class AdminController {
 		
 		long count1 = price.chars().filter(ch -> ch == '.').count();
 		long count2=price.chars().filter(ch->(ch>='a' && ch<='z') || (ch>='A' && ch<='Z') || (ch>=33 && ch<=47) || (ch>=58 && ch<=64) ||(ch>=91 && ch<=96) || (ch>=123 && ch<=126)).count();
+
 		if(count1>1 || count2>0)
 			return new RedirectView("/admin/addAndUpdateMenu");
 		if(Double.parseDouble(price)<1)
@@ -170,14 +178,15 @@ public class AdminController {
 		m.addAttribute("id", "null");
 		return "admin/viewupcomingordersadmin";
 	}
-	
 	//change is made
 	//alert required
 	@GetMapping("/admin/findUserProfile")
 	public String findUserProfile(Model model, Principal principal, @ModelAttribute("userEmail") String userEmail) {
 		CanteenUsers current_user = canteenUserRepository.findByEmail(userEmail);
 		if(current_user==null) {
+
 			CanteenUsers currrent_users=canteenUserRepository.findByEmail(principal.getName());
+
 			model.addAttribute("user",currrent_users);
 			model.addAttribute("update_user",new CanteenUsers());
 			System.out.println("No email found");
@@ -294,6 +303,9 @@ public class AdminController {
 		Double finalPrice = Double.valueOf(s);
 
 		canteenUsers.setWallet(finalPrice);
+		String message="Order Cancelled By admin.\nUsername:"+canteenUsers.getEmail()+"\nfood name: "+orderEntity.getFood().getName()+"\nAmount Refunded to Wallet:Rs"+orderEntity.getTotalPrice()+"\nWallet Balance: Rs"+finalPrice+"\nOrder Date:"+orderEntity.getOrderDate();
+		emailSenderService.sendEmail(canteenUsers.getEmail(), "Message from Canteen Management", message);
+
 		canteenUserRepository.save(canteenUsers);
 		m.addAttribute("orders", orders);
 		return "admin/viewupcomingordersadmin";
@@ -412,6 +424,8 @@ public class AdminController {
 		System.out.println(order);
 		order.setStatus("Delivered");
 		this.orderRepository.save(order);
+		String message="Order Delivered.\nUsername:"+order.getCanteenUsers().getEmail()+"\nfood name: "+order.getFood().getName()+"\nTotal Price:Rs"+order.getTotalPrice()+"\nOrder Date:"+order.getOrderDate();
+		emailSenderService.sendEmail(order.getCanteenUsers().getEmail(), "Message from Canteen Management", message);
 		return new RedirectView("/admin/viewUpcomingOrders");
 	}
 
@@ -551,6 +565,8 @@ public class AdminController {
 	    }
 	    return null;
 	}
+
+	
 
 	@GetMapping("/admin/analytics")
 	public String analytics(Model model) {
