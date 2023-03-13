@@ -41,94 +41,96 @@ import com.canteen.service.OrderService;
 public class UserController {
 	@Autowired
 	CanteenUserRepository canteenUserRepository;
-	
+
 	@Autowired
 	OrderService orderService;
 
 	@Autowired
 	BCryptPasswordEncoder bCryptPasswordEncoder;
-	
+
 	@Autowired
 	OrderRepository orderRepository;
-	
+
 	@Autowired
 	MenuRepository menuRepository;
-	// Display bookOrder Page 	
-	
+	// Display bookOrder Page
+
 	@Autowired
 	private EmailSenderService emailSenderService;
-	
+
 	@GetMapping("/user/bookOrderByType")
-	public String bookOrderByType(@ModelAttribute("type")String type, Model model , Principal principal) {
+	public String bookOrderByType(@ModelAttribute("type") String type, Model model, Principal principal) {
 		System.out.println(type);
-		String userName=principal.getName();
-		CanteenUsers current_user=canteenUserRepository.findByEmail(userName);
-		
+		String userName = principal.getName();
+		CanteenUsers current_user = canteenUserRepository.findByEmail(userName);
+
 		// Viewing Menu Backend Implemantation
-		
-		List<menuCanteen> foodItems=menuRepository.findAll();
-		List<menuCanteen> enabledFoodItems  = foodItems.stream().filter(item->item.isEnable() == true).collect(Collectors.toList());
+
+		List<menuCanteen> foodItems = menuRepository.findAll();
+		List<menuCanteen> enabledFoodItems = foodItems.stream().filter(item -> item.isEnable() == true)
+				.collect(Collectors.toList());
 		Date date = new Date();
 		@SuppressWarnings("deprecation")
 		int month = date.getMonth();
 		@SuppressWarnings("deprecation")
-		List<menuCanteen> finalFoodItemsByType = enabledFoodItems.stream().filter(item->item.getFoodServedDate().getMonth()==month).collect(Collectors.toList());
+		List<menuCanteen> finalFoodItemsByType = enabledFoodItems.stream()
+				.filter(item -> item.getFoodServedDate().getMonth() == month).collect(Collectors.toList());
 		List<menuCanteen> temp = finalFoodItemsByType;
-		
-		if(!type.equals("All")) {
-			finalFoodItemsByType = finalFoodItemsByType.stream().filter(item -> item.getType().equals(type)).collect(Collectors.toList());
+
+		if (!type.equals("All")) {
+			finalFoodItemsByType = finalFoodItemsByType.stream().filter(item -> item.getType().equals(type))
+					.collect(Collectors.toList());
 		}
-		
-		
-		//Upcoming Orders backend Implemantation
+
+		// Upcoming Orders backend Implemantation
 		int id = current_user.getId();
-		List<OrderEntity> orders= this.orderService.getAllOrders("Booked");
-		List<OrderEntity> userOrders = orders.stream().filter(order -> order.getCanteenUsers().getId() == id).collect(Collectors.toList());
-		
-		model.addAttribute("foodItems",finalFoodItemsByType);
-		model.addAttribute("user",current_user);
-		model.addAttribute("user_orders",userOrders);
+		List<OrderEntity> orders = this.orderService.getAllOrders("Booked");
+		List<OrderEntity> userOrders = orders.stream().filter(order -> order.getCanteenUsers().getId() == id)
+				.collect(Collectors.toList());
+
+		model.addAttribute("foodItems", finalFoodItemsByType);
+		model.addAttribute("user", current_user);
+		model.addAttribute("user_orders", userOrders);
 		return "users/bookorder";
-		
+
 	}
-	
-	
-	
-	
+
 	@GetMapping("/user/bookOrder")
-	public String bookOrder(Model model,Principal principal) {
-		String userName=principal.getName();
-		CanteenUsers current_user=canteenUserRepository.findByEmail(userName);
-		
+	public String bookOrder(Model model, Principal principal) {
+		String userName = principal.getName();
+		CanteenUsers current_user = canteenUserRepository.findByEmail(userName);
+
 		// Viewing Menu Backend Implemantation
-		
-		List<menuCanteen> foodItems=menuRepository.findAll();
-		List<menuCanteen> enabledFoodItems  = foodItems.stream().filter(item->item.isEnable() == true).collect(Collectors.toList());
+
+		List<menuCanteen> foodItems = menuRepository.findAll();
+		List<menuCanteen> enabledFoodItems = foodItems.stream().filter(item -> item.isEnable() == true)
+				.collect(Collectors.toList());
 		Date date = new Date();
 		@SuppressWarnings("deprecation")
 		int month = date.getMonth();
 		@SuppressWarnings("deprecation")
-		List<menuCanteen> finalFoodItems = enabledFoodItems.stream().filter(item->item.getFoodServedDate().getMonth()==month).collect(Collectors.toList());
-		
-		//Upcoming Orders backend Implemantation
+		List<menuCanteen> finalFoodItems = enabledFoodItems.stream()
+				.filter(item -> item.getFoodServedDate().getMonth() == month).collect(Collectors.toList());
+
+		// Upcoming Orders backend Implemantation
 		int id = current_user.getId();
-		List<OrderEntity> orders= this.orderService.getAllOrders("Booked");
-		List<OrderEntity> userOrders = orders.stream().filter(order -> order.getCanteenUsers().getId() == id).collect(Collectors.toList());
+		List<OrderEntity> orders = this.orderService.getAllOrders("Booked");
+		List<OrderEntity> userOrders = orders.stream().filter(order -> order.getCanteenUsers().getId() == id)
+				.collect(Collectors.toList());
 		System.out.println(current_user.getWallet());
-		model.addAttribute("foodItems",finalFoodItems);
-		model.addAttribute("user",current_user);
-		model.addAttribute("user_orders",userOrders);
+		model.addAttribute("foodItems", finalFoodItems);
+		model.addAttribute("user", current_user);
+		model.addAttribute("user_orders", userOrders);
 		return "users/bookorder";
 	}
-	
+
 	@GetMapping("user/cancelOrder/{Id}")
-	public RedirectView cancelOrder(@PathVariable("Id")int id,Principal principal,RedirectAttributes attributes)
-	{
-		String userName=principal.getName();
-		CanteenUsers current_user=canteenUserRepository.findByEmail(userName);
-		Optional<OrderEntity> optional=orderRepository.findById(id);
-		OrderEntity orderEntity=optional.get();
-		
+	public RedirectView cancelOrder(@PathVariable("Id") int id, Principal principal, RedirectAttributes attributes) {
+		String userName = principal.getName();
+		CanteenUsers current_user = canteenUserRepository.findByEmail(userName);
+		Optional<OrderEntity> optional = orderRepository.findById(id);
+		OrderEntity orderEntity = optional.get();
+
 		Double d = current_user.getWallet() + orderEntity.getTotalPrice();
 		DecimalFormat dfor = new DecimalFormat("0.00");
 		String s = dfor.format(d);
@@ -136,263 +138,281 @@ public class UserController {
 		current_user.setWallet(final_wallet);
 		canteenUserRepository.save(current_user);
 		orderRepository.deleteById(id);
-		
-		attributes.addAttribute("cancel",1);
-		
-		String message="Order Deleted Successfully.\nUsername:"+current_user.getEmail()+"\nOrder Date"+String.valueOf(orderEntity.getOrderDate())+"\nMoney Refunded back to Wallet.";
+
+		attributes.addAttribute("cancel", 1);
+
+		String message = "Order Deleted Successfully.\nUsername:" + current_user.getEmail() + "\nOrder Date"
+				+ String.valueOf(orderEntity.getOrderDate()) + "\nMoney Refunded back to Wallet.";
 		emailSenderService.sendEmail(current_user.getEmail(), "Message from Canteen Management", message);
 		return new RedirectView("/user/bookOrder");
 	}
-	
-	// Display view previous orders page and it will display all the orders of current user in the page by default
+
+	// Display view previous orders page and it will display all the orders of
+	// current user in the page by default
 	@GetMapping("/user/viewPreviousOrders")
-	public String viewPreviousOrders(Model model,Principal principal) {
-		String userName=principal.getName();
-		CanteenUsers current_user=canteenUserRepository.findByEmail(userName);
-		model.addAttribute("user",current_user);
+	public String viewPreviousOrders(Model model, Principal principal) {
+		String userName = principal.getName();
+		CanteenUsers current_user = canteenUserRepository.findByEmail(userName);
+		model.addAttribute("user", current_user);
 		int id = current_user.getId();
-		List<OrderEntity> orders= this.orderService.getAllOrders("Delivered");
-		List<OrderEntity> finalOrders = orders.stream().filter(order -> order.getCanteenUsers().getId() == id).collect(Collectors.toList());
-		
-		model.addAttribute("userOrders",finalOrders);
+		List<OrderEntity> orders = this.orderService.getAllOrders("Delivered");
+		List<OrderEntity> finalOrders = orders.stream().filter(order -> order.getCanteenUsers().getId() == id)
+				.collect(Collectors.toList());
+
+		model.addAttribute("userOrders", finalOrders);
 		return "users/viewpreviousorders";
 	}
-	
-	// It will handle view previous orders by date for current user and display viewpreviousorders page with filtered data 
-		@GetMapping("/user/findAllOrdersByUserByDate")
-		public String findAllOrdersByUserByData(@ModelAttribute("vieworderbydate")  String date, Principal principal , Model model) {
-			String userName = principal.getName();
-			CanteenUsers current_user = canteenUserRepository.findByEmail(userName);
-			model.addAttribute("user", current_user);
-			int id = current_user.getId();
-			String userId = Integer.toString(id);
-			if(date==null || date.length()==0)
-			{
-				List<OrderEntity> orders= this.orderService.getAllOrders("Delivered");
-				List<OrderEntity> finalOrders = orders.stream().filter(order -> order.getCanteenUsers().getId() == id).collect(Collectors.toList());
-				model.addAttribute("userOrders", finalOrders);
-				return "users/viewpreviousorders";
-			}
-			LocalDate date1 = LocalDate.parse(date , DateTimeFormatter.ISO_DATE); 
-			
-			List<OrderEntity> orders = this.orderService.getAllOrdersByDateAndUserId(date1, userId, "Delivered");
-			model.addAttribute("userOrders", orders);
-			
+
+	// It will handle view previous orders by date for current user and display
+	// viewpreviousorders page with filtered data
+	@GetMapping("/user/findAllOrdersByUserByDate")
+	public String findAllOrdersByUserByData(@ModelAttribute("vieworderbydate") String date, Principal principal,
+			Model model) {
+		String userName = principal.getName();
+		CanteenUsers current_user = canteenUserRepository.findByEmail(userName);
+		model.addAttribute("user", current_user);
+		int id = current_user.getId();
+		String userId = Integer.toString(id);
+		if (date == null || date.length() == 0) {
+			List<OrderEntity> orders = this.orderService.getAllOrders("Delivered");
+			List<OrderEntity> finalOrders = orders.stream().filter(order -> order.getCanteenUsers().getId() == id)
+					.collect(Collectors.toList());
+			model.addAttribute("userOrders", finalOrders);
 			return "users/viewpreviousorders";
 		}
-	
-	
+		LocalDate date1 = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+
+		List<OrderEntity> orders = this.orderService.getAllOrdersByDateAndUserId(date1, userId, "Delivered");
+		model.addAttribute("userOrders", orders);
+
+		return "users/viewpreviousorders";
+	}
+
 	// display add money to wallet page with current wallet balance of current user
 	@GetMapping("/user/addMoneyToWallet")
-	public String addMoneyToWallet(Model model,Principal principal) {
-		String userName=principal.getName();
-		CanteenUsers current_user=canteenUserRepository.findByEmail(userName);
-		model.addAttribute("user",current_user);
+	public String addMoneyToWallet(Model model, Principal principal) {
+		String userName = principal.getName();
+		CanteenUsers current_user = canteenUserRepository.findByEmail(userName);
+		model.addAttribute("user", current_user);
 		return "users/addmoneytowallet";
 	}
-	
-	// It will update current user wallet balance by taking input and again redirect to addmoneytowalletpage
-		@GetMapping("/user/addBalance")
-		public RedirectView addBalance(Model model,Principal principal,@ModelAttribute("amount") String amount,RedirectAttributes attributes,@RequestParam("validUpto")String validUpto,@RequestParam("cardNumber")String card,@RequestParam("cvv") String cvv) {
-			String userName=principal.getName();
-			// Card number
-			int count=(int) card.chars().filter(Character::isDigit).count();
-            if(count!=16)
-                return new RedirectView("/user/addMoneyToWallet");
-            // Cvv
-            int qan=(int)cvv.chars().filter(Character::isDigit).count();
-            if(qan!=3)
-                return new RedirectView("/user/addMoneyToWallet");
-            
-            
-			Double d = Double.valueOf(amount);
-			DecimalFormat defor = new DecimalFormat("0.00");
-			String val = defor.format(d);
-			Double finalVal = Double.valueOf(val);
-			CanteenUsers current_user=canteenUserRepository.findByEmail(userName);
-			
-			
-			if(d<0 || d>5000) {
-                return new RedirectView("/user/addMoneyToWallet");
-            }
-            else{
-                Double oldBalance=current_user.getWallet();
-            System.out.println(oldBalance);
-            current_user.setWallet(oldBalance+finalVal);
-            }
-			
-			LocalDate currentDate = LocalDate.now();
-            String localdate=currentDate.toString();
-            
-            int monthtrimlocal=Integer.parseInt(localdate.substring(5, 7));
-            int yeartrimlocal=Integer.parseInt(localdate.substring(2,4));
-            
-            
-            int monthinput=Integer.parseInt(validUpto.substring(0,2));
-            int yearinput=Integer.parseInt(validUpto.substring(3));
 
+	// It will update current user wallet balance by taking input and again redirect
+	// to addmoneytowalletpage
+	@GetMapping("/user/addBalance")
+	public RedirectView addBalance(Model model, Principal principal, @ModelAttribute("amount") String amount,
+			RedirectAttributes attributes, @RequestParam("validUpto") String validUpto,
+			@RequestParam("cardNumber") String card, @RequestParam("cvv") String cvv) {
+		String userName = principal.getName();
+		// Card number
+		int count = (int) card.chars().filter(Character::isDigit).count();
+		if (count != 16)
+			return new RedirectView("/user/addMoneyToWallet");
+		// Cvv
+		int qan = (int) cvv.chars().filter(Character::isDigit).count();
+		if (qan != 3)
+			return new RedirectView("/user/addMoneyToWallet");
+
+		Double d = Double.valueOf(amount);
+		DecimalFormat defor = new DecimalFormat("0.00");
+		String val = defor.format(d);
+		Double finalVal = Double.valueOf(val);
+		CanteenUsers current_user = canteenUserRepository.findByEmail(userName);
+
+		if (d < 0 || d > 5000) {
+			return new RedirectView("/user/addMoneyToWallet");
+		} else {
+			Double oldBalance = current_user.getWallet();
+			System.out.println(oldBalance);
+			current_user.setWallet(oldBalance + finalVal);
+		}
+
+		LocalDate currentDate = LocalDate.now();
+		String localdate = currentDate.toString();
+
+		int monthtrimlocal = Integer.parseInt(localdate.substring(5, 7));
+		int yeartrimlocal = Integer.parseInt(localdate.substring(2, 4));
+
+		int monthinput = Integer.parseInt(validUpto.substring(0, 2));
+		int yearinput = Integer.parseInt(validUpto.substring(3));
+
+		if (yearinput < 1 || monthinput < 1 || monthinput > 12 || yearinput < yeartrimlocal) {
+			return new RedirectView("/user/addMoneyToWallet");
+		}
+
+		if (yearinput > yeartrimlocal) {
 			canteenUserRepository.save(current_user);
-			model.addAttribute("user",current_user);
-			attributes.addAttribute("success",1);
-			String message="Money added to Wallet.\nUsername:"+current_user.getEmail()+"\nPresent Wallet Balance: Rs"+current_user.getWallet();
+			model.addAttribute("user", current_user);
+			attributes.addAttribute("success", 1);
+			String message = "Money added to Wallet.\nUsername:" + current_user.getEmail()
+					+ "\nPresent Wallet Balance: Rs" + current_user.getWallet();
 			emailSenderService.sendEmail(current_user.getEmail(), "Message from Canteen Management", message);
 			return new RedirectView("/user/addMoneyToWallet");
-			
-            
+		} else if (yearinput == yeartrimlocal && monthinput >= monthtrimlocal) {
+			canteenUserRepository.save(current_user);
+			model.addAttribute("user", current_user);
+			attributes.addAttribute("success", 1);
+			String message = "Money added to Wallet.\nUsername:" + current_user.getEmail()
+					+ "\nPresent Wallet Balance: Rs" + current_user.getWallet();
+			emailSenderService.sendEmail(current_user.getEmail(), "Message from Canteen Management", message);
+			return new RedirectView("/user/addMoneyToWallet");
 		}
-	
-	
+
+		else
+			return new RedirectView("/user/addMoneyToWallet");
+
+	}
+
 	// display update profile page
 	@GetMapping("/user/updateProfile")
-	public String updateProfile(Model model,Principal principal) {
-		String userName=principal.getName();
-		CanteenUsers current_user=canteenUserRepository.findByEmail(userName);
+	public String updateProfile(Model model, Principal principal) {
+		String userName = principal.getName();
+		CanteenUsers current_user = canteenUserRepository.findByEmail(userName);
 		System.out.println(current_user.getEmail());
-		model.addAttribute("user",current_user);
-		model.addAttribute("update_user",new CanteenUsers());
+		model.addAttribute("user", current_user);
+		model.addAttribute("update_user", new CanteenUsers());
 		return "users/updateprofile";
 	}
-	// Save Changes Button Handler - it will update the user data and again return the same page
+
+	// Save Changes Button Handler - it will update the user data and again return
+	// the same page
 	@PostMapping("/user/updateUserProfile")
-	public RedirectView updateUserProfile(Model model,Principal principal,@ModelAttribute("oldpassword")String oldPassword,@ModelAttribute("newpassword")String newPasword,@ModelAttribute("update_user")CanteenUsers users,RedirectAttributes attributes) {
-		String userName=principal.getName();
-		CanteenUsers current_user=canteenUserRepository.findByEmail(userName);
+	public RedirectView updateUserProfile(Model model, Principal principal,
+			@ModelAttribute("oldpassword") String oldPassword, @ModelAttribute("newpassword") String newPasword,
+			@ModelAttribute("update_user") CanteenUsers users, RedirectAttributes attributes) {
+		String userName = principal.getName();
+		CanteenUsers current_user = canteenUserRepository.findByEmail(userName);
 		current_user.setName(users.getName());
 		current_user.setPhone(users.getPhone());
-		if(oldPassword.length()>0 && newPasword.length()>0)
-		{
-			if(bCryptPasswordEncoder.matches(oldPassword, current_user.getPassword()))
-			{
+		if (oldPassword.length() > 0 && newPasword.length() > 0) {
+			if (bCryptPasswordEncoder.matches(oldPassword, current_user.getPassword())) {
 				current_user.setPassword(bCryptPasswordEncoder.encode(newPasword));
-				attributes.addAttribute("success","1");
+				attributes.addAttribute("success", "1");
 				return new RedirectView("/user/updateProfile");
-			}
-			else
-			{
-				attributes.addAttribute("error","1");
+			} else {
+				attributes.addAttribute("error", "1");
 				return new RedirectView("/user/updateProfile");
 			}
 		}
 		canteenUserRepository.save(current_user);
 		return new RedirectView("/user/updateProfile");
 	}
+
 	@GetMapping("/user/submitfeedback/{ID}")
-	public String submitFeedback(Model model,@PathVariable("ID") Integer Id ) {
-		 Optional <OrderEntity> optional=orderRepository.findById(Id);
-		 OrderEntity orderEntity=optional.get();
-		 model.addAttribute("order",orderEntity);
-		 return "/users/submitfeedback";
+	public String submitFeedback(Model model, @PathVariable("ID") Integer Id) {
+		Optional<OrderEntity> optional = orderRepository.findById(Id);
+		OrderEntity orderEntity = optional.get();
+		model.addAttribute("order", orderEntity);
+		return "/users/submitfeedback";
 	}
+
 	@GetMapping("/user/savefeedback/{ID}")
-	public RedirectView saveFeedback(@PathVariable("ID") Integer Id ,@ModelAttribute("feedbackdata") String feedback)
-	{
-		Optional <OrderEntity> optional=orderRepository.findById(Id);
-		OrderEntity orderEntity=optional.get();
+	public RedirectView saveFeedback(@PathVariable("ID") Integer Id, @ModelAttribute("feedbackdata") String feedback) {
+		Optional<OrderEntity> optional = orderRepository.findById(Id);
+		OrderEntity orderEntity = optional.get();
 		System.out.println(Id);
 		orderEntity.setFeedback(feedback);
 		orderRepository.save(orderEntity);
-		return  new RedirectView("/user/viewPreviousOrders");
+		return new RedirectView("/user/viewPreviousOrders");
 	}
-	TreeMap<LocalDate,Integer> treeMap=new TreeMap<>();
-	double  ordersTotal = 0;
+
+	TreeMap<LocalDate, Integer> treeMap = new TreeMap<>();
+	double ordersTotal = 0;
+
 	@GetMapping("/user/selectDates/{foodId}/{foodServedDate}")
-	public String selectDates( Principal principal ,Model model, @PathVariable("foodId")String foodId, @PathVariable("foodServedDate")String foodServedDate)
-	{
+	public String selectDates(Principal principal, Model model, @PathVariable("foodId") String foodId,
+			@PathVariable("foodServedDate") String foodServedDate) {
 		treeMap.clear();
 		ordersTotal = 0;
 		int id = Integer.parseInt(foodId);
 		menuCanteen food = menuRepository.findById(id);
-		model.addAttribute("treeMap",treeMap);
+		model.addAttribute("treeMap", treeMap);
 		model.addAttribute("food", food);
-		//Todays Date
+		// Todays Date
 		LocalDate today = LocalDate.now();
 		int day = today.getDayOfMonth();
-		//Food Served date in localdate formate for cmparision
-		LocalDate servedDate = LocalDate.parse(foodServedDate , DateTimeFormatter.ISO_DATE);
+		// Food Served date in localdate formate for cmparision
+		LocalDate servedDate = LocalDate.parse(foodServedDate, DateTimeFormatter.ISO_DATE);
 		int servedDay = servedDate.getDayOfMonth();
-		
+
 		String email = principal.getName();
 		CanteenUsers canteenUser = canteenUserRepository.findByEmail(email);
 		model.addAttribute("user", canteenUser);
 		model.addAttribute("ordersTotal", ordersTotal);
-		
+
 		return "/users/selectdates";
 	}
-		
-	
+
 	@GetMapping("user/addDateOfOrder")
-	public String addDateOfOrder( Principal principal ,Model model,@ModelAttribute("dateinput")String date,@ModelAttribute("quantityinput")Integer quantity, @ModelAttribute("foodId") String foodId, @ModelAttribute("foodServedDate")String foodServedDate,RedirectAttributes attributes) throws ParseException
-	{
+	public String addDateOfOrder(Principal principal, Model model, @ModelAttribute("dateinput") String date,
+			@ModelAttribute("quantityinput") Integer quantity, @ModelAttribute("foodId") String foodId,
+			@ModelAttribute("foodServedDate") String foodServedDate, RedirectAttributes attributes)
+			throws ParseException {
 		System.out.println(date);
 //		System.out.println(quantity);
-		LocalDate requestedDate = LocalDate.parse(date , DateTimeFormatter.ISO_DATE); 
+		LocalDate requestedDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
 		LocalDate foodservedDate = LocalDate.parse(foodServedDate, DateTimeFormatter.ISO_DATE);
-		
+
 		// Check if user is ordering for previous days or next month
 		LocalDate today = LocalDate.now();
 		Month currentMonth = today.getMonth();
 		int currentDay = today.getDayOfMonth();
-		
+
 		Month requestedMonth = requestedDate.getMonth();
 		int requestedDay = requestedDate.getDayOfMonth();
-		
+
 		int servedDay = foodservedDate.getDayOfMonth();
-		
+
 		DayOfWeek requestedDayOfWeek = requestedDate.getDayOfWeek();
 		String day = requestedDayOfWeek.toString();
-		
-		
-		
+
 		System.out.println(requestedDay);
 		System.out.println(servedDay);
-		
+
 		int id = Integer.parseInt(foodId);
 		menuCanteen food = menuRepository.findById(id);
-		
-		
+
 		// Check if it is not 3:00 pm already
-		
-		LocalTime time1 , time2;
-		 LocalTime localTime = LocalTime.now();
-		 
-		 time1 = LocalTime.of(localTime.getHour(), localTime.getMinute(), localTime.getMinute());
-		 time2 = LocalTime.of(15,00,00);
-		
-		if(requestedMonth == currentMonth && requestedDay >= currentDay &&  requestedDay >= servedDay  && (!day.equals("SATURDAY"))  && (!day.equals("SUNDAY"))) {
-			 if(requestedDay == currentDay && time1.compareTo(time2) > 0 ) {
-				 	
-			 }
-			 else {
 
+		LocalTime time1, time2;
+		LocalTime localTime = LocalTime.now();
 
-                 if(treeMap.containsKey(requestedDate))
-				 {
-					 
-				 }
-				 else {
+		time1 = LocalTime.of(localTime.getHour(), localTime.getMinute(), localTime.getMinute());
+		time2 = LocalTime.of(15, 00, 00);
+
+		if (requestedMonth == currentMonth && requestedDay >= currentDay && requestedDay >= servedDay
+				&& (!day.equals("SATURDAY")) && (!day.equals("SUNDAY"))) {
+			if (requestedDay == currentDay && time1.compareTo(time2) > 0) {
+
+			} else {
+
+				if (treeMap.containsKey(requestedDate)) {
+
+				} else {
 					treeMap.put(requestedDate, quantity);
-					ordersTotal += (quantity*(food.getPrice()));
+					ordersTotal += (quantity * (food.getPrice()));
 				}
-			 }
-			
+			}
+
 		}
 
 		model.addAttribute("food", food);
-		model.addAttribute("treeMap",treeMap);
-		model.addAttribute("ordersTotal",ordersTotal);
-		
+		model.addAttribute("treeMap", treeMap);
+		model.addAttribute("ordersTotal", ordersTotal);
+
 		String email = principal.getName();
 		CanteenUsers canteenUser = canteenUserRepository.findByEmail(email);
-		
-		model.addAttribute("user",canteenUser);
-		
-		return "/users/selectdates"; 
+
+		model.addAttribute("user", canteenUser);
+
+		return "/users/selectdates";
 //		return new RedirectView("/user/selectDates/"+foodId+"/"+foodServedDate);
 	}
+
 	@GetMapping("/user/deleteDates/{Date}/{foodId}")
-	public String deleteDates(Principal principal ,Model model,@PathVariable("Date")String Date,@PathVariable("foodId") String foodId )
-	{
-		LocalDate date1 = LocalDate.parse(Date , DateTimeFormatter.ISO_DATE);
+	public String deleteDates(Principal principal, Model model, @PathVariable("Date") String Date,
+			@PathVariable("foodId") String foodId) {
+		LocalDate date1 = LocalDate.parse(Date, DateTimeFormatter.ISO_DATE);
 
 		int id = Integer.parseInt(foodId);
 		menuCanteen food = menuRepository.findById(id);
@@ -401,15 +421,16 @@ public class UserController {
 		CanteenUsers canteenUser = canteenUserRepository.findByEmail(email);
 		int val = treeMap.get(date1);
 		ordersTotal -= (val * food.getPrice());
-		model.addAttribute("ordersTotal",ordersTotal);
-		model.addAttribute("user",canteenUser);
-		
+		model.addAttribute("ordersTotal", ordersTotal);
+		model.addAttribute("user", canteenUser);
+
 		treeMap.remove(date1);
-		model.addAttribute("treeMap",treeMap);
+		model.addAttribute("treeMap", treeMap);
 		return "/users/selectdates";
 	}
+
 	@GetMapping("/user/addDate/{foodId}")
-	public String addDate(Principal principal,Model model, @PathVariable("foodId")String foodId) {
+	public String addDate(Principal principal, Model model, @PathVariable("foodId") String foodId) {
 		model.addAttribute("treeMap", treeMap);
 		int id = Integer.parseInt(foodId);
 		menuCanteen food = menuRepository.findById(id);
@@ -417,92 +438,87 @@ public class UserController {
 		String email = principal.getName();
 		CanteenUsers canteenUser = canteenUserRepository.findByEmail(email);
 		model.addAttribute("ordersTotal", ordersTotal);
-		model.addAttribute("user",canteenUser);
-		
-		
-		
+		model.addAttribute("user", canteenUser);
+
 		return "/users/selectdates";
 	}
-	
+
 	@GetMapping("/user/updateQuantityOfOrder")
-	public RedirectView updateQuantityOfOrder(Model model,@ModelAttribute("selecteddate")String date , @ModelAttribute("selectedquantity")String quantity, @ModelAttribute("foodId") String foodId, @ModelAttribute("price") String price) {
-		LocalDate date1 = LocalDate.parse(date , DateTimeFormatter.ISO_DATE);
+	public RedirectView updateQuantityOfOrder(Model model, @ModelAttribute("selecteddate") String date,
+			@ModelAttribute("selectedquantity") String quantity, @ModelAttribute("foodId") String foodId,
+			@ModelAttribute("price") String price) {
+		LocalDate date1 = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
 		int quant = Integer.parseInt(quantity);
 		int prevQuantity = treeMap.get(date1);
 //		int foodPrice = Integer.parseInt(price);
 		int id = Integer.parseInt(foodId);
-		
+
 		menuCanteen food = menuRepository.findById(id);
-		
-		if(quant < prevQuantity) {
+
+		if (quant < prevQuantity) {
 			ordersTotal -= ((prevQuantity - quant) * food.getPrice());
+		} else {
+			ordersTotal += ((quant - prevQuantity) * food.getPrice());
 		}
-		else {
-			ordersTotal+=((quant-prevQuantity) * food.getPrice());
-		}
-		treeMap.put(date1 , quant);
-		return new RedirectView("/user/addDate/"+foodId);
+		treeMap.put(date1, quant);
+		return new RedirectView("/user/addDate/" + foodId);
 	}
-	
+
 	@GetMapping("/user/confirmOrder/{foodId}")
-	public RedirectView confirmOrder(Principal principal, @PathVariable("foodId")String foodId,RedirectAttributes attributes) {
+	public RedirectView confirmOrder(Principal principal, @PathVariable("foodId") String foodId,
+			RedirectAttributes attributes) {
 		int id = Integer.parseInt(foodId);
 		menuCanteen food = menuRepository.findById(id);
 		String email = principal.getName();
 		CanteenUsers canteenUser = canteenUserRepository.findByEmail(email);
-		
-		
-		
-		
-		  // getting keySet() into Set
-        Set<LocalDate> set1 = treeMap.keySet();
- 
-        // Book only if orders Total is less than user wallet balance
-       
-        
-        Double walletTotal = canteenUser.getWallet();
-        
-        if(ordersTotal <= walletTotal) {
-        	// Reduce the wallet balance of the user first then update the user walllet in db
-        	// Then book orders
-        	
-        	Double d = walletTotal-ordersTotal;
-        	DecimalFormat dfor = new DecimalFormat("0.00");
-        	String s = dfor.format(d);
-        	Double finalWallet = Double.valueOf(s);
-        	
-        	canteenUser.setWallet(finalWallet);
-        	canteenUserRepository.save(canteenUser);
-        	String allDates="Dates Are:\n";
-        	
-        	// for-each loop to book order for all dates
-            for(LocalDate key : set1) {
-            	OrderEntity order = new OrderEntity();
-        		order.setCanteenUsers(canteenUser);
-        		order.setFood(food);
-        		
-            	order.setOrderDate( java.sql.Date.valueOf(key));
-            	order.setQuantity(treeMap.get(key));
-            	order.setStatus("Booked");
-            	order.setTotalPrice(treeMap.get(key) * food.getPrice());
-            	allDates+= String.valueOf(order.getOrderDate())+" - "+String.valueOf(order.getQuantity())+"P";
-            	allDates+="\n";
-            	orderRepository.save(order);
-            }
-        	String message="Order Booked.\nUsername:"+canteenUser.getEmail()+"\nfood name: "+food.getName()+"\nWallet Balance: "+finalWallet+"\n"+allDates;
-    		emailSenderService.sendEmail(canteenUser.getEmail(), "Message from Canteen Management", message);
-        }
-        
-       
-        	 else {
-             	attributes.addAttribute("lowBal",1);
-             	return new RedirectView("/user/addDate/"+foodId);
-             }
-     
-        
-        attributes.addAttribute("bookingComplete",1);
+
+		// getting keySet() into Set
+		Set<LocalDate> set1 = treeMap.keySet();
+
+		// Book only if orders Total is less than user wallet balance
+
+		Double walletTotal = canteenUser.getWallet();
+
+		if (ordersTotal <= walletTotal) {
+			// Reduce the wallet balance of the user first then update the user walllet in
+			// db
+			// Then book orders
+
+			Double d = walletTotal - ordersTotal;
+			DecimalFormat dfor = new DecimalFormat("0.00");
+			String s = dfor.format(d);
+			Double finalWallet = Double.valueOf(s);
+
+			canteenUser.setWallet(finalWallet);
+			canteenUserRepository.save(canteenUser);
+			String allDates = "Dates Are:\n";
+
+			// for-each loop to book order for all dates
+			for (LocalDate key : set1) {
+				OrderEntity order = new OrderEntity();
+				order.setCanteenUsers(canteenUser);
+				order.setFood(food);
+
+				order.setOrderDate(java.sql.Date.valueOf(key));
+				order.setQuantity(treeMap.get(key));
+				order.setStatus("Booked");
+				order.setTotalPrice(treeMap.get(key) * food.getPrice());
+				allDates += String.valueOf(order.getOrderDate()) + " - " + String.valueOf(order.getQuantity()) + "P";
+				allDates += "\n";
+				orderRepository.save(order);
+			}
+			String message = "Order Booked.\nUsername:" + canteenUser.getEmail() + "\nfood name: " + food.getName()
+					+ "\nWallet Balance: " + finalWallet + "\n" + allDates;
+			emailSenderService.sendEmail(canteenUser.getEmail(), "Message from Canteen Management", message);
+		}
+
+		else {
+			attributes.addAttribute("lowBal", 1);
+			return new RedirectView("/user/addDate/" + foodId);
+		}
+
+		attributes.addAttribute("bookingComplete", 1);
 		return new RedirectView("/user/bookOrder");
 	}
-	
-	
+
 }
