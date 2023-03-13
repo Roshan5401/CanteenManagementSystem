@@ -48,7 +48,7 @@ import com.canteen.repository.CanteenUserRepository;
 import com.canteen.repository.MenuRepository;
 import com.canteen.repository.OrderRepository;
 import com.canteen.service.CanteenService;
-
+import com.canteen.service.EmailSenderService;
 import com.canteen.entities.OrderEntity;
 import com.canteen.repository.CanteenUserRepository;
 import com.canteen.service.OrderService;
@@ -168,6 +168,8 @@ public class AdminController {
 		m.addAttribute("id", "null");
 		return "admin/viewupcomingordersadmin";
 	}
+	
+
 	
 	//change is made
 	//alert required
@@ -475,11 +477,11 @@ public class AdminController {
 
 		// The whole Order List
 		List<OrderEntity> totalOrders = (List<OrderEntity>) this.orderRepository.findAll();
-
+		List<OrderEntity> ordersDelivered = totalOrders.stream().filter(order->order.getStatus().equals("Delivered")).collect(Collectors.toList());
 		// Total Orders / Veg Orders / Non-Veg Orders Count
-		List<OrderEntity> vegFood = totalOrders.stream().filter(order -> order.getFood().getType().equals("Veg"))
+		List<OrderEntity> vegFood = ordersDelivered.stream().filter(order -> order.getFood().getType().equals("Veg"))
 				.collect(Collectors.toList());
-		List<OrderEntity> nonVegFood = totalOrders.stream().filter(order -> order.getFood().getType().equals("Nonveg"))
+		List<OrderEntity> nonVegFood = ordersDelivered.stream().filter(order -> order.getFood().getType().equals("Nonveg"))
 				.collect(Collectors.toList());
 		int totalOrdersCount = totalOrders.size();
 		int noOfVegOrders = vegFood.size();
@@ -522,7 +524,7 @@ public class AdminController {
 
 		TreeMap<Integer, Integer> map = new TreeMap<Integer, Integer>();
 		//Orders that are already delivered
-		List<OrderEntity> ordersDelivered = totalOrders.stream().filter(order->order.getStatus().equals("Delivered")).collect(Collectors.toList());
+		
 		
 		for (int i = 0; i < ordersDelivered.size(); i++) {
 			OrderEntity order = ordersDelivered.get(i);
