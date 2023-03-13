@@ -166,6 +166,13 @@ public class UserController {
 			model.addAttribute("user", current_user);
 			int id = current_user.getId();
 			String userId = Integer.toString(id);
+			if(date==null || date.length()==0)
+			{
+				List<OrderEntity> orders= this.orderService.getAllOrders("Delivered");
+				List<OrderEntity> finalOrders = orders.stream().filter(order -> order.getCanteenUsers().getId() == id).collect(Collectors.toList());
+				model.addAttribute("userOrders", finalOrders);
+				return "users/viewpreviousorders";
+			}
 			LocalDate date1 = LocalDate.parse(date , DateTimeFormatter.ISO_DATE); 
 			
 			List<OrderEntity> orders = this.orderService.getAllOrdersByDateAndUserId(date1, userId, "Delivered");
@@ -356,6 +363,8 @@ public class UserController {
 				 	
 			 }
 			 else {
+
+
                  if(treeMap.containsKey(requestedDate))
 				 {
 					 
@@ -364,7 +373,6 @@ public class UserController {
 					treeMap.put(requestedDate, quantity);
 					ordersTotal += (quantity*(food.getPrice()));
 				}
-
 			 }
 			
 		}
