@@ -1,0 +1,178 @@
+@charset "UTF-8";
+*{
+	margin:0;
+	padding : 0;
+	box-sizing: border-box;
+	font-family: 'Poppins', sans-serif;
+}
+.userboard{
+	display: flex;
+	flex-direction : row;
+	height: 100vh;
+	width: 100%;
+}
+
+.header{
+	display:flex;
+	justify-content: space-between;
+}
+
+.header>h2{
+	color:#f76c28;
+	font-weight: bold;
+}
+
+
+
+.menubar {
+	flex: 20;
+	height: 100vh;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	background-color: #272c48;
+}
+
+.menubar>a {
+	padding: 20px;
+	color: white;
+	text-decoration: none;
+	font-size: 1.2rem;
+	font-weight: bold;
+	margin-bottom: 20px;
+}
+
+.menubar>h3 {
+	padding: 25px;
+	color: white;
+	background-color: #272c48;
+	font-size: 1.3rem;
+	font-weight: bold;
+}
+
+.active{
+	background-color : white;
+	color:black !important;
+
+}
+
+.maincontent{
+	flex : 80;
+	height: 100vh;
+	width: 100%;
+	padding-top: 20px;
+	padding-right:20px;
+	padding-left:20px;
+	padding-bottom:0;
+	overflow-y:scroll; 
+}
+
+.maincontent > h2{
+	height:10vh;
+	width: 100%;
+}
+
+.walletpage{
+	display:flex;
+	flex-direction: row;
+	justify-content: space-between;
+	background-color:#ffeee7;
+	padding: 30px;
+	margin-top:20px;
+	border-radius:15px;
+}
+
+.currentbalance{
+	background-color:#272c48;
+	padding:15px;
+	border-radius:15px;
+	color:white;
+}
+
+.currentbalance > h2{
+	font-size: 2rem;
+	color:#f76c28;
+}
+
+
+ .walletbalance{
+color:#34704a;
+	
+}
+
+.carddataform{
+	display:flex;
+	flex-direction : column;
+	
+}
+
+.carddetails > h2{
+
+margin-bottom: 10px;
+color: #272c48;
+font-weight: bold;
+}
+
+input{
+	margin-bottom: 20px;
+	margin-top: 20px;
+	background: white;
+	
+	border-radius: 15px;
+	border:none;
+	padding: 15px;
+	width:400px;
+}
+
+a{
+	text-decoration: none;
+	
+}
+
+.button {
+	width: 150px;
+	padding: 20px;
+	background: #f76c28;
+	border-radius: 15px;
+	border: none;
+	color: white;
+	margin-bottom: 20px;
+	margin-top: 20px;
+	margin-left : 15px;
+	font-weight: bold;
+}
+
+.logoutbutton{
+	position : absolute;
+	bottom: 0;
+	left :80px;
+	background-color: #fbded2;
+	padding : 15px;
+	color : black;
+	border : none;
+	border-radius: 5px;
+	margin : 25px;
+	z-index: 100;
+	font-weight: bold;
+}
+
+
+.moneybag{
+	width: 22rem;
+	margin-top: 130px;
+	margin-right: 100px;
+}
+
+
+img.moneybag {
+   animation: mover 1s infinite  alternate;
+}
+
+@keyframes mover {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-40px); }
+}
+
+
+
+

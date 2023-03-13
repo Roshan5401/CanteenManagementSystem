@@ -1,0 +1,128 @@
+*{
+	margin: 0;
+	padding :0;
+	box-sizing: border-box;
+	font-family: 'Poppins', sans-serif;
+}
+
+ .content{
+	height:100vh;
+	width:100%;
+	display:flex;
+	justify-content: center;
+	align-items: center;
+		position: relative;
+} 
+
+.hero{
+
+	height : 70vh;
+	width: 70%;
+	margin:auto;
+	display:flex;
+	flex-direction:row;
+	background: #ffeee7;
+	align-items: center;
+	align-self: center;
+	padding: 20px;
+}
+
+.left{
+	margin-left: 50px;
+	margin-bottom: 30px;
+}
+
+.right{
+	flex: 50;
+	padding: 40px;
+	margin-right:50px;
+	align-items : center ;
+}
+
+textarea{
+	border:none;
+	border-radius :20px;
+	color:#f76c28;
+	font-weight: bold;
+}
+
+h4{
+	margin-bottom : 10px;
+}
+
+a{
+	color:white;
+	text-decoration:none;
+}
+
+h1{
+	font-size:50px;
+}
+
+.title{
+	font-size: 4em;
+	color:#f76c28;
+}
+.welcome{
+	font-size: 1.5em;
+}
+
+.newuserlink{
+	color: #34704a;
+}
+
+.newuser{
+	margin-left:30px;
+}
+
+.slider{
+	position:absolute;
+	top:0;
+	right:0;
+	width:100%;
+	height:100vh;
+	background: #272c48;  /* fallback for old browsers */
+/* background: -webkit-linear-gradient(to right, #6dd5ed, #2193b0);  Chrome 10-25, Safari 5.1-6
+background: linear-gradient(to right, #6dd5ed, #2193b0); W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+	
+	opacity:1;
+	z-index:-1;
+}
+
+#feedbackdata{
+	width: 600px;
+	min-height: 350px;
+	padding : 20px;
+}
+
+
+.button {
+	width:auto;
+	padding: 20px;
+	background: #f76c28;
+	border-radius: 15px;
+	border: none;
+	color: white;
+	margin-bottom: 20px;
+	margin-top: 20px;
+	margin-left : 15px;
+	font-weight: bold;
+}
+
+span{
+	color:#f76c28;
+	font-size: 1rem;
+}
+
+.feedbackform{
+	margin-bottom : 180px;
+	color: #272c48;
+}
+
+
+.forminput{
+		margin-left  : 100px;
+}
+
+
+

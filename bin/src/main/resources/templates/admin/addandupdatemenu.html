@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="preconnect" th:href="@{https://fonts.googleapis.com}">
+<link rel="preconnect" th:href="@{https://fonts.gstatic.com}"
+	crossorigin>
+<link
+	th:href="@{https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap}"
+	rel="stylesheet">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+	crossorigin="anonymous">
+
+<link rel="stylesheet" th:href="@{/css/addandupdatemenu.css}" />
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+</head>
+<body>
+	<a th:href="@{/logout}" class="logoutbutton">Log out</a>
+	<div class="userboard">
+		<div class="menubar">
+			<h3 class="hellouser">Hello, Admin</h3>
+			<a th:href="@{/admin/updateUserProfile}">Update user profile</a> <a
+				th:href="@{/admin/addAndUpdateMenu}" class="active">Add and
+				Update menu</a> <a th:href="@{/admin/viewPreviousOrders}">View
+				Previous orders</a> <a th:href="@{/admin/viewUpcomingOrders}">View
+				Upcoming orders</a> <a th:href="@{/admin/viewFeedbacks}">View
+				Feedbacks</a>
+		</div>
+		<div class="maincontent">
+
+			<div class="menuInputForm">
+				<form th:action="@{/admin/addfood}" class="actualForm"
+					th:object="${new_food}" method="post">
+					<h1>Add a new Item</h1>
+					<input type="text" placeholder="Enter the item name"
+						class="inputField" name="name" /> <input type="text"
+						placeholder="Enter the price" class="inputField" name="price" />
+
+					<input type="date" placeholder="Enter the date" class="inputField"
+						name="foodServedDate" />
+
+					<div class="radioBtns inputField">
+						<input type="radio" id="red" name="type" value="Nonveg"> <label
+							for="red">Non-Veg</label> <input type="radio" id="green"
+							name="type" value="Veg"> <label for="green">Veg</label>
+					</div>
+					<div class="submitButton">
+						<input type="submit" value="Add Item" class="button" />
+					</div>
+				</form>
+
+			</div>
+
+
+
+			<h2 class="currentmenu">Current Menu</h2>
+			<table class="styled-table">
+				<thead>
+					<tr>
+						<th>Food Id</th>
+						<th>Available From</th>
+						<th>Item Name</th>
+						<th>Type</th>
+						<th>Price</th>
+						<th>Action</th>
+
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="item :  ${menuItems}">
+						<td th:text="${item.ID}"></td>
+						<td th:text="${item.foodServedDate}"></td>
+						<td th:text="${item.name}"></td>
+						<td th:text="${item.type}"></td>
+						<td th:text="Rs +${item.Price}"></td>
+						<td><a th:href="@{'/admin/deletefood/'+${item.ID}}"
+							class="deletefooditem">Delete Food item</a></td>
+					</tr>
+
+
+				</tbody>
+			</table>
+
+		</div>
+	</div>
+	<div class="toast" id="toast"
+		style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%)">
+		<div class="toast-header">
+			<strong class="mr-auto">Signed In Successfully</strong>
+		</div>
+		<div class="toast-body">Welcome!!</div>
+	</div>
+	<script>
+	function showToast() {
+	      var myAlert = document.getElementById('toast');//select id of toast
+	      var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
+	      bsAlert.show();//show it
+	    }
+	
+	//Setting the session so that the popup does not display again
+	var is_modal_show = sessionStorage.getItem('alreadyShow');
+	if(is_modal_show != 'already shown'){
+	window.onload= ()=>showToast();
+	sessionStorage.setItem('alreadyShow','already shown');
+	}
+	</script>
+	<script
+		th:src="@{https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js}"
+		integrity="sha512-f8mwTB+Bs8a5c46DEm7HQLcJuHMBaH/UFlcgyetMqqkvTcYg4g5VXsYR71b3qC82lZytjNYvBj2pf0VekA9/FQ=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script type="text/javascript" th:src="@{/js/style.js}"></script>
+
+</body>
+</html>
+
