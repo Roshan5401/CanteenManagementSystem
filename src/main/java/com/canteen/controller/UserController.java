@@ -356,8 +356,15 @@ public class UserController {
 				 	
 			 }
 			 else {
-				 treeMap.put(requestedDate, quantity);
+                 if(treeMap.containsKey(requestedDate))
+				 {
+					 
+				 }
+				 else {
+					treeMap.put(requestedDate, quantity);
 					ordersTotal += (quantity*(food.getPrice()));
+				}
+
 			 }
 			
 		}
