@@ -48,7 +48,7 @@ import com.canteen.repository.CanteenUserRepository;
 import com.canteen.repository.MenuRepository;
 import com.canteen.repository.OrderRepository;
 import com.canteen.service.CanteenService;
-
+import com.canteen.service.EmailSenderService;
 import com.canteen.entities.OrderEntity;
 import com.canteen.repository.CanteenUserRepository;
 import com.canteen.service.OrderService;
