@@ -20,5 +20,13 @@ public class CanteenService {
 	{
 		return this.canteenUserRepository.getById(id);
 	}
+	
+	
+	public CanteenService(CanteenUserRepository canteenUserRepository) {
+		super();
+		// TODO Auto-generated constructor stub
+		this.canteenUserRepository = canteenUserRepository;
+	}
+	
 
 }

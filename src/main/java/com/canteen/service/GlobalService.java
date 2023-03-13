@@ -19,4 +19,9 @@ public class GlobalService {
 		return globalemployee;
 	}
 	
+	public GlobalService(GlobalRepository globalRepository) {
+		super();
+		this.globalRepository = globalRepository;
+	}
+	
 }
