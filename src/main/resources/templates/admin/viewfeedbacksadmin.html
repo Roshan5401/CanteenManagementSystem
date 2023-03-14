@@ -50,8 +50,9 @@
 				<form th:action="@{/admin/feedbackdownload}" class="downloadPDF">
 
 					<input type="text" name=food th:value="${food}" class="disabled" />
-					<input type="submit" value="Download pdf"
-						class="button downloadbtn" />
+					<input type="submit" name="excel" value="Download excel" class="button downloadbtn" />
+				<input type="submit" name="pdf" value = "Download pdf" class = "button downloadbtn"/>
+
 				</form>
 			</div>
 			<div class="allfeedbacks" th:object="${feedbacks}">
@@ -76,6 +77,42 @@
 
 		</div>
 	</div>
+	<div class="toast" id="feedbackDeleted" style="position: absolute; top: 10px; left: 50%;transform:translateX(-50%)">
+	    <div class="toast-header">
+	      <strong class="mr-auto">Feedback Deleted<strong>
+	    </div>
+	</div>
+	<script type="text/javascript">
+	const queryString = window.location.search;
+	console.log(queryString);
+	const urlParams = new URLSearchParams(queryString);
+	const deleted = urlParams.get('deleted')
+	function showfeedbackDeletedToast() {
+		if(deleted==="1"){
+			var myAlert = document.getElementById('feedbackDeleted');//select id of toast
+		      var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
+		      bsAlert.show();//show it
+		}
+	}
+	
+	window.onload= ()=>{
+		showfeedbackDeletedToast();
+	}
+	
+	function delayPopup()
+	{
+		if(deleted==="1"){
+			const url = window.location.href;
+			console.log(url);
+			const urlobj = new URL(url);
+			urlobj.searchParams.delete("deleted");
+			console.log(urlobj.toString());	
+			window.location.assign(urlobj.toString());
+		}		
+	}
+	
+	setTimeout(delayPopup,2000)
+	</script>
 	<script
 		th:src="@{https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js}"
 		integrity="sha512-f8mwTB+Bs8a5c46DEm7HQLcJuHMBaH/UFlcgyetMqqkvTcYg4g5VXsYR71b3qC82lZytjNYvBj2pf0VekA9/FQ=="

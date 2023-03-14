@@ -48,6 +48,15 @@ import com.canteen.repository.CanteenUserRepository;
 import com.canteen.repository.MenuRepository;
 import com.canteen.repository.OrderRepository;
 import com.canteen.service.CanteenService;
+
+
+import com.canteen.service.OrderService;
+import com.canteen.util.FeedbackExcelGenerator;
+import com.canteen.util.FeedbackPDFGenerator;
+import com.canteen.util.PreviousOrdersExcelGenerator;
+import com.canteen.util.PreviousOrdersPDFGenerator;
+import com.canteen.util.UpcomingOrdersExcelGenerator;
+
 import com.canteen.service.EmailSenderService;
 import com.canteen.entities.OrderEntity;
 import com.canteen.repository.CanteenUserRepository;
@@ -61,6 +70,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lowagie.text.DocumentException;
 
 import jakarta.persistence.criteria.CriteriaBuilder.In;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import net.bytebuddy.asm.Advice.OffsetMapping.ForOrigin.Renderer.ForReturnTypeName;
 
@@ -80,7 +90,6 @@ public class AdminController {
 	CanteenService canteenService;
 	@Autowired
 	OrderRepository orderRepository;
-	
 	@Autowired
 	private EmailSenderService emailSenderService;
 
@@ -97,16 +106,24 @@ public class AdminController {
 	
 	//full validation done no edge cases left
 	@PostMapping("/admin/addfood")
-	public RedirectView addfood(@RequestParam("name")String name,@RequestParam("type")String type,@RequestParam("price")String price,@RequestParam("foodServedDate")String date) {
+	public RedirectView addfood(@RequestParam("name")String name,@RequestParam("type")String type,@RequestParam("price")String price,@RequestParam("foodServedDate")String date,RedirectAttributes attributes ) {
 		System.out.println("****");
 		menuCanteen menu=new menuCanteen();
 		
 		long count1 = price.chars().filter(ch -> ch == '.').count();
-		long count2=price.chars().filter(ch->(ch>='a' && ch<='z') || (ch>='A' && ch<='Z')).count();
-		if(count1>1 || count2>0)
+		long count2=price.chars().filter(ch->(ch>='a' && ch<='z') || (ch>='A' && ch<='Z') || (ch>=33 && ch<=47) || (ch>=58 && ch<=64) ||(ch>=91 && ch<=96) || (ch>=123 && ch<=126)).count();
+
+		if(count1>1 || count2>0) {
+			attributes.addAttribute("PriceWrong",1);
 			return new RedirectView("/admin/addAndUpdateMenu");
+		}
+			
 		if(Double.parseDouble(price)<1)
+		{
+			attributes.addAttribute("PriceWrong",1);
 			return new RedirectView("/admin/addAndUpdateMenu");
+		}
+			
 		menu.setName(name);
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -125,16 +142,18 @@ public class AdminController {
 		Double dfinal = Double.valueOf(s);
 		menu.setPrice(dfinal);
 		menuRepository.save(menu);
+		attributes.addAttribute("Added",1);
 		return new RedirectView("/admin/addAndUpdateMenu");
 	}
 
 	@GetMapping("/admin/deletefood/{ID}")
-	public RedirectView deletefood(@ModelAttribute("old_food") menuCanteen menu, @PathVariable("ID") Integer Id) {
+	public RedirectView deletefood(@ModelAttribute("old_food") menuCanteen menu, @PathVariable("ID") Integer Id,RedirectAttributes attributes) {
 
 		Optional<menuCanteen> optional = menuRepository.findById(Id);
 		menuCanteen food = optional.get();
 		food.setEnable(false);
 		menuRepository.save(food);
+		attributes.addAttribute("deleted",1);
 		return new RedirectView("/admin/addAndUpdateMenu");
 	}
 
@@ -168,16 +187,15 @@ public class AdminController {
 		m.addAttribute("id", "null");
 		return "admin/viewupcomingordersadmin";
 	}
-	
-
-	
 	//change is made
 	//alert required
 	@GetMapping("/admin/findUserProfile")
 	public String findUserProfile(Model model, Principal principal, @ModelAttribute("userEmail") String userEmail) {
 		CanteenUsers current_user = canteenUserRepository.findByEmail(userEmail);
 		if(current_user==null) {
-			CanteenUsers currrent_users=canteenUserRepository.findByRole("ROLE_ADMIN");
+
+			CanteenUsers currrent_users=canteenUserRepository.findByEmail(principal.getName());
+
 			model.addAttribute("user",currrent_users);
 			model.addAttribute("update_user",new CanteenUsers());
 			System.out.println("No email found");
@@ -296,6 +314,7 @@ public class AdminController {
 		canteenUsers.setWallet(finalPrice);
 		String message="Order Cancelled By admin.\nUsername:"+canteenUsers.getEmail()+"\nfood name: "+orderEntity.getFood().getName()+"\nAmount Refunded to Wallet:Rs"+orderEntity.getTotalPrice()+"\nWallet Balance: Rs"+finalPrice+"\nOrder Date:"+orderEntity.getOrderDate();
 		emailSenderService.sendEmail(canteenUsers.getEmail(), "Message from Canteen Management", message);
+
 		canteenUserRepository.save(canteenUsers);
 		m.addAttribute("orders", orders);
 		return "admin/viewupcomingordersadmin";
@@ -337,49 +356,79 @@ public class AdminController {
 	}
 
 	@GetMapping("/admin/feedbackdownload")
-	public String feedbackDownload(HttpServletResponse response, @ModelAttribute("food") String food, Model m)
+	public String feedbackDownload(HttpServletResponse response,HttpServletRequest request, @ModelAttribute("food") String food, Model m)
 			throws DocumentException, IOException {
-		response.setContentType("application/pdf");
-		DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD:HH:MM:SS");
-		String currentDateTime = dateFormat.format(new Date());
-		String headerkey = "Content-Disposition";
-		String headervalue = "attachment; filename=Feedbacks" + currentDateTime + ".pdf";
-		response.setHeader(headerkey, headervalue);
-		List<OrderEntity> orders = this.orderService.getAllOrders("Delivered");
-		List<OrderEntity> finalFeedbacks = null;
-		if (food.equals("null")) {
-			finalFeedbacks = orders.stream().filter(feed -> feed.getFeedback() != null).collect(Collectors.toList());
-			System.out.println(finalFeedbacks);
-			m.addAttribute("feedbacks", finalFeedbacks);
-			m.addAttribute("food", "null");
+		String buttonClicked = request.getParameter("pdf");
+		if(buttonClicked!=null)//if pdf is clicked this will run
+		{
+			response.setContentType("application/pdf");
+			DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD:HH:MM:SS");
+			String currentDateTime = dateFormat.format(new Date());
+			String headerkey = "Content-Disposition";
+			String headervalue = "attachment; filename=Feedbacks" + currentDateTime + ".pdf";
+			response.setHeader(headerkey, headervalue);
+			List<OrderEntity> orders = this.orderService.getAllOrders("Delivered");
+			List<OrderEntity> finalFeedbacks = null;
+			if (food.equals("null")) {
+				finalFeedbacks = orders.stream().filter(feed -> feed.getFeedback() != null).collect(Collectors.toList());
+				System.out.println(finalFeedbacks);
+				m.addAttribute("feedbacks", finalFeedbacks);
+				m.addAttribute("food", "null");
+			}
+
+			else {
+				List<OrderEntity> finalOrders = orders.stream().filter(order -> order.getFood().getName().equals(food))
+						.collect(Collectors.toList());
+				finalFeedbacks = finalOrders.stream().filter(feed -> feed.getFeedback() != null)
+						.collect(Collectors.toList());
+				m.addAttribute("feedbacks", finalFeedbacks);
+				m.addAttribute("food", food);
+			}
+
+			FeedbackPDFGenerator generator = new FeedbackPDFGenerator();
+
+			generator.generate(finalFeedbacks, response);
 		}
+		else
+		{
+			
+			List<OrderEntity> orders = this.orderService.getAllOrders("Delivered");
+			List<OrderEntity> finalFeedbacks = null;
+			if (food.equals("null")) {
+				finalFeedbacks = orders.stream().filter(feed -> feed.getFeedback() != null).collect(Collectors.toList());
+				System.out.println(finalFeedbacks);
+				m.addAttribute("feedbacks", finalFeedbacks);
+				m.addAttribute("food", "null");
+			}
 
-		else {
-			List<OrderEntity> finalOrders = orders.stream().filter(order -> order.getFood().getName().equals(food))
-					.collect(Collectors.toList());
-			finalFeedbacks = finalOrders.stream().filter(feed -> feed.getFeedback() != null)
-					.collect(Collectors.toList());
-			m.addAttribute("feedbacks", finalFeedbacks);
-			m.addAttribute("food", food);
+			else {
+				List<OrderEntity> finalOrders = orders.stream().filter(order -> order.getFood().getName().equals(food))
+						.collect(Collectors.toList());
+				finalFeedbacks = finalOrders.stream().filter(feed -> feed.getFeedback() != null)
+						.collect(Collectors.toList());
+				m.addAttribute("feedbacks", finalFeedbacks);
+				m.addAttribute("food", food);
+			}
+
+			FeedbackExcelGenerator generator = new FeedbackExcelGenerator();
+
+			generator.generate(finalFeedbacks, response);
 		}
-
-		FeedbackPDFGenerator generator = new FeedbackPDFGenerator();
-
-		generator.generate(finalFeedbacks, response);
-		return "/admin/viewfeedbackadmin";
+		return null;
 	}
 
 	@GetMapping("/admin/deleteOrderFeedback/{Id}")
-	public RedirectView deletefeedback(@PathVariable("Id") int Id) {
+	public RedirectView deletefeedback(@PathVariable("Id") int Id,RedirectAttributes attributes) {
 		Optional<OrderEntity> optional = orderRepository.findById(Id);
 		OrderEntity orderEntity = optional.get();
 		orderEntity.setFeedback(null);
 		orderRepository.save(orderEntity);
+		attributes.addAttribute("deleted",1);
 		return new RedirectView("/admin/viewFeedbacks");
 	}
 
 	@GetMapping("/admin/deliveredOrder/{orderId}")
-	public RedirectView deliveredOrder(@PathVariable("orderId") int id) {
+	public RedirectView deliveredOrder(@PathVariable("orderId") int id,RedirectAttributes attributes) {
 		System.out.println(id);
 		OrderEntity order = this.orderService.getbyOrderId(id);
 		System.out.println(order);
@@ -387,90 +436,148 @@ public class AdminController {
 		this.orderRepository.save(order);
 		String message="Order Delivered.\nUsername:"+order.getCanteenUsers().getEmail()+"\nfood name: "+order.getFood().getName()+"\nTotal Price:Rs"+order.getTotalPrice()+"\nOrder Date:"+order.getOrderDate();
 		emailSenderService.sendEmail(order.getCanteenUsers().getEmail(), "Message from Canteen Management", message);
+		attributes.addAttribute("delivered",1);
 		return new RedirectView("/admin/viewUpcomingOrders");
 	}
 
 	@GetMapping("/admin/previousordersdownload")
-	public String previousOrdersDownload(HttpServletResponse response, @ModelAttribute("date") String date,
+	public String previousOrdersDownload(HttpServletResponse response,HttpServletRequest request, @ModelAttribute("date") String date,
 			@ModelAttribute("id") String id, Model m) throws DocumentException, IOException {
-		response.setContentType("application/pdf");
-		DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD:HH:MM:SS");
-		String currentDateTime = dateFormat.format(new Date());
-		String headerkey = "Content-Disposition";
-		String headervalue = "attachment; filename=PreviousOrders" + currentDateTime + ".pdf";
-		response.setHeader(headerkey, headervalue);
-		System.out.println(date);
-		System.out.println(id);
-		List<OrderEntity> ordersList = null;
-		if (date.equals("null") && id.equals("null")) {
-			ordersList = orderService.getAllOrders("Delivered");
+		
+		String buttonClicked = request.getParameter("pdf");
+		if(buttonClicked!=null)//if pdf is clicked this will run
+		{
+			response.setContentType("application/pdf");
+			DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD:HH:MM:SS");
+			String currentDateTime = dateFormat.format(new Date());
+			String headerkey = "Content-Disposition";
+			String headervalue = "attachment; filename=PreviousOrders" + currentDateTime + ".pdf";
+			response.setHeader(headerkey, headervalue);
+			System.out.println(date);
+			System.out.println(id);
+			List<OrderEntity> ordersList = null;
+			if (date.equals("null") && id.equals("null")) {
+				ordersList = orderService.getAllOrders("Delivered");
+			}
+
+			else if (date.equals("null")) {
+				System.out.println("Date is null and user id is not");
+				ordersList = this.orderService.getAllOrdersByUserId("Delivered", id);
+				m.addAttribute("orders", ordersList);
+			}
+
+			else if (id.equals("null")) {
+				System.out.println("Date is not null and User id is null");
+				LocalDate date1 = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+				ordersList = this.orderService.getAllOrdersByStatusAndDate("Delivered", date1);
+				m.addAttribute("orders", ordersList);
+			}
+
+			else {
+				LocalDate date1 = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+				ordersList = this.orderService.getAllOrdersByDateAndUserId(date1, id, "Delivered");
+				m.addAttribute("orders", ordersList);
+			}
+
+			PreviousOrdersPDFGenerator generator = new PreviousOrdersPDFGenerator();
+			generator.generate(ordersList, response);
 		}
+		else//this is the code for excel part
+		{
+			List<OrderEntity> ordersList = null;
+			if (date.equals("null") && id.equals("null")) {
+				ordersList = orderService.getAllOrders("Delivered");
+			}
 
-		else if (date.equals("null")) {
-			System.out.println("Date is null and user id is not");
-			ordersList = this.orderService.getAllOrdersByUserId("Delivered", id);
-			m.addAttribute("orders", ordersList);
+			else if (date.equals("null")) {
+				System.out.println("Date is null and user id is not");
+				ordersList = this.orderService.getAllOrdersByUserId("Delivered", id);
+				m.addAttribute("orders", ordersList);
+			}
+
+			else if (id.equals("null")) {
+				System.out.println("Date is not null and User id is null");
+				LocalDate date1 = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+				ordersList = this.orderService.getAllOrdersByStatusAndDate("Delivered", date1);
+				m.addAttribute("orders", ordersList);
+			}
+
+			else {
+				LocalDate date1 = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+				ordersList = this.orderService.getAllOrdersByDateAndUserId(date1, id, "Delivered");
+				m.addAttribute("orders", ordersList);
+			}
+			PreviousOrdersExcelGenerator excelGenerator=new PreviousOrdersExcelGenerator(); 
+			
+            excelGenerator.generate(ordersList, response);
 		}
-
-		else if (id.equals("null")) {
-			System.out.println("Date is not null and User id is null");
-			LocalDate date1 = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
-			ordersList = this.orderService.getAllOrdersByStatusAndDate("Delivered", date1);
-			m.addAttribute("orders", ordersList);
-		}
-
-		else {
-			LocalDate date1 = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
-			ordersList = this.orderService.getAllOrdersByDateAndUserId(date1, id, "Delivered");
-			m.addAttribute("orders", ordersList);
-		}
-
-		PreviousOrdersPDFGenerator generator = new PreviousOrdersPDFGenerator();
-
-		generator.generate(ordersList, response);
-		return "/admin/viewpreviousordersadmin";
+		
+		
+		return null;
 	}
 
 	@GetMapping("/admin/upcomingordersdownload")
-	public String upcomingOrdersDownload(HttpServletResponse response, @ModelAttribute("date") String date,
-			@ModelAttribute("id") String id, Model m) throws DocumentException, IOException {
-		response.setContentType("application/pdf");
-		DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD:HH:MM:SS");
-		String currentDateTime = dateFormat.format(new Date());
-		String headerkey = "Content-Disposition";
-		String headervalue = "attachment; filename=UpcomingOrders" + currentDateTime + ".pdf";
-		response.setHeader(headerkey, headervalue);
-		System.out.println(date);
-		System.out.println(id);
-		List<OrderEntity> ordersList = null;
-		if (date.equals("null") && id.equals("null")) {
-			ordersList = orderService.getAllOrders("Booked");
-		}
+	public String upcomingOrdersDownload(HttpServletResponse response, HttpServletRequest request,
+	                                     @ModelAttribute("date") String date, @ModelAttribute("id") String id, Model m)
+	        throws DocumentException, IOException {
+	    String buttonClicked = request.getParameter("pdf"); // get value of pdf button if clicked
+	    if (buttonClicked != null) {
+	        response.setContentType("application/pdf");
+	        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+	        String currentDateTime = dateFormat.format(new Date());
+	        String headerkey = "Content-Disposition";
+	        String headervalue = "attachment; filename=UpcomingOrders_" + currentDateTime + ".pdf";
+	        response.setHeader(headerkey, headervalue);
+	        System.out.println(date);
+	        System.out.println(id);
+	        List<OrderEntity> ordersList = null;
+	        if (date.equals("null") && id.equals("null")) {
+	            ordersList = orderService.getAllOrders("Booked");
+	        } else if (date.equals("null")) {
+	            System.out.println("Date is null and user id is not");
+	            ordersList = this.orderService.getAllOrdersByUserId("Booked", id);
+	            m.addAttribute("orders", ordersList);
+	        } else if (id.equals("null")) {
+	            System.out.println("Date is not null and User id is null");
+	            LocalDate date1 = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+	            ordersList = this.orderService.getAllOrdersByStatusAndDate("Booked", date1);
+	            m.addAttribute("orders", ordersList);
+	        } else {
+	            LocalDate date1 = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+	            ordersList = this.orderService.getAllOrdersByDateAndUserId(date1, id, "Booked");
+	            m.addAttribute("orders", ordersList);
+	        }
 
-		else if (date.equals("null")) {
-			System.out.println("Date is null and user id is not");
-			ordersList = this.orderService.getAllOrdersByUserId("Booked", id);
-			m.addAttribute("orders", ordersList);
-		}
+	        UpcomingOrdersPDFGenerator generator = new UpcomingOrdersPDFGenerator();
+	        generator.generate(ordersList, response);
 
-		else if (id.equals("null")) {
-			System.out.println("Date is not null and User id is null");
-			LocalDate date1 = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
-			ordersList = this.orderService.getAllOrdersByStatusAndDate("Booked", date1);
-			m.addAttribute("orders", ordersList);
-		}
-
-		else {
-			LocalDate date1 = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
-			ordersList = this.orderService.getAllOrdersByDateAndUserId(date1, id, "Booked");
-			m.addAttribute("orders", ordersList);
-		}
-
-		UpcomingOrdersPDFGenerator generator = new UpcomingOrdersPDFGenerator();
-
-		generator.generate(ordersList, response);
-		return "/admin/viewupcomingordersadmin";
+	    } else {
+	        // Excel button was clicked, handle Excel download
+	        List<OrderEntity> ordersList = null;
+	        if (date.equals("null") && id.equals("null")) {
+	            ordersList = orderService.getAllOrders("Booked");
+	        } else if (date.equals("null")) {
+	            System.out.println("Date is null and user id is not");
+	            ordersList = this.orderService.getAllOrdersByUserId("Booked", id);
+	            m.addAttribute("orders", ordersList);
+	        } else if (id.equals("null")) {
+	            System.out.println("Date is not null and User id is null");
+	            LocalDate date1 = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+	            ordersList = this.orderService.getAllOrdersByStatusAndDate("Booked", date1);
+	            m.addAttribute("orders", ordersList);
+	        } else {
+	            LocalDate date1 = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+	            ordersList = this.orderService.getAllOrdersByDateAndUserId(date1, id, "Booked");
+	            m.addAttribute("orders", ordersList);
+	        }
+	        
+	        UpcomingOrdersExcelGenerator generator = new UpcomingOrdersExcelGenerator();
+	        generator.generate(ordersList, response);
+	    }
+	    return null;
 	}
+
+	
 
 	@GetMapping("/admin/analytics")
 	public String analytics(Model model) {

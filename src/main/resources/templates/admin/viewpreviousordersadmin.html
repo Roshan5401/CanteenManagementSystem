@@ -37,7 +37,7 @@
 			<h1>View Previous Orders</h1>
 				<h2>View previous orders for a specific date and for a specific user</h2>
 				<input type="date" name="vieworderbydate" class = "inputField"/> 
-				<input type="text"  placeholder = "userId" id = "userIdinput" name = "userId" class = "inputField"/>
+				<input type="number"  placeholder = "userId" id = "userIdinput" name = "userId" class = "inputField"/>
 				<div class="viewbtn">
 					<input type="submit"
 					value="View orders" class="button" />
@@ -51,7 +51,9 @@
 			<form th:action="@{/admin/previousordersdownload}" class="downloadPDF">
 				<input type="text" name= "date" th:value="${date}" class = "disabled"/>
 				<input type="text" name="id" th:value="${id}" class = "disabled"/>
-				<input type="submit"  value = "Download pdf" class = "button downloadbtn"/>
+				<input type="submit" name="excel" value="Download excel" class="button downloadbtn" />
+				<input type="submit" name="pdf" value = "Download pdf" class = "button downloadbtn"/>
+
 			</form>
 			</div>
 			<table class="styled-table">
