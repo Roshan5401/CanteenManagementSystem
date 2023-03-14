@@ -388,7 +388,7 @@ public class UserController {
 			} else {
 
 				if (treeMap.containsKey(requestedDate)) {
-
+					model.addAttribute("dateExists","1");
 				} else {
 					treeMap.put(requestedDate, quantity);
 					ordersTotal += (quantity * (food.getPrice()));
@@ -400,7 +400,6 @@ public class UserController {
 		model.addAttribute("food", food);
 		model.addAttribute("treeMap", treeMap);
 		model.addAttribute("ordersTotal", ordersTotal);
-
 		String email = principal.getName();
 		CanteenUsers canteenUser = canteenUserRepository.findByEmail(email);
 
