@@ -106,17 +106,24 @@ public class AdminController {
 	
 	//full validation done no edge cases left
 	@PostMapping("/admin/addfood")
-	public RedirectView addfood(@RequestParam("name")String name,@RequestParam("type")String type,@RequestParam("price")String price,@RequestParam("foodServedDate")String date) {
+	public RedirectView addfood(@RequestParam("name")String name,@RequestParam("type")String type,@RequestParam("price")String price,@RequestParam("foodServedDate")String date,RedirectAttributes attributes ) {
 		System.out.println("****");
 		menuCanteen menu=new menuCanteen();
 		
 		long count1 = price.chars().filter(ch -> ch == '.').count();
 		long count2=price.chars().filter(ch->(ch>='a' && ch<='z') || (ch>='A' && ch<='Z') || (ch>=33 && ch<=47) || (ch>=58 && ch<=64) ||(ch>=91 && ch<=96) || (ch>=123 && ch<=126)).count();
 
-		if(count1>1 || count2>0)
+		if(count1>1 || count2>0) {
+			attributes.addAttribute("PriceWrong",1);
 			return new RedirectView("/admin/addAndUpdateMenu");
+		}
+			
 		if(Double.parseDouble(price)<1)
+		{
+			attributes.addAttribute("PriceWrong",1);
 			return new RedirectView("/admin/addAndUpdateMenu");
+		}
+			
 		menu.setName(name);
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -135,16 +142,18 @@ public class AdminController {
 		Double dfinal = Double.valueOf(s);
 		menu.setPrice(dfinal);
 		menuRepository.save(menu);
+		attributes.addAttribute("Added",1);
 		return new RedirectView("/admin/addAndUpdateMenu");
 	}
 
 	@GetMapping("/admin/deletefood/{ID}")
-	public RedirectView deletefood(@ModelAttribute("old_food") menuCanteen menu, @PathVariable("ID") Integer Id) {
+	public RedirectView deletefood(@ModelAttribute("old_food") menuCanteen menu, @PathVariable("ID") Integer Id,RedirectAttributes attributes) {
 
 		Optional<menuCanteen> optional = menuRepository.findById(Id);
 		menuCanteen food = optional.get();
 		food.setEnable(false);
 		menuRepository.save(food);
+		attributes.addAttribute("deleted",1);
 		return new RedirectView("/admin/addAndUpdateMenu");
 	}
 
@@ -409,16 +418,17 @@ public class AdminController {
 	}
 
 	@GetMapping("/admin/deleteOrderFeedback/{Id}")
-	public RedirectView deletefeedback(@PathVariable("Id") int Id) {
+	public RedirectView deletefeedback(@PathVariable("Id") int Id,RedirectAttributes attributes) {
 		Optional<OrderEntity> optional = orderRepository.findById(Id);
 		OrderEntity orderEntity = optional.get();
 		orderEntity.setFeedback(null);
 		orderRepository.save(orderEntity);
+		attributes.addAttribute("deleted",1);
 		return new RedirectView("/admin/viewFeedbacks");
 	}
 
 	@GetMapping("/admin/deliveredOrder/{orderId}")
-	public RedirectView deliveredOrder(@PathVariable("orderId") int id) {
+	public RedirectView deliveredOrder(@PathVariable("orderId") int id,RedirectAttributes attributes) {
 		System.out.println(id);
 		OrderEntity order = this.orderService.getbyOrderId(id);
 		System.out.println(order);
@@ -426,6 +436,7 @@ public class AdminController {
 		this.orderRepository.save(order);
 		String message="Order Delivered.\nUsername:"+order.getCanteenUsers().getEmail()+"\nfood name: "+order.getFood().getName()+"\nTotal Price:Rs"+order.getTotalPrice()+"\nOrder Date:"+order.getOrderDate();
 		emailSenderService.sendEmail(order.getCanteenUsers().getEmail(), "Message from Canteen Management", message);
+		attributes.addAttribute("delivered",1);
 		return new RedirectView("/admin/viewUpcomingOrders");
 	}
 

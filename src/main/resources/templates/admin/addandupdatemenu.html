@@ -94,6 +94,86 @@
      Welcome!!
     </div>
   </div>
+  <div class="toast" id="Added" style="position: absolute; top: 10px; left: 50%;transform:translateX(-50%)">
+	    <div class="toast-header">
+	      <strong class="mr-auto">Food Item Added<strong>
+	    </div>
+	</div>
+  <div class="toast" id="MenuDeleted" style="position: absolute; top: 10px; left: 50%;transform:translateX(-50%)">
+	    <div class="toast-header">
+	      <strong class="mr-auto">Food Item Deleted<strong>
+	    </div>
+	</div>
+	<div class="toast" id="PriceWrong" style="position: absolute; top: 10px; left: 50%;transform:translateX(-50%)">
+	    <div class="toast-header">
+	      <strong class="mr-auto">Wrong price input<strong>
+	    </div>
+	</div>
+	<script type="text/javascript">
+	const queryString = window.location.search;
+	console.log(queryString);
+	const urlParams = new URLSearchParams(queryString);
+	const deleted = urlParams.get('deleted')
+	const Added = urlParams.get('Added')
+	const PriceWrong = urlParams.get('PriceWrong')
+	function showMenuDeletedToast() {
+		if(deleted==="1"){
+			var myAlert = document.getElementById('MenuDeleted');//select id of toast
+		      var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
+		      bsAlert.show();//show it
+		}
+	}
+	function showMenuAddedToast() {
+		if(Added==="1"){
+			var myAlert = document.getElementById('Added');//select id of toast
+		      var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
+		      bsAlert.show();//show it
+		}
+	}
+	function showPriceWrongToast() {
+		if(PriceWrong==="1"){
+			var myAlert = document.getElementById('PriceWrong');//select id of toast
+		      var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
+		      bsAlert.show();//show it
+		}
+	}
+	
+	window.onload= ()=>	{
+	showMenuDeletedToast();
+	showMenuAddedToast();
+	showPriceWrongToast();
+	}
+
+	function delayPopup()
+	{
+		if(deleted==="1"){
+			const url = window.location.href;
+			console.log(url);
+			const urlobj = new URL(url);
+			urlobj.searchParams.delete("deleted");
+			console.log(urlobj.toString());	
+			window.location.assign(urlobj.toString());
+		}	
+		if(Added==="1"){
+			const url = window.location.href;
+			console.log(url);
+			const urlobj = new URL(url);
+			urlobj.searchParams.delete("Added");
+			console.log(urlobj.toString());	
+			window.location.assign(urlobj.toString());
+		}
+		if(PriceWrong==="1"){
+			const url = window.location.href;
+			console.log(url);
+			const urlobj = new URL(url);
+			urlobj.searchParams.delete("PriceWrong");
+			console.log(urlobj.toString());	
+			window.location.assign(urlobj.toString());
+		}
+	}
+	
+	setTimeout(delayPopup,2000)
+	</script>
   <script>
 	function showToast() {
 	      var myAlert = document.getElementById('toast');//select id of toast
