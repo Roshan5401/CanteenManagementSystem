@@ -17,6 +17,8 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,6 +40,7 @@ import com.canteen.service.EmailSenderService;
 import com.canteen.service.OrderService;
 
 @Controller
+@EnableScheduling
 public class UserController {
 	@Autowired
 	CanteenUserRepository canteenUserRepository;
@@ -521,5 +524,18 @@ public class UserController {
 		attributes.addAttribute("bookingComplete", 1);
 		return new RedirectView("/user/bookOrder");
 	}
-
+    @Scheduled(cron = "0 30 12 ? * *")
+	public void FoodPrepMailing() {
+		List<OrderEntity> orderEntities=(List<OrderEntity>) orderRepository.findAll();
+		Date today = java.sql.Date.valueOf(LocalDate.now());
+		for(OrderEntity order:orderEntities)
+		{
+			if(order.getOrderDate().equals(today))
+			{
+				String message = "Your Food is Prepared.Collect it from canteen";
+				emailSenderService.sendEmail(order.getCanteenUsers().getEmail(), "Message from Canteen Management", message);
+			}
+		}
+		
+	}
 }
