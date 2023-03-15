@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -116,7 +117,6 @@ public class UserController {
 		@SuppressWarnings("deprecation")
 		List<menuCanteen> finalFoodItems = enabledFoodItems.stream()
 				.filter(item -> item.getFoodServedDate().getMonth() == month).collect(Collectors.toList());
-		
 
 		// Upcoming Orders backend Implemantation
 		int id = current_user.getId();
@@ -124,9 +124,7 @@ public class UserController {
 		List<OrderEntity> userOrders = orders.stream().filter(order -> order.getCanteenUsers().getId() == id)
 				.collect(Collectors.toList());
 		System.out.println(current_user.getWallet());
-		
-		
-		
+
 		model.addAttribute("foodItems", finalFoodItems);
 		model.addAttribute("user", current_user);
 		model.addAttribute("user_orders", userOrders);
@@ -316,37 +314,37 @@ public class UserController {
 	}
 
 	@GetMapping("/user/savefeedback/{ID}")
-	public RedirectView saveFeedback(@PathVariable("ID") Integer Id, @ModelAttribute("feedbackdata") String feedback,RedirectAttributes attributes) {
+	public RedirectView saveFeedback(@PathVariable("ID") Integer Id, @ModelAttribute("feedbackdata") String feedback,
+			RedirectAttributes attributes) {
 		Optional<OrderEntity> optional = orderRepository.findById(Id);
 		OrderEntity orderEntity = optional.get();
 		System.out.println(Id);
 		orderEntity.setFeedback(feedback);
 		orderRepository.save(orderEntity);
-		attributes.addAttribute("FeedbackSaved",1);
+		attributes.addAttribute("FeedbackSaved", 1);
 		return new RedirectView("/user/viewPreviousOrders");
 	}
 
 	TreeMap<LocalDate, Integer> treeMap = new TreeMap<>();
 	double ordersTotal = 0;
-	
+
 	@GetMapping("/user/redirectselectdates/{orderid}")
-	public RedirectView prevOrderTOreOrder(@PathVariable("orderid") String orderid,Model model,RedirectAttributes attributes)
-	{
+	public RedirectView prevOrderTOreOrder(@PathVariable("orderid") String orderid, Model model,
+			RedirectAttributes attributes) {
 		OrderEntity order = orderRepository.findByOrderId(Integer.parseInt(orderid));
 		menuCanteen food = order.getFood();
 		System.out.println(food);
-		
-		if(food.isEnable()==Boolean.parseBoolean("0"))
-		{
+
+		if (food.isEnable() == Boolean.parseBoolean("0")) {
 			System.out.println("Food has been deleted");
-			attributes.addAttribute("foodExist",0);
+			attributes.addAttribute("foodExist", 0);
 			return new RedirectView("/user/viewPreviousOrders");
 		}
-		model.addAttribute("food",food);
-		
-		return new RedirectView("/user/selectDates/"+food.getID()+"/"+food.getFoodServedDate());
+		model.addAttribute("food", food);
+
+		return new RedirectView("/user/selectDates/" + food.getID() + "/" + food.getFoodServedDate());
 	}
-	
+
 	@GetMapping("/user/selectDates/{foodId}/{foodServedDate}")
 	public String selectDates(Principal principal, Model model, @PathVariable("foodId") String foodId,
 			@PathVariable("foodServedDate") String foodServedDate) {
@@ -415,7 +413,7 @@ public class UserController {
 			} else {
 
 				if (treeMap.containsKey(requestedDate)) {
-					model.addAttribute("dateExists","1");
+					model.addAttribute("dateExists", "1");
 				} else {
 					treeMap.put(requestedDate, quantity);
 					ordersTotal += (quantity * (food.getPrice()));
@@ -547,38 +545,49 @@ public class UserController {
 		attributes.addAttribute("bookingComplete", 1);
 		return new RedirectView("/user/bookOrder");
 	}
-    @Scheduled(cron = "0 30 12 ? * *")
+
+	@Scheduled(cron = "0 30 12 ? * *")
 	public void FoodPrepMailing() {
-		List<OrderEntity> orderEntities=(List<OrderEntity>) orderRepository.findAll();
+		List<OrderEntity> orderEntities = (List<OrderEntity>) orderRepository.findAll();
 		Date today = java.sql.Date.valueOf(LocalDate.now());
-		for(OrderEntity order:orderEntities)
-		{
-			if(order.getOrderDate().equals(today))
-			{
+		for (OrderEntity order : orderEntities) {
+			if (order.getOrderDate().equals(today)) {
 				String message = "Your Food is Prepared.Collect it from canteen";
-				emailSenderService.sendEmail(order.getCanteenUsers().getEmail(), "Message from Canteen Management", message);
+				emailSenderService.sendEmail(order.getCanteenUsers().getEmail(), "Message from Canteen Management",
+						message);
 			}
 		}
-		
+
 	}
-    
-    @GetMapping("/user/itemFeedback/{foodID}")
-    public String  itemFeedback(Model model, Principal principal, @PathVariable("foodID") int foodID) {
-    	// Passing user Information in the item feedback page
-    	String userName = principal.getName();
+
+	@GetMapping("/user/itemFeedback/{foodID}")
+	public String itemFeedback(Model model, Principal principal, @PathVariable("foodID") String foodID) {
+		// Passing user Information in the item feedback page
+		int id = Integer.parseInt(foodID);
+		String userName = principal.getName();
 		CanteenUsers current_user = canteenUserRepository.findByEmail(userName);
 		model.addAttribute("user", current_user);
-		
+
 		// Fetching the food Item Details
-		menuCanteen food = this.menuRepository.findById(foodID);
-		model.addAttribute("food",food);
-		
-		// Fetching orders table and filtering all the feedbacks from the table and passing all the feedbacks in the page
+		menuCanteen food = this.menuRepository.findById(id);
+		model.addAttribute("food", food);
+
+		// Fetching orders table and filtering all the feedbacks from the table and
+		// passing all the feedbacks in the page
+		System.out.println(foodID);
 		List<OrderEntity> allOrders = this.orderService.getAllOrders("Delivered");
-		List<OrderEntity> foodSorting = allOrders.stream().filter(order -> order.getFood().getID() == foodID).collect(Collectors.toList());
-		List<OrderEntity> finalFeedbacks = foodSorting.stream().filter(order ->order.getFeedback() != null).collect(Collectors.toList());
-		
-    	return "/users/itemfeedback";
-    }
-   
+		System.out.println(allOrders);
+
+	  List<OrderEntity> foodSorting = allOrders.stream().filter(order ->
+	  (order.getFood().getID() )== id) .collect(Collectors.toList());
+	  System.out.println(foodSorting);
+
+		List<OrderEntity> finalFeedbacks = foodSorting.stream().filter(order -> order.getFeedback() != null)
+				.collect(Collectors.toList());
+		System.out.println(finalFeedbacks);
+
+		model.addAttribute("feedbacks", finalFeedbacks);
+		return "/users/itemfeedback";
+	}
+
 }
