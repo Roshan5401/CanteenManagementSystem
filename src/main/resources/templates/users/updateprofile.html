@@ -43,9 +43,9 @@
 					th:value="${user.email}" disabled /> <input
 					type="password" placeholder="Enter your old password"
 					name="oldpassword" /> 
-					<input type="password" placeholder="Enter new password" name="newpassword" /> 
+					<input type="password" placeholder="Enter new password" name="newpassword"   pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" /> 
 					<input type="tel" placeholder="Enter your phone number"
-						th:value="${user.phone}" name="phone" /> <input type="submit" value="Save Changes"
+						th:value="${user.phone}" name="phone" minlength="10" maxlength="10"  pattern="[6789][0-9]{9}" title="Must be valid Phone Number" /> <input type="submit" value="Save Changes"
 					class="button" />
 
 			</form>
