@@ -59,9 +59,9 @@
 
 					<div class="second">
 						<input type="password" placeholder="Enter new password"
-							name="newpassword" /> <input type="tel"
+							name="newpassword"  pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" /> <input type="tel"
 							placeholder="Enter your phone number" name="phone"
-							th:value="${user.phone}" />
+							 minlength="10" maxlength="10"  pattern="[6789][0-9]{9}" title="Must be valid Phone Number" th:value="${user.phone}" />
 					</div>
 					<div class="buttondiv">
 						<input type="submit" value="Save Changes" class="button" />
