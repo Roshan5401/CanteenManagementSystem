@@ -116,6 +116,7 @@ public class UserController {
 		@SuppressWarnings("deprecation")
 		List<menuCanteen> finalFoodItems = enabledFoodItems.stream()
 				.filter(item -> item.getFoodServedDate().getMonth() == month).collect(Collectors.toList());
+		
 
 		// Upcoming Orders backend Implemantation
 		int id = current_user.getId();
@@ -123,6 +124,9 @@ public class UserController {
 		List<OrderEntity> userOrders = orders.stream().filter(order -> order.getCanteenUsers().getId() == id)
 				.collect(Collectors.toList());
 		System.out.println(current_user.getWallet());
+		
+		
+		
 		model.addAttribute("foodItems", finalFoodItems);
 		model.addAttribute("user", current_user);
 		model.addAttribute("user_orders", userOrders);
@@ -557,4 +561,14 @@ public class UserController {
 		}
 		
 	}
+    
+    @GetMapping("/user/itemFeedback")
+    public String  itemFeedback() {
+    	return "/users/itemfeedback";
+    }
+    
+    @GetMapping("/forgotpassword")
+    public String forgotPassword() {
+    	return "/users/forgotpassword";
+    }
 }

@@ -1,5 +1,6 @@
 package com.canteen.controller;
 
+import java.io.File;
 import java.io.IOException;
 
 import java.security.Principal;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,7 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.poi.util.StringUtil;
 import org.hibernate.sql.results.graph.instantiation.internal.ArgumentDomainResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.MergedAnnotationCollectors;
@@ -29,6 +32,7 @@ import org.springframework.objenesis.instantiator.basic.NewInstanceInstantiator;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -37,6 +41,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -69,6 +74,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lowagie.text.DocumentException;
 
+import jakarta.mail.Multipart;
 import jakarta.persistence.criteria.CriteriaBuilder.In;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -98,7 +104,6 @@ public class AdminController {
 	public String addAndUpdateMenu(Model model) {
 		List<menuCanteen> menuItems = new ArrayList<>();
 		menuItems = menuRepository.getFoodByEnable(true);
-		model.addAttribute("new_food", new menuCanteen());
 		model.addAttribute("delete_food", new menuCanteen());
 		model.addAttribute("menuItems", menuItems);
 		return "admin/addandupdatemenu";
@@ -106,7 +111,7 @@ public class AdminController {
 	
 	//full validation done no edge cases left
 	@PostMapping("/admin/addfood")
-	public RedirectView addfood(@RequestParam("name")String name,@RequestParam("type")String type,@RequestParam("price")String price,@RequestParam("foodServedDate")String date,RedirectAttributes attributes ) {
+	public RedirectView addfood(@RequestParam("name")String name,@RequestParam("type")String type,@RequestParam("price")String price,@RequestParam("foodServedDate")String date, @RequestParam("itemImage")MultipartFile file    ,RedirectAttributes attributes ) throws IllegalStateException, IOException {
 		System.out.println("****");
 		menuCanteen menu=new menuCanteen();
 		
@@ -141,6 +146,21 @@ public class AdminController {
 		String s = dfor.format(d);
 		Double dfinal = Double.valueOf(s);
 		menu.setPrice(dfinal);
+		/*
+		 * final String FOLDER_PATH = "C:/Users/ANURAGB/Downloads/CanteenItemsImages/";
+		 * String filePath = FOLDER_PATH+file.getOriginalFilename();
+		 * menu.setImage(filePath);
+		 * 
+		 * file.transferTo(new File(filePath));
+		 */
+		
+		String filename = StringUtils.cleanPath(file.getOriginalFilename());
+		
+		if(filename.contains("..")) {
+			System.out.println("File is not supported");
+		}
+		menu.setImage(Base64.getEncoder().encodeToString(file.getBytes()));
+		
 		menuRepository.save(menu);
 		attributes.addAttribute("Added",1);
 		return new RedirectView("/admin/addAndUpdateMenu");
