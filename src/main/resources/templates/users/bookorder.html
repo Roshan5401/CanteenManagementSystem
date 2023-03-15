@@ -112,6 +112,8 @@
 						</div>
 						<h5 class = "availbelfrom">Available from - <span th:text="${food.foodServedDate}"></span></h5>
 						
+						<a th:href="@{/user/itemFeedback}" style = "color :#f76c28 ">View Feedback</a>
+						
 						<a
 								th:href="@{'/user/selectDates/'+${food.ID}+'/'+${food.foodServedDate}}"
 								class="bookorderbtn btn">Book Order</a>

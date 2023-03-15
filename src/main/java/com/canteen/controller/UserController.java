@@ -541,4 +541,14 @@ public class UserController {
 		}
 		
 	}
+    
+    @GetMapping("/user/itemFeedback")
+    public String  itemFeedback() {
+    	return "/users/itemfeedback";
+    }
+    
+    @GetMapping("/forgotpassword")
+    public String forgotPassword() {
+    	return "/users/forgotpassword";
+    }
 }
