@@ -558,13 +558,23 @@ public class UserController {
 		
 	}
     
-    @GetMapping("/user/itemFeedback")
-    public String  itemFeedback() {
+    @GetMapping("/user/itemFeedback/{foodID}")
+    public String  itemFeedback(Model model, Principal principal, @PathVariable("foodID") int foodID) {
+    	// Passing user Information in the item feedback page
+    	String userName = principal.getName();
+		CanteenUsers current_user = canteenUserRepository.findByEmail(userName);
+		model.addAttribute("user", current_user);
+		
+		// Fetching the food Item Details
+		menuCanteen food = this.menuRepository.findById(foodID);
+		model.addAttribute("food",food);
+		
+		// Fetching orders table and filtering all the feedbacks from the table and passing all the feedbacks in the page
+		List<OrderEntity> allOrders = this.orderService.getAllOrders("Delivered");
+		List<OrderEntity> foodSorting = allOrders.stream().filter(order -> order.getFood().getID() == foodID).collect(Collectors.toList());
+		List<OrderEntity> finalFeedbacks = foodSorting.stream().filter(order ->order.getFeedback() != null).collect(Collectors.toList());
+		
     	return "/users/itemfeedback";
     }
-    
-    @GetMapping("/forgotpassword")
-    public String forgotPassword() {
-    	return "/users/forgotpassword";
-    }
+   
 }
