@@ -329,12 +329,16 @@ public class UserController {
 	TreeMap<LocalDate, Integer> treeMap = new TreeMap<>();
 	double ordersTotal = 0;
 	
-	@GetMapping("/user/redirectselectdates/{foodname}")
-	public RedirectView prevOrderTOreOrder(@PathVariable("foodname") String foodname,Model model,RedirectAttributes attributes)
+	@GetMapping("/user/redirectselectdates/{orderid}")
+	public RedirectView prevOrderTOreOrder(@PathVariable("orderid") String orderid,Model model,RedirectAttributes attributes)
 	{
-		menuCanteen food = menuRepository.findByName(foodname);
-		if(food==null)
+		OrderEntity order = orderRepository.findByOrderId(Integer.parseInt(orderid));
+		menuCanteen food = order.getFood();
+		System.out.println(food);
+		
+		if(food.isEnable()==Boolean.parseBoolean("0"))
 		{
+			System.out.println("Food has been deleted");
 			attributes.addAttribute("foodExist",0);
 			return new RedirectView("/user/viewPreviousOrders");
 		}
