@@ -39,6 +39,8 @@ import com.canteen.repository.OrderRepository;
 import com.canteen.service.EmailSenderService;
 import com.canteen.service.OrderService;
 
+import aj.org.objectweb.asm.Attribute;
+
 @Controller
 @EnableScheduling
 public class UserController {
@@ -322,7 +324,21 @@ public class UserController {
 
 	TreeMap<LocalDate, Integer> treeMap = new TreeMap<>();
 	double ordersTotal = 0;
-
+	
+	@GetMapping("/user/redirectselectdates/{foodname}")
+	public RedirectView prevOrderTOreOrder(@PathVariable("foodname") String foodname,Model model,RedirectAttributes attributes)
+	{
+		menuCanteen food = menuRepository.findByName(foodname);
+		if(food==null)
+		{
+			attributes.addAttribute("foodExist",0);
+			return new RedirectView("/user/viewPreviousOrders");
+		}
+		model.addAttribute("food",food);
+		
+		return new RedirectView("/user/selectDates/"+food.getID()+"/"+food.getFoodServedDate());
+	}
+	
 	@GetMapping("/user/selectDates/{foodId}/{foodServedDate}")
 	public String selectDates(Principal principal, Model model, @PathVariable("foodId") String foodId,
 			@PathVariable("foodServedDate") String foodServedDate) {
