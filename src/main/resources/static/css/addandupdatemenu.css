@@ -6,6 +6,40 @@
 	font-family: 'Poppins', sans-serif;
 }
 
+.secondInput{
+	display: flex;
+}
+
+input[type="file"] {
+  background-color: white;
+  font-size: 16px;
+  color:#272c48 ;
+  padding: 15px;
+  border-radius: 15px;
+  margin: 20px;
+}
+
+
+input[type="file"]:focus {
+  outline: none;
+  box-shadow: 0 0 5px #4CAF50;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+  background-color:#f76c28 ;
+  color: #fff;
+  padding: 15px;
+  border-radius: 5px;
+  border: none;
+}
+
+input[type="file"]::-ms-browse {
+  background-color: #f76c28;
+  color: #fff;
+  padding: 15px;
+  border-radius: 5px;
+  border: none;
+}
 
 .userboard {
 	display: flex;
@@ -186,6 +220,7 @@ label {
   font-size: 16px;
   color: #333;
   font-weight: bold;
+  align-content: center;
 }
 
 label:before {

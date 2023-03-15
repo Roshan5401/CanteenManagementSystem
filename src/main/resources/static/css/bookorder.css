@@ -51,25 +51,27 @@ a {
 	width: 100%;
 }
 
-.navbar{
+.navbar {
 	height: 7vh;
 	background-color: #272c48;
 }
-.logo{
-	color : white;
+
+.logo {
+	color: white;
 	font-size: 1.3rem;
 	font-weight: bold;
 	margin-left: 30px;
 }
-#diff{
-	color:#f76c28;
+
+#diff {
+	color: #f76c28;
 }
 
-.navbar > h3{
+.navbar>h3 {
 	color: white;
 	font-size: 1.3rem;
 	font-weight: bold;
-		margin-right: 30px;
+	margin-right: 30px;
 }
 
 .active {
@@ -216,6 +218,69 @@ input[type="radio"]:checked+label:before {
 	font-weight: bold;
 }
 
+.menuItems {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	display: flex;
+}
+
+.card {
+	margin-right: 30px;
+		transition: scale 0.5s;
+}
+
+.card:hover{
+	scale:1.07;
+
+}
+
+
+
+.card-body > *{
+	padding:5px;
+}
+.card-img, .card-img-bottom, .card-img-top {
+	height: 200px;
+}
+.first {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.circle-red{
+	width:15px;
+	height:15px;
+	border-radius:50%;
+	background-color:red;
+}
+
+.circle-green{
+	width:15px;
+	height:15px;
+	border-radius:50%;
+	background-color:green;
+}
+
+
+
+.availbelfrom {
+	font-size: 0.7rem;
+}
+
+.price {
+	color: #f76c28;
+}
+
+.btn{
+	background-color:#272c48;
+}
+
+.btn:hover{
+	color:white;
+	background-color:#f76c28;
+}
+
 .styled-table {
 	border-collapse: collapse;
 	margin: 25px 0;
@@ -247,9 +312,16 @@ input[type="radio"]:checked+label:before {
 	border-bottom: 2px solid #f76c28;
 }
 
+.card-body{
+	display: flex;
+	flex-direction: column;
+}
+
 .bookorderbtn {
 	font-weight: bold;
 	color: #f76c28;
+	justify-content: flex-end;
+	align-items: flex-end;
 }
 
 .cancleorderbtn {
