@@ -51,7 +51,7 @@
 }
 
 .menubar {
-	flex: 20;
+	flex: 17;
 	height: 100%;
 	width: 100%;
 	display: flex;
@@ -84,7 +84,7 @@
 
 
 .maincontent {
-	flex : 80;
+	flex : 83;
 	height: 100%;
 	width: 100%;
 	padding-top: 20px;
