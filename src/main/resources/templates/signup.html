@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+
 <link rel="stylesheet" th:href="@{/css/signup.css}" />
 <link rel="preconnect" th:href="@{https://fonts.googleapis.com}">
 <link rel="preconnect" th:href="@{https://fonts.gstatic.com}"
@@ -10,6 +12,7 @@
 <link
 	th:href="@{https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap}"
 	rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 
 
 </head>
@@ -47,9 +50,28 @@
 	</div>
 
 	<div class="slider"></div>
-
-	<script
-		th:src="@{https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js}"
+	<div class="toast" id="UserExists" style="position: absolute; top: 10px; left: 50%;transform:translateX(-50%)">
+	    <div class="toast-header">
+	      <strong class="mr-auto">User Exists</strong>
+	    </div>
+	</div>
+	<script>
+	var UserExists = "[[${UserExists}]]";
+	console.log(UserExists);
+	function showUserExistsToast() {
+		if(UserExists==="1"){
+	      var myAlert = document.getElementById('UserExists');//select id of toast
+	      var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
+	      bsAlert.show();//show it 
+	      console.log(UserExists);
+	      UserExists = "0";
+	      console.log(UserExists);
+	    } 
+	
+	}
+	window.onload=()=> showUserExistsToast();
+	</script>
+	<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js}"
 		integrity="sha512-f8mwTB+Bs8a5c46DEm7HQLcJuHMBaH/UFlcgyetMqqkvTcYg4g5VXsYR71b3qC82lZytjNYvBj2pf0VekA9/FQ=="
 		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script type="text/javascript" th:src="@{/js/style.js}"></script>

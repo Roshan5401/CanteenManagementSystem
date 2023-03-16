@@ -66,12 +66,17 @@ public class HomeController {
 				canteenUsers.setPassword(bCryptPasswordEncoder.encode(canteenUsers.getPassword()));
 				canteenUsers.setRole("ROLE_USER");
 				canteenUsers.setWallet(0.00);
+				try {
 				canteenUserRepository.save(canteenUsers);
+				}catch(Exception e){
+					model.addAttribute("UserExists","1");
+					return "signup";
+				}
 				model.addAttribute("canteenUsers", canteenUsers);
 				httpSession.setAttribute("message",new Message("Successfully Registered!!", "alert-success"));
 				String message="You Have Successfully Registerd for Canteen Services.\nUsername:"+canteenUsers.getEmail()+"\nWallet Balance: Rs0.00";
 				emailSenderService.sendEmail(canteenUsers.getEmail(), "Message from Canteen Management", message);
-
+				model.addAttribute("loginsuccess",1);
 		return "signin";
 
 			}
