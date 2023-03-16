@@ -88,6 +88,9 @@ count.forEach(c=>{
 	itemOrderCount.push(parseInt(c.value));
 });
 
+console.log(itemNames);
+console.log(itemOrderCount);
+
 
 
 
@@ -102,7 +105,7 @@ new Chart(ctx3, {
 		labels: itemNames,
 		datasets: [{
 			color: '#ffeee7',
-			label: 'Food Items Ordered',
+			label: 'Food items sell',
 			data: itemOrderCount,
 			borderWidth: 2,
 			backgroundColor: '#ffeee7',

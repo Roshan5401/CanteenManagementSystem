@@ -13,7 +13,7 @@ public class CanteenManagementSystemApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(CanteenManagementSystemApplication.class, args);
-		               
+		
 	}
 //	public void removeVerificationMessageFromSession() {
 //        try {

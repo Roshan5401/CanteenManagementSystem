@@ -611,7 +611,6 @@ public class AdminController {
 				.collect(Collectors.toList());
 		List<OrderEntity> nonVegFood = ordersDelivered.stream().filter(order -> order.getFood().getType().equals("Nonveg"))
 				.collect(Collectors.toList());
-		//totalOrdersCount gives the number of orders whether it is delivered or not
 		int totalOrdersCount = totalOrders.size();
 		int noOfVegOrders = vegFood.size();
 		int noOfNonVegOrders = nonVegFood.size();
