@@ -57,11 +57,16 @@
 	      <strong class="mr-auto">Wrong OTP, Try again</strong>
 	    </div>
 	</div>
+	<div class="toast" id="loginsuccess" style="position: absolute; top: 10px; left: 50%;transform:translateX(-50%)">
+	    <div class="toast-header">
+	      <strong class="mr-auto">Signup successful</strong>
+	    </div>
+	</div>
 
 	<script type="text/javascript">
 	
 	var OTP = "[[${OTP}]]";
-	
+	var loginsuccess = "[[${loginsuccess}]]";
 	
 	function showOTPToast() {
 		if(OTP==="1"){
@@ -78,8 +83,18 @@
 		      OTP = "0";
 		}
 	}
+	function showloginsuccessToast() {
+		if(loginsuccess==="1"){
+			var myAlert = document.getElementById('loginsuccess');//select id of toast
+		      var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
+		      bsAlert.show();//show it
+		      loginsuccess = "0";
+		      
+		}
+	}
 	window.onload= () =>{
 		showOTPToast();
+		showloginsuccessToast();
 	}
 	</script>
 	<script>
