@@ -116,6 +116,7 @@ public class AdminController {
 		menuCanteen menu=new menuCanteen();
 		
 		long count1 = price.chars().filter(ch -> ch == '.').count();
+
 		long count2=price.chars().filter(ch->(ch>='a' && ch<='z') || (ch>='A' && ch<='Z') || (ch>=33 && ch<=45) || (ch>=58 && ch<=64) ||(ch>=91 && ch<=96) || (ch>=123 && ch<=126) || (ch==47)).count();
 		
 		if(count1>1 || count2>0) {
