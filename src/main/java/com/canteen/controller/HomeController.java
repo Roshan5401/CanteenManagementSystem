@@ -66,12 +66,17 @@ public class HomeController {
 				canteenUsers.setPassword(bCryptPasswordEncoder.encode(canteenUsers.getPassword()));
 				canteenUsers.setRole("ROLE_USER");
 				canteenUsers.setWallet(0.00);
+				try {
 				canteenUserRepository.save(canteenUsers);
+				}catch(Exception e){
+					model.addAttribute("UserExists","1");
+					return "signup";
+				}
 				model.addAttribute("canteenUsers", canteenUsers);
 				httpSession.setAttribute("message",new Message("Successfully Registered!!", "alert-success"));
 				String message="You Have Successfully Registerd for Canteen Services.\nUsername:"+canteenUsers.getEmail()+"\nWallet Balance: Rs0.00";
 				emailSenderService.sendEmail(canteenUsers.getEmail(), "Message from Canteen Management", message);
-
+				model.addAttribute("loginsuccess",1);
 		return "signin";
 
 			}
@@ -125,25 +130,35 @@ public class HomeController {
 	{
 
 		forgotPasswordEmail=username;
-		//if email does not exist in Canteen Users, Genarate Alert
+		CanteenUsers user = canteenUserRepository.findByEmail(forgotPasswordEmail);
+		if(user == null)
+		{
+			model.addAttribute("usernotfound","1");
+			return "/users/forgotpassword";
+		}
 		Random random = new Random();
 		OTP=String.format("%04d", random.nextInt(10000));
 		String message="Your Otp for Forgot password is "+String.valueOf(OTP);
 		emailSenderService.sendEmail(username, "Message from Canteen Management", message);
 		model.addAttribute("username",username);
+		model.addAttribute("usernotfound","2");
 		return "/users/forgotpassword";
 	}
 
 	@PostMapping("/saveForgotPassword")
-	public String saveForgotPassword(@RequestParam("userotp")String otp,@RequestParam("newpassword") String password)
+	public String saveForgotPassword(@RequestParam("userotp")String otp,@RequestParam("newpassword") String password,Model model)
 	{
 		CanteenUsers canteenUsers;
-		// If Otp Equals, Password Updated Alert
+		
 		if(OTP.equals(otp))
 		{
 			canteenUsers=canteenUserRepository.findByEmail(forgotPasswordEmail);
 			canteenUsers.setPassword(bCryptPasswordEncoder.encode(password));
 			canteenUserRepository.save(canteenUsers);
+			model.addAttribute("OTP","1");
+		}
+		else {
+			model.addAttribute("OTP","2");
 		}
 		//if OTP Mismatch Genarate ALert
 		return "signin";
