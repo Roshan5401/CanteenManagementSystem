@@ -222,11 +222,14 @@ input[type="radio"]:checked+label:before {
 	margin-top: 20px;
 	margin-bottom: 20px;
 	display: flex;
+	flex-wrap:wrap;
+	justify-content: center;
 }
 
 .card {
-	margin-right: 30px;
+	margin: 30px;
 		transition: scale 0.5s;
+
 }
 
 .card:hover{
