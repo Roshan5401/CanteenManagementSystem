@@ -20,6 +20,8 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,7 +42,10 @@ import com.canteen.repository.OrderRepository;
 import com.canteen.service.EmailSenderService;
 import com.canteen.service.OrderService;
 
+import aj.org.objectweb.asm.Attribute;
+
 @Controller
+@EnableScheduling
 public class UserController {
 	@Autowired
 	CanteenUserRepository canteenUserRepository;
@@ -121,6 +126,7 @@ public class UserController {
 		List<OrderEntity> userOrders = orders.stream().filter(order -> order.getCanteenUsers().getId() == id)
 				.collect(Collectors.toList());
 		System.out.println(current_user.getWallet());
+
 		model.addAttribute("foodItems", finalFoodItems);
 		model.addAttribute("user", current_user);
 		model.addAttribute("user_orders", userOrders);
@@ -310,18 +316,36 @@ public class UserController {
 	}
 
 	@GetMapping("/user/savefeedback/{ID}")
-	public RedirectView saveFeedback(@PathVariable("ID") Integer Id, @ModelAttribute("feedbackdata") String feedback,RedirectAttributes attributes) {
+	public RedirectView saveFeedback(@PathVariable("ID") Integer Id, @ModelAttribute("feedbackdata") String feedback,
+			RedirectAttributes attributes) {
 		Optional<OrderEntity> optional = orderRepository.findById(Id);
 		OrderEntity orderEntity = optional.get();
 		System.out.println(Id);
 		orderEntity.setFeedback(feedback);
 		orderRepository.save(orderEntity);
-		attributes.addAttribute("FeedbackSaved",1);
+		attributes.addAttribute("FeedbackSaved", 1);
 		return new RedirectView("/user/viewPreviousOrders");
 	}
 
 	TreeMap<LocalDate, Integer> treeMap = new TreeMap<>();
 	double ordersTotal = 0;
+
+	@GetMapping("/user/redirectselectdates/{orderid}")
+	public RedirectView prevOrderTOreOrder(@PathVariable("orderid") String orderid, Model model,
+			RedirectAttributes attributes) {
+		OrderEntity order = orderRepository.findByOrderId(Integer.parseInt(orderid));
+		menuCanteen food = order.getFood();
+		System.out.println(food);
+
+		if (food.isEnable() == Boolean.parseBoolean("0")) {
+			System.out.println("Food has been deleted");
+			attributes.addAttribute("foodExist", 0);
+			return new RedirectView("/user/viewPreviousOrders");
+		}
+		model.addAttribute("food", food);
+
+		return new RedirectView("/user/selectDates/" + food.getID() + "/" + food.getFoodServedDate());
+	}
 
 	@GetMapping("/user/selectDates/{foodId}/{foodServedDate}")
 	public String selectDates(Principal principal, Model model, @PathVariable("foodId") String foodId,
@@ -391,7 +415,7 @@ public class UserController {
 			} else {
 
 				if (treeMap.containsKey(requestedDate)) {
-
+					model.addAttribute("dateExists", "1");
 				} else {
 					treeMap.put(requestedDate, quantity);
 					ordersTotal += (quantity * (food.getPrice()));
@@ -403,7 +427,6 @@ public class UserController {
 		model.addAttribute("food", food);
 		model.addAttribute("treeMap", treeMap);
 		model.addAttribute("ordersTotal", ordersTotal);
-
 		String email = principal.getName();
 		CanteenUsers canteenUser = canteenUserRepository.findByEmail(email);
 
@@ -613,5 +636,48 @@ public class UserController {
 		
 		model.addAttribute("sellPerMonth", monthsData);
 		return "/users/useranalytics";
+	}
+	@Scheduled(cron = "0 30 12 ? * *")
+	public void FoodPrepMailing() {
+		List<OrderEntity> orderEntities = (List<OrderEntity>) orderRepository.findAll();
+		Date today = java.sql.Date.valueOf(LocalDate.now());
+		for (OrderEntity order : orderEntities) {
+			if (order.getOrderDate().equals(today)) {
+				String message = "Your Food is Prepared.Collect it from canteen";
+				emailSenderService.sendEmail(order.getCanteenUsers().getEmail(), "Message from Canteen Management",
+						message);
+			}
+		}
+
+	}
+
+	@GetMapping("/user/itemFeedback/{foodID}")
+	public String itemFeedback(Model model, Principal principal, @PathVariable("foodID") String foodID) {
+		// Passing user Information in the item feedback page
+		int id = Integer.parseInt(foodID);
+		String userName = principal.getName();
+		CanteenUsers current_user = canteenUserRepository.findByEmail(userName);
+		model.addAttribute("user", current_user);
+
+		// Fetching the food Item Details
+		menuCanteen food = this.menuRepository.findById(id);
+		model.addAttribute("food", food);
+
+		// Fetching orders table and filtering all the feedbacks from the table and
+		// passing all the feedbacks in the page
+		System.out.println(foodID);
+		List<OrderEntity> allOrders = this.orderService.getAllOrders("Delivered");
+		System.out.println(allOrders);
+
+	  List<OrderEntity> foodSorting = allOrders.stream().filter(order ->
+	  (order.getFood().getID() )== id) .collect(Collectors.toList());
+	  System.out.println(foodSorting);
+
+		List<OrderEntity> finalFeedbacks = foodSorting.stream().filter(order -> order.getFeedback() != null)
+				.collect(Collectors.toList());
+		System.out.println(finalFeedbacks);
+
+		model.addAttribute("feedbacks", finalFeedbacks);
+		return "/users/itemfeedback";
 	}
 }

@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
+<Meta HTTP-EQUIV="Refresh" CONTENT="20">
 <title>Insert title here</title>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
@@ -21,16 +22,18 @@
 </head>
 <body>
 	<a th:href="@{/logout}" class="logoutbutton">Log out</a>
-	
+
 	<div class="navbar">
-		<div class="logo">NRI <span id = "diff">Canteen</span></div>
-	
+		<div class="logo">
+			NRI <span id="diff">Canteen</span>
+		</div>
+
 		<h3 class="hellouser">
-				Hello, <span th:text="${user.name}"></span>
-			</h3> 
+			Hello, <span th:text="${user.name}"></span>
+		</h3>
 	</div>
 	<div class="userboard">
-		<!-- <div class="linkbar">
+		<!--  <div class="linkbar">
 			<a th:href="@{/user/bookOrder}"><i
 				class="fa-solid fa-bag-shopping active"></i></a> <a
 				th:href="@{/user/viewPreviousOrders}"><i
@@ -39,7 +42,7 @@
 				class="fa-solid fa-wallet"></i></a> <a th:href="@{/user/updateProfile}"><i
 				class="fa-solid fa-user"></i></a>
 
-		</div> -->
+		</div>  -->
 
 		<div class="menubar">
 			<!-- <h3 class="hellouser">
@@ -88,30 +91,40 @@
 			<div class="currentmenu">
 
 				<h2>Current Menu</h2>
-				<table class="styled-table">
-					<thead>
-						<tr>
-							<th>Item Name</th>
-							<th>Price</th>
-							<th>Type</th>
-							<th>Available From</th>
-							<th>Action</th>
-
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="food :  ${foodItems}">
-
-							<td th:text="${food.name}"></td>
-							<td th:text="${food.price}"></td>
-							<td th:text="${food.type}"></td>
-							<td th:text="${food.foodServedDate}"></td>
-							<td><a
+				
+				<div class="menuItems">
+					<div class="card" style="width: 18rem;" th:each="food : ${foodItems}">
+					<div th:if="${#strings.isEmpty(food.image)}">
+							<img class="card-img-top" th:src="@{https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png}" alt="" />
+					</div>
+					<div th:unless="${#strings.isEmpty(food.image)}">
+						<img th:src="*{'data:image/jpeg;base64, '+{food.image}}" class="card-img-top" alt="...">
+					</div>
+					
+					<div class="card-body">
+						<div class="first">
+							<h3 class="card-title" th:text="${food.name}"></h3>
+					<!-- 		<h5 th:text="${food.type}"></h5> -->
+							<div class = "circle" th:classappend="${food.type=='Veg'?'circle-green':'circle-red'}"></div>
+						</div>
+						<div class="second">
+							<h5 class = "price">₹ <span th:text="${food.price}"></span></h5>
+							
+						</div>
+						<h5 class = "availbelfrom">Available from - <span th:text="${food.foodServedDate}"></span></h5>
+						
+						<a th:href="@{'/user/itemFeedback/'+${food.ID}}" style = "color :#f76c28 ">View Feedback</a>
+						
+						<a
 								th:href="@{'/user/selectDates/'+${food.ID}+'/'+${food.foodServedDate}}"
-								class="bookorderbtn">Book Order</a></td>
-						</tr>
-					</tbody>
-				</table>
+								class="bookorderbtn btn">Book Order</a>
+					</div>
+				</div>
+				
+				</div>
+				
+
+			
 			</div>
 
 			<div class="upcomingOrders">

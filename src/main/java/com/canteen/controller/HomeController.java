@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
+import java.util.Random;
 
 import org.hibernate.query.NativeQuery.ReturnableResultNode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,5 +109,43 @@ public class HomeController {
 	public String failureLogin()
 	{
 		return "loginFailed";
+	}
+		//Forgot Password
+    @GetMapping("/forgotpassword")
+    public String forgotPassword(Model model) {
+    	String username="";
+    	model.addAttribute("username", username);
+    	return "/users/forgotpassword";
+    }
+    
+	String forgotPasswordEmail="";
+	String OTP;
+	@PostMapping("/genarateOtp")
+	public String genarateOtp(@RequestParam("username")String username,Model model)
+	{
+
+		forgotPasswordEmail=username;
+		//if email does not exist in Canteen Users, Genarate Alert
+		Random random = new Random();
+		OTP=String.format("%04d", random.nextInt(10000));
+		String message="Your Otp for Forgot password is "+String.valueOf(OTP);
+		emailSenderService.sendEmail(username, "Message from Canteen Management", message);
+		model.addAttribute("username",username);
+		return "/users/forgotpassword";
+	}
+
+	@PostMapping("/saveForgotPassword")
+	public String saveForgotPassword(@RequestParam("userotp")String otp,@RequestParam("newpassword") String password)
+	{
+		CanteenUsers canteenUsers;
+		// If Otp Equals, Password Updated Alert
+		if(OTP.equals(otp))
+		{
+			canteenUsers=canteenUserRepository.findByEmail(forgotPasswordEmail);
+			canteenUsers.setPassword(bCryptPasswordEncoder.encode(password));
+			canteenUserRepository.save(canteenUsers);
+		}
+		//if OTP Mismatch Genarate ALert
+		return "signin";
 	}
 }

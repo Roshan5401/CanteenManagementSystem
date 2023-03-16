@@ -14,5 +14,6 @@ public interface MenuRepository extends JpaRepository<menuCanteen, Integer> {
 	@Query("select u From menuCanteen u Where u.Enable=:n")
 	public List<menuCanteen> getFoodByEnable(@Param("n") boolean val);
 	
-	
+	@Query("select u From menuCanteen u Where u.name=:n and u.Enable=1")
+	public menuCanteen findByName(@Param("n") String foodname);
 }

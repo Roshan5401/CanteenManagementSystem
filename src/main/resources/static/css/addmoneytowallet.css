@@ -61,7 +61,7 @@
 
 
 .menubar {
-	flex: 20;
+	flex: 17;
 	height: 100%;
 	width: 100%;
 	display: flex;
@@ -93,7 +93,7 @@
 }
 
 .maincontent{
-	flex : 80;
+	flex : 83;
 	height: 100%;
 	width: 100%;
 	padding-top: 20px;
@@ -209,6 +209,33 @@ img.moneybag {
     100% { transform: translateY(-40px); }
 }
 
+/* feedback users */
+
+.info{
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 30px;
+}
+.info>*{
+	font-weight: bold;
+}
+
+.info > h2 > span{
+	color:#f76c28;
+}
+
+.feedback{
+	background-color : #fbded2;
+	padding:30px;
+	border-radius:15px;
+	margin-top:20px;
+	color:#f76c28;
+}
+
+.feedback > .feedprovider{
+	margin-top:30px;
+	color:black;
+}
 
 
 
