@@ -156,14 +156,15 @@ public class AdminController {
 		 */
 		
 		String filename = StringUtils.cleanPath(file.getOriginalFilename());
-		
+	
 		if(filename.contains("..")) {
 			System.out.println("File is not supported");
 		}
-		menu.setImage(Base64.getEncoder().encodeToString(file.getBytes()));
+			menu.setImage(Base64.getEncoder().encodeToString(file.getBytes()));
+			menuRepository.save(menu);
+			attributes.addAttribute("Added",1);
 		
-		menuRepository.save(menu);
-		attributes.addAttribute("Added",1);
+		
 		return new RedirectView("/admin/addAndUpdateMenu");
 	}
 
