@@ -158,6 +158,7 @@ public class HomeController {
 			model.addAttribute("OTP","1");
 		}
 		else {
+			OTP="abc";
 			model.addAttribute("OTP","2");
 		}
 		//if OTP Mismatch Genarate ALert
