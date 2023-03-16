@@ -1,5 +1,4 @@
-// Orders Per  Month Chart
-
+//for bar chart the code is given below
 var sellPerMonth = [];
 const monthData = document.querySelectorAll(".monthdata");
 
@@ -15,7 +14,7 @@ new Chart(ctx, {
 	data: {
 		labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 		datasets: [{
-			label: 'Orders Placed every Month',
+			label: 'Amount Spend Per Month',
 			data: sellPerMonth,
 			borderWidth: 2, // Set the line width to 2 pixels
 			backgroundColor: '#272c48',
@@ -34,20 +33,15 @@ new Chart(ctx, {
 
 
 
-// Veg Non - veg Ratio
-
-// Accessing the data of veg and nonveg Orders Count
 
 
-
-var vegCount = document.getElementById("veg").getAttribute("data-message");
-var nonVegCount = document.getElementById("nonveg").getAttribute("data-message");
-
+//pie chart for the veg and non veg for the particular user
+var vegCount = document.getElementById("vegfood").getAttribute("data-message");
+var nonVegCount = document.getElementById("nonvegfood").getAttribute("data-message");
 console.log(vegCount);
 console.log(nonVegCount);
-
 const ctx2 = document.getElementById('typeChart');
-
+console.log(vegCount);
 new Chart(ctx2, {
 	type: 'doughnut',
 	data: {
@@ -72,8 +66,7 @@ new Chart(ctx2, {
 });
 
 
-
-// Bar data to show food sell in height
+//bar for the item bought by the user over the year
 var itemNames = [];
 var itemOrderCount = [];
 
