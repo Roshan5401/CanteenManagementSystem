@@ -14,6 +14,7 @@
 	rel="stylesheet"
 	integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
 	crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <link rel="stylesheet" th:href="@{/css/updateprofileadmin.css}" />
 <script
@@ -26,12 +27,12 @@
 	<div class="userboard">
 		<div class="menubar">
 			<h3 class="hellouser">Hello, Admin</h3>
-			<a th:href="@{/admin/updateUserProfile}" class="active">Update
-				user profile</a> <a th:href="@{/admin/addAndUpdateMenu}">Add and
-				Update menu</a> <a th:href="@{/admin/viewPreviousOrders}">View
-				Previous orders</a> <a th:href="@{/admin/viewUpcomingOrders}">View
-				Upcoming orders</a> <a th:href="@{/admin/viewFeedbacks}">View
-				Feedbacks</a><a th:href="@{/admin/analytics}">Analytics</a>
+			<a th:href="@{/admin/updateUserProfile}" class="active"><i class="fa-solid fa-user"></i> Update
+				user profile</a> <a th:href="@{/admin/addAndUpdateMenu}"> <i class="fa-sharp fa-solid fa-bowl-food"></i> Add and
+				Update menu</a> <a th:href="@{/admin/viewPreviousOrders}"><i class="fa-solid fa-backward"></i> View
+				Previous orders</a> <a th:href="@{/admin/viewUpcomingOrders}"><i class="fa-solid fa-forward"></i> View
+				Upcoming orders</a> <a th:href="@{/admin/viewFeedbacks}"><i class="fa-solid fa-comment-dots"></i> View
+				Feedbacks</a><a th:href="@{/admin/analytics}"><i class="fa-sharp fa-solid fa-chart-simple"></i>  Analytics</a>
 		</div>
 		<div class="maincontent">
 			<h2>Update profile of any user</h2>
