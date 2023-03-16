@@ -6,7 +6,9 @@
 	box-sizing: border-box;
 	font-family: 'Poppins', sans-serif;
 }
-
+.icon{
+	margin-right: 20px;
+}
 a {
 	text-decoration: none;
 }
@@ -107,10 +109,10 @@ a {
 }
 
 .maincontent {
-	flex: 80;
+	flex: 83;
 	height: 100%;
 	width: 100%;
-	padding: 25px;
+	padding: 20px;
 	overflow-y: scroll;
 }
 
@@ -223,13 +225,13 @@ input[type="radio"]:checked+label:before {
 	margin-bottom: 20px;
 	display: flex;
 	flex-wrap:wrap;
-	justify-content: center;
+	justify-content: flex-start;
 }
 
 .card {
 	margin: 30px;
-		transition: scale 0.5s;
-
+	transition: scale 0.5s;
+	flex-basis: auto;
 }
 
 .card:hover{

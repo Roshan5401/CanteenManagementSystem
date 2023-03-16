@@ -7,6 +7,10 @@
 	font-family: 'Poppins', sans-serif;
 }
 
+.icon{
+	margin-right: 20px;
+}
+
 a {
 	text-decoration: none;
 }
@@ -105,10 +109,10 @@ a {
 }
 
 .maincontent {
-	flex: 80;
+	flex: 83;
 	height: 100%;
 	width: 100%;
-	padding: 25px;
+	padding: 20px;
 	overflow-y: scroll;
 }
 
