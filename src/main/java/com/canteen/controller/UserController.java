@@ -296,13 +296,14 @@ public class UserController {
 			if (bCryptPasswordEncoder.matches(oldPassword, current_user.getPassword())) {
 				current_user.setPassword(bCryptPasswordEncoder.encode(newPasword));
 				attributes.addAttribute("success", "1");
+				canteenUserRepository.save(current_user);
 				return new RedirectView("/user/updateProfile");
 			} else {
 				attributes.addAttribute("error", "1");
 				return new RedirectView("/user/updateProfile");
 			}
 		}
-		canteenUserRepository.save(current_user);
+		
 		return new RedirectView("/user/updateProfile");
 	}
 
