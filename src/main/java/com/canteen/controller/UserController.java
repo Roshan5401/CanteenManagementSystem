@@ -292,16 +292,18 @@ public class UserController {
 		current_user.setName(users.getName());
 		current_user.setPhone(users.getPhone());
 		if (oldPassword.length() > 0 && newPasword.length() > 0) {
+			System.out.println();
 			if (bCryptPasswordEncoder.matches(oldPassword, current_user.getPassword())) {
 				current_user.setPassword(bCryptPasswordEncoder.encode(newPasword));
 				attributes.addAttribute("success", "1");
+				canteenUserRepository.save(current_user);
 				return new RedirectView("/user/updateProfile");
 			} else {
 				attributes.addAttribute("error", "1");
 				return new RedirectView("/user/updateProfile");
 			}
 		}
-		canteenUserRepository.save(current_user);
+		
 		return new RedirectView("/user/updateProfile");
 	}
 
