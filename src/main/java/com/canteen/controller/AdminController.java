@@ -116,8 +116,8 @@ public class AdminController {
 		menuCanteen menu=new menuCanteen();
 		
 		long count1 = price.chars().filter(ch -> ch == '.').count();
-		long count2=price.chars().filter(ch->(ch>='a' && ch<='z') || (ch>='A' && ch<='Z') || (ch>=33 && ch<=45) || (ch>=58 && ch<=64) ||(ch>=91 && ch<=96) || (ch>=123 && ch<=126) ||(ch==47)).count();
-
+		long count2=price.chars().filter(ch->(ch>='a' && ch<='z') || (ch>='A' && ch<='Z') || (ch>=33 && ch<=45) || (ch>=58 && ch<=64) ||(ch>=91 && ch<=96) || (ch>=123 && ch<=126) || (ch==47)).count();
+		
 		if(count1>1 || count2>0) {
 			attributes.addAttribute("PriceWrong",1);
 			return new RedirectView("/admin/addAndUpdateMenu");
@@ -610,6 +610,7 @@ public class AdminController {
 				.collect(Collectors.toList());
 		List<OrderEntity> nonVegFood = ordersDelivered.stream().filter(order -> order.getFood().getType().equals("Nonveg"))
 				.collect(Collectors.toList());
+		//totalOrdersCount gives the number of orders whether it is delivered or not
 		int totalOrdersCount = totalOrders.size();
 		int noOfVegOrders = vegFood.size();
 		int noOfNonVegOrders = nonVegFood.size();
