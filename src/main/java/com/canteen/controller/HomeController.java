@@ -52,10 +52,25 @@ public class HomeController {
 		model.addAttribute("canteenUser", new CanteenUsers());
 		return "signup";
 	}
+	
+	String signupEmail="abc";
+	String signupOtp="abc";
+	@PostMapping("/genarateOtpForSignUp")
+	public String genarateOtpForSignup(@RequestParam("username")String username,Model model)
+	{
+		signupEmail=username;
+		Random random = new Random();
+		signupOtp=String.format("%04d", random.nextInt(10000));
+		String message="OTP for Canteen Service Registration:"+String.valueOf(signupOtp);
+		emailSenderService.sendEmail(signupEmail, "Message from Canteen Management", message);
+		model.addAttribute("username", signupEmail);
+		return "signup";
+	}
+	
 	@PostMapping("/do_register")
-	public String doRegister(@ModelAttribute("canteenUser") CanteenUsers canteenUsers,HttpSession httpSession,Model model){
+	public String doRegister(@ModelAttribute("canteenUser") CanteenUsers canteenUsers,HttpSession httpSession,Model model,@RequestParam("signupOtp") String Otp){
 		try {
-			GlobalEmployees emp=globalRepository.findByEmail(canteenUsers.getEmail());
+			GlobalEmployees emp=globalRepository.findByEmail(signupEmail);
 			if(emp==null)
 			{
 				System.out.println("You are not our employee, Contact Hr to solve your issue");
@@ -63,15 +78,21 @@ public class HomeController {
 				return "loginFailed";
 			}
 			else {
-				canteenUsers.setPassword(bCryptPasswordEncoder.encode(canteenUsers.getPassword()));
-				canteenUsers.setRole("ROLE_USER");
-				canteenUsers.setWallet(0.00);
-				try {
-				canteenUserRepository.save(canteenUsers);
-				}catch(Exception e){
-					model.addAttribute("UserExists","1");
-					return "signup";
+				
+				if(Otp.equals(signupOtp))
+				{
+					canteenUsers.setEmail(signupEmail);
+					canteenUsers.setPassword(bCryptPasswordEncoder.encode(canteenUsers.getPassword()));
+					canteenUsers.setRole("ROLE_USER");
+					canteenUsers.setWallet(0.00);
+					try {
+					canteenUserRepository.save(canteenUsers);
+					}catch(Exception e){
+						model.addAttribute("UserExists","1");
+						return "signup";
+					}
 				}
+
 				model.addAttribute("canteenUsers", canteenUsers);
 				httpSession.setAttribute("message",new Message("Successfully Registered!!", "alert-success"));
 				String message="You Have Successfully Registerd for Canteen Services.\nUsername:"+canteenUsers.getEmail()+"\nWallet Balance: Rs0.00";
@@ -91,6 +112,7 @@ public class HomeController {
 		}
 		
 	}
+	
 	@GetMapping("/signin")
 	public String login(Model model) {
 		return "signin";
