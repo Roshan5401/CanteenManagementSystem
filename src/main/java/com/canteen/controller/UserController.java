@@ -113,6 +113,7 @@ public class UserController {
 		List<menuCanteen> foodItems = menuRepository.findAll();
 		List<menuCanteen> enabledFoodItems = foodItems.stream().filter(item -> item.isEnable() == true)
 				.collect(Collectors.toList());
+		
 		Date date = new Date();
 		@SuppressWarnings("deprecation")
 		int month = date.getMonth();
