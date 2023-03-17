@@ -62,6 +62,7 @@
 	    </div>
 	</div>
 	<script>
+	var OTP = "[[${OTP}]]";
 	var UserExists = "[[${UserExists}]]";
 	console.log(UserExists);
 	function showUserExistsToast() {
@@ -75,7 +76,18 @@
 	    } 
 	
 	}
-	window.onload=()=> showUserExistsToast();
+	function showOTPToast() {
+		if(OTP==="2"){
+			var myAlert = document.getElementById('OTPmismatch');//select id of toast
+		      var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
+		      bsAlert.show();//show it
+		      OTP = "0";
+		}
+	}
+	window.onload=()=> {
+		showUserExistsToast();
+		showOTPToast();
+		}
 	</script>
 	<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js}"
 		integrity="sha512-f8mwTB+Bs8a5c46DEm7HQLcJuHMBaH/UFlcgyetMqqkvTcYg4g5VXsYR71b3qC82lZytjNYvBj2pf0VekA9/FQ=="

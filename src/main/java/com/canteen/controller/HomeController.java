@@ -92,6 +92,12 @@ public class HomeController {
 						return "signup";
 					}
 				}
+				else {
+					OTP="abc";
+					model.addAttribute("OTP","2");
+					return "signin";
+					
+				}
 
 				model.addAttribute("canteenUsers", canteenUsers);
 				httpSession.setAttribute("message",new Message("Successfully Registered!!", "alert-success"));
