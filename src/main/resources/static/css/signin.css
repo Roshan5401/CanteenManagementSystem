@@ -61,10 +61,7 @@ input[type=submit]{
 	cursor: pointer;
 }
 
-.backtosigninsignup{
-	display: flex;
-	justify-content: space-between;
-}
+
 .generatebtn{
 	background-color:#ffeee7;
 	align-self: flex-start;

@@ -5,6 +5,20 @@
 	font-family: 'Poppins', sans-serif;
 }
 
+.backtosigninsignup{
+	display: flex;
+	justify-content: space-between;
+}
+
+.generatebtn{
+	background-color:#ffeee7;
+	display:flex;
+	align-content:flex-start;
+	margin-bottom: 2px;
+	margin-top: 2px;
+}
+
+
 .content{
 	height:100vh;
 	width:100%;
