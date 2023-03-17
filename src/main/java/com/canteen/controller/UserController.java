@@ -208,6 +208,8 @@ public class UserController {
 	}
 
 	// It will update current user wallet balance by taking input and again redirect
+	//not successfull alert required 
+	//amount edge case fixed
 	// to addmoneytowalletpage
 	@GetMapping("/user/addBalance")
 	public RedirectView addBalance(Model model, Principal principal, @ModelAttribute("amount") String amount,
@@ -222,13 +224,18 @@ public class UserController {
 		int qan = (int) cvv.chars().filter(Character::isDigit).count();
 		if (qan != 3)
 			return new RedirectView("/user/addMoneyToWallet");
-
+		long count1 = amount.chars().filter(ch -> ch == '.').count();
+		long count2=amount.chars().filter(ch->(ch>='a' && ch<='z') || (ch>='A' && ch<='Z') || (ch>=33 && ch<=45) || (ch>=58 && ch<=64) ||(ch>=91 && ch<=96) || (ch>=123 && ch<=126) || (ch==47)).count();
+		
+		if(count1>0 || count2>0) {
+			return new RedirectView("/user/addMoneyToWallet");
+		}
 		Double d = Double.valueOf(amount);
 		DecimalFormat defor = new DecimalFormat("0.00");
 		String val = defor.format(d);
 		Double finalVal = Double.valueOf(val);
 		CanteenUsers current_user = canteenUserRepository.findByEmail(userName);
-
+		
 		if (d < 0 || d > 5000) {
 			return new RedirectView("/user/addMoneyToWallet");
 		} else {
