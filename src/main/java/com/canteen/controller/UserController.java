@@ -84,8 +84,12 @@ public class UserController {
 		List<menuCanteen> finalFoodItemsByType = enabledFoodItems.stream()
 				.filter(item -> item.getFoodServedDate().getMonth() == month).collect(Collectors.toList());
 		List<menuCanteen> temp = finalFoodItemsByType;
+		
+		if(type.isEmpty()) {
+			
+		}
 
-		if (!type.equals("All")) {
+		else if(!type.equals("All")){
 			finalFoodItemsByType = finalFoodItemsByType.stream().filter(item -> item.getType().equals(type))
 					.collect(Collectors.toList());
 		}
@@ -101,6 +105,39 @@ public class UserController {
 		model.addAttribute("user_orders", userOrders);
 		return "users/bookorder";
 
+	}
+	
+	@GetMapping("/user/bookOrderByName")
+	public String bookOrderByName(Model model , Principal principal,@RequestParam("foodItemName") String foodItemName) {
+		String userName = principal.getName();
+		CanteenUsers current_user = canteenUserRepository.findByEmail(userName);
+
+		// Viewing Menu Backend Implemantation
+
+		List<menuCanteen> foodItems = menuRepository.findAll();
+		List<menuCanteen> enabledFoodItems = foodItems.stream().filter(item -> item.isEnable() == true)
+				.collect(Collectors.toList());
+		
+		Date date = new Date();
+		@SuppressWarnings("deprecation")
+		int month = date.getMonth();
+		@SuppressWarnings("deprecation")
+		List<menuCanteen> finalFoodItems = enabledFoodItems.stream()
+				.filter(item -> item.getFoodServedDate().getMonth() == month).collect(Collectors.toList());
+
+		List<menuCanteen> searchedFoodItems = finalFoodItems.stream().filter(order->(order.getName().toLowerCase()).contains(foodItemName.toLowerCase())).collect(Collectors.toList());
+		
+		// Upcoming Orders backend Implemantation
+		int id = current_user.getId();
+		List<OrderEntity> orders = this.orderService.getAllOrders("Booked");
+		List<OrderEntity> userOrders = orders.stream().filter(order -> order.getCanteenUsers().getId() == id)
+				.collect(Collectors.toList());
+		System.out.println(current_user.getWallet());
+
+		model.addAttribute("foodItems", searchedFoodItems);
+		model.addAttribute("user", current_user);
+		model.addAttribute("user_orders", userOrders);
+		return "users/bookorder";
 	}
 
 	@GetMapping("/user/bookOrder")
