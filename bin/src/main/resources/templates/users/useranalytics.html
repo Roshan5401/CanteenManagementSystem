@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+	crossorigin="anonymous">
+
+
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+	crossorigin="anonymous"></script>
+
+<script src="https://kit.fontawesome.com/da7dc3d4c5.js"
+	crossorigin="anonymous"></script>
+
+<link rel="preconnect" th:href="@{https://fonts.googleapis.com}">
+<link rel="preconnect" th:href="@{https://fonts.gstatic.com}"
+	crossorigin>
+<link
+	th:href="@{https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap}"
+	rel="stylesheet">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+<link rel="stylesheet" th:href="@{/css/useranalytics.css}" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+	crossorigin="anonymous"></script>
+</head>
+<body>
+<!--  The data which will be used in the Javascript for analytics through chart js but wont be shown directly on the web page-->
+<div id="vegfood"  th:attr="data-message=${vegfood}"></div>
+<div id="nonvegfood"  th:attr="data-message=${nonvegfood}"></div>
+<div th:each = "monthData : ${sellPerMonth}" style="display:none;">
+	<input th:value = ${monthData} class = "monthdata"></input>
+</div>
+
+<div th:each="val :  ${barNames}"  style="display:none;">
+					<input th:value="${val}" class ="barnames"></input>
+					
+</div>
+<div th:each = "count : ${barHeight}" style="display:none;">
+	<input th:value = ${count} class = "barheights"></input>
+</div>
+
+	<a th:href="@{/logout}" class="logoutbutton">Log out</a>
+	<div class="navbar">
+		<div class="logo">NRI <span id = "diff">Canteen</span></div>
+	
+		<h3 class="hellouser">
+				Hello, <span th:text="${user.name}"></span>
+			</h3> 
+	</div>
+	<div class="userboard">
+		<div class="menubar">
+			
+			<a th:href="@{/user/bookOrder}" ><i class ="fa-sharp fa-solid fa-burger"></i>  Book Order</a> <a
+				th:href="@{/user/viewPreviousOrders}"><i class ="fa-solid fa-backward"></i> View Previous Order</a> <a
+				th:href="@{/user/addMoneyToWallet}"><i class = " fa-sharp fa-solid fa-wallet"></i>  Add Money to Wallet</a> <a
+				th:href="@{/user/updateProfile}"><i class = "fa-solid fa-user"></i>  Update Profile</a>
+				<a th:href="@{/user/useranalytics}" class = "active"><i class="fa-sharp fa-solid fa-chart-simple icon"></i>  Analytics</a>
+		</div>
+		<div class="maincontent">
+			<!-- Application Counts -->
+			<div class="countstats">
+				<div class="allfood">
+					<h2 class = "title">Overall Booking</h2>
+					<h2 class = "value" th:text="${totalDeliveredOrders}"></h2>
+				</div>
+				<div class="fooditems">
+					<h2 class = "title">Current Month Booking</h2>
+					<h2 class = "value" th:text="${totalitemthismonth}"></h2>
+				</div>
+				<div class="overall">
+					<h2 class = "title">Overall Spend</h2>
+					<h2 class = "value" th:text="${totalcostitems}"></h2>
+				</div>
+				<div class="vegi">
+					<h2 class = "title">Current Month Spend</h2>
+					<h2 class = "value" th:text="${totalcostthismonth}"></h2>
+				</div>
+			</div>
+			<div class="chartone">
+				<div class="box">
+				<canvas id="yearChart"></canvas>
+				</div>
+				<div class="box">
+					<canvas id="typeChart"></canvas>
+				</div>
+			</div>
+			<div class="charttwo">
+				<div class="box">
+					<canvas id="foodChart"></canvas>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js}" integrity="sha512-f8mwTB+Bs8a5c46DEm7HQLcJuHMBaH/UFlcgyetMqqkvTcYg4g5VXsYR71b3qC82lZytjNYvBj2pf0VekA9/FQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script type="text/javascript" th:src="@{/js/style.js}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.2.1/chart.min.js" integrity="sha512-v3ygConQmvH0QehvQa6gSvTE2VdBZ6wkLOlmK7Mcy2mZ0ZF9saNbbk19QeaoTHdWIEiTlWmrwAL4hS8ElnGFbA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script type = "text/javascript" th:src="@{/js/useranalytics.js}"></script>
+	
+</body>
+</html>

@@ -55,11 +55,11 @@ input{
 	border-radius: 15px;
 	border:none;
 	padding: 15px;
-	width:400px;
+	width:100%;
 }
 
 .button {
-	width: 500px;
+	width: 100%;
 	padding: 20px;
 	background: #f76c28;
 	border-radius: 15px;

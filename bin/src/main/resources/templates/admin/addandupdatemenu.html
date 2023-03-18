@@ -14,39 +14,50 @@
 	rel="stylesheet"
 	integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
 	crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+	crossorigin="anonymous"></script>
 <link rel="stylesheet" th:href="@{/css/addandupdatemenu.css}" />
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 </head>
 <body>
 	<a th:href="@{/logout}" class="logoutbutton">Log out</a>
 	<div class="userboard">
 		<div class="menubar">
 			<h3 class="hellouser">Hello, Admin</h3>
-			<a th:href="@{/admin/updateUserProfile}">Update user profile</a> <a
-				th:href="@{/admin/addAndUpdateMenu}" class="active">Add and
-				Update menu</a> <a th:href="@{/admin/viewPreviousOrders}">View
-				Previous orders</a> <a th:href="@{/admin/viewUpcomingOrders}">View
-				Upcoming orders</a> <a th:href="@{/admin/viewFeedbacks}">View
-				Feedbacks</a>
+			<a th:href="@{/admin/updateUserProfile}"><i class="fa-solid fa-user icon"></i> Update user profile</a> <a
+				th:href="@{/admin/addAndUpdateMenu}" class="active"> <i class="fa-sharp fa-solid fa-bowl-food icon"></i> Add and
+				Update menu</a> <a th:href="@{/admin/viewPreviousOrders}"><i class="fa-solid fa-backward icon"></i> View
+				Previous orders</a> <a th:href="@{/admin/viewUpcomingOrders}"><i class="fa-solid fa-forward icon"></i> View
+				Upcoming orders</a> <a th:href="@{/admin/viewFeedbacks}"><i class="fa-solid fa-comment-dots icon"></i> View
+				Feedbacks</a><a th:href="@{/admin/analytics}"><i class="fa-sharp fa-solid fa-chart-simple icon"></i>  Analytics</a>
+
 		</div>
 		<div class="maincontent">
 
 			<div class="menuInputForm">
-				<form th:action="@{/admin/addfood}" class="actualForm"
-					th:object="${new_food}" method="post">
+				<form th:action="@{/admin/addfood}" class="actualForm" method="post"
+					enctype="multipart/form-data">
 					<h1>Add a new Item</h1>
 					<input type="text" placeholder="Enter the item name"
-						class="inputField" name="name" /> <input type="text"
-						placeholder="Enter the price" class="inputField" name="price" />
+						class="inputField" name="name" required /> <input type="text"
+						placeholder="Enter the price" class="inputField" name="price"
+						required /> <input type="date" placeholder="Enter the date"
+						class="inputField" name="foodServedDate" required />
+					<div class="secondInput">
 
-					<input type="date" placeholder="Enter the date" class="inputField"
-						name="foodServedDate" />
 
-					<div class="radioBtns inputField">
-						<input type="radio" id="red" name="type" value="Nonveg"> <label
-							for="red">Non-Veg</label> <input type="radio" id="green"
-							name="type" value="Veg"> <label for="green">Veg</label>
+						<div class="radioBtns inputField">
+							<input type="radio" id="red" name="type" value="Nonveg" required>
+							<label for="red">Non-Veg</label> <input type="radio" id="green"
+								name="type" value="Veg" required> <label for="green">Veg</label>
+						</div>
+
+						<div id="file-upload">
+							<input type="file" name="itemImage" accept=".png, .jpg, .jpeg"/>
+						</div>
 					</div>
 					<div class="submitButton">
 						<input type="submit" value="Add Item" class="button" />
@@ -57,7 +68,7 @@
 
 
 
-			<h2 class="currentmenu">Current Menu</h2>
+			<h2>Current Menu</h2>
 			<table class="styled-table">
 				<thead>
 					<tr>
@@ -94,6 +105,89 @@
 		</div>
 		<div class="toast-body">Welcome!!</div>
 	</div>
+	<div class="toast" id="Added"
+		style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%)">
+		<div class="toast-header">
+			<strong class="mr-auto">Food Item Added<strong>
+		</div>
+	</div>
+	<div class="toast" id="MenuDeleted"
+		style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%)">
+		<div class="toast-header">
+			<strong class="mr-auto">Food Item Deleted<strong>
+		</div>
+	</div>
+	<div class="toast" id="PriceWrong"
+		style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%)">
+		<div class="toast-header">
+			<strong class="mr-auto">Wrong price input<strong>
+		</div>
+	</div>
+	<script type="text/javascript">
+	const queryString = window.location.search;
+	console.log(queryString);
+	const urlParams = new URLSearchParams(queryString);
+	const deleted = urlParams.get('deleted')
+	const Added = urlParams.get('Added')
+	const PriceWrong = urlParams.get('PriceWrong')
+	function showMenuDeletedToast() {
+		if(deleted==="1"){
+			var myAlert = document.getElementById('MenuDeleted');//select id of toast
+		      var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
+		      bsAlert.show();//show it
+		}
+	}
+	function showMenuAddedToast() {
+		if(Added==="1"){
+			var myAlert = document.getElementById('Added');//select id of toast
+		      var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
+		      bsAlert.show();//show it
+		}
+	}
+	function showPriceWrongToast() {
+		if(PriceWrong==="1"){
+			var myAlert = document.getElementById('PriceWrong');//select id of toast
+		      var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
+		      bsAlert.show();//show it
+		}
+	}
+	
+	window.onload= ()=>	{
+	showMenuDeletedToast();
+	showMenuAddedToast();
+	showPriceWrongToast();
+	}
+
+	function delayPopup()
+	{
+		if(deleted==="1"){
+			const url = window.location.href;
+			console.log(url);
+			const urlobj = new URL(url);
+			urlobj.searchParams.delete("deleted");
+			console.log(urlobj.toString());	
+			window.location.assign(urlobj.toString());
+		}	
+		if(Added==="1"){
+			const url = window.location.href;
+			console.log(url);
+			const urlobj = new URL(url);
+			urlobj.searchParams.delete("Added");
+			console.log(urlobj.toString());	
+			window.location.assign(urlobj.toString());
+		}
+		if(PriceWrong==="1"){
+			const url = window.location.href;
+			console.log(url);
+			const urlobj = new URL(url);
+			urlobj.searchParams.delete("PriceWrong");
+			console.log(urlobj.toString());	
+			window.location.assign(urlobj.toString());
+		}
+	}
+	
+	setTimeout(delayPopup,2000)
+	</script>
 	<script>
 	function showToast() {
 	      var myAlert = document.getElementById('toast');//select id of toast
@@ -108,12 +202,6 @@
 	sessionStorage.setItem('alreadyShow','already shown');
 	}
 	</script>
-	<script
-		th:src="@{https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js}"
-		integrity="sha512-f8mwTB+Bs8a5c46DEm7HQLcJuHMBaH/UFlcgyetMqqkvTcYg4g5VXsYR71b3qC82lZytjNYvBj2pf0VekA9/FQ=="
-		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-	<script type="text/javascript" th:src="@{/js/style.js}"></script>
-
 </body>
 </html>
 

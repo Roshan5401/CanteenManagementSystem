@@ -14,6 +14,9 @@
 	rel="stylesheet"
 	integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
 	crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<script src="https://kit.fontawesome.com/da7dc3d4c5.js"
+	crossorigin="anonymous"></script>
 <link rel="stylesheet" th:href="@{/css/viewpreviousorders.css}" />
 <script
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
@@ -22,13 +25,32 @@
 </head>
 <body>
 	<a th:href="@{/logout}" class="logoutbutton">Log out</a>
+		<div class="navbar">
+		<div class="logo">NRI <span id = "diff">Canteen</span></div>
+	
+		<h3 class="hellouser">
+				Hello, <span th:text="${user.name}"></span>
+			</h3> 
+	</div>
 	<div class="userboard">
+	<!--  <div class="linkbar">
+			<a th:href="@{/user/bookOrder}"><i
+				class="fa-solid fa-bag-shopping"></i></a> <a
+				th:href="@{/user/viewPreviousOrders}"><i
+				class="fa-solid fa-backward active"></i></a> <a
+				th:href="@{/user/addMoneyToWallet}"><i
+				class="fa-solid fa-wallet"></i></a> <a th:href="@{/user/updateProfile}"><i
+				class="fa-solid fa-user"></i></a>
+
+		</div>  -->
+	
 		<div class="menubar">
-			<h3 class="hellouser">Hello, <span th:text="${user.name}"></span></h3>
-			<a th:href="@{/user/bookOrder}">Book Order</a> <a
-				th:href="@{/user/viewPreviousOrders}" class = "active">View Previous Order</a> <a
-				th:href="@{/user/addMoneyToWallet}">Add Money to Wallet</a> <a
-				th:href="@{/user/updateProfile}">Update Profile</a>
+			<!-- <h3 class="hellouser">Hello, <span th:text="${user.name}"></span></h3> -->
+			<a th:href="@{/user/bookOrder}"><i class ="fa-sharp fa-solid fa-burger"></i> Book Order</a> <a
+				th:href="@{/user/viewPreviousOrders}" class = "active"><i class ="fa-solid fa-backward"></i> View Previous Order</a> <a
+				th:href="@{/user/addMoneyToWallet}"><i class = " fa-sharp fa-solid fa-wallet"></i>  Add Money to Wallet</a> <a
+				th:href="@{/user/updateProfile}"><i class = "fa-solid fa-user"></i> Update Profile</a>
+				<a th:href="@{/user/useranalytics}"><i class="fa-sharp fa-solid fa-chart-simple icon"></i>  Analytics</a>
 		</div>
 		<div class="maincontent">
 			<div class="data-form">
@@ -51,6 +73,7 @@
 						<th>Price</th>
 						<th>Status</th>
 						<th>Feedback</th>
+						<th>Purchase again</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -65,6 +88,8 @@
 						<td><a
 							th:href="@{'/user/submitfeedback/'+${order.orderId}}" class="submitfeedbackbtn">Submit
 								Feedback</a></td>
+								<td><a
+							th:href="@{'/user/redirectselectdates/'+${order.orderId}}" class="submitfeedbackbtn">Reorder Food Item</a></td>
 					</tr>
 					
 
@@ -74,6 +99,65 @@
 
 		</div>
 	</div>
+	<div class="toast" id="FeedbackSaved" style="position: absolute; top: 10px; left: 50%;transform:translateX(-50%)">
+	    <div class="toast-header">
+	      <strong class="mr-auto">Feedback Saved</strong>
+	    </div>
+	</div>
+	<div class="toast" id="foodExist" style="position: absolute; top: 10px; left: 50%;transform:translateX(-50%)">
+	    <div class="toast-header">
+	      <strong class="mr-auto">Food item has been deleted</strong>
+	    </div>
+	</div>
+	<script type="text/javascript">
+	const queryString = window.location.search;
+	console.log(queryString);
+	const urlParams = new URLSearchParams(queryString);
+	const FeedbackSaved = urlParams.get('FeedbackSaved')
+	const foodExist = urlParams.get('foodExist')
+	function showFeedbackSavedToast() {
+		if(FeedbackSaved==="1"){
+			var myAlert = document.getElementById('FeedbackSaved');//select id of toast
+		      var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
+		      bsAlert.show();//show it
+		}
+	}
+	function showfoodExistToast() {
+		if(foodExist==="0"){
+			var myAlert = document.getElementById('foodExist');//select id of toast
+		      var bsAlert = new bootstrap.Toast(myAlert,{delay:2000});//inizialize it
+		      bsAlert.show();//show it
+		}
+	}
+	
+	window.onload= ()=>{
+		showFeedbackSavedToast();
+		showfoodExistToast();
+	}
+	
+	function delayPopup()
+	{
+		if(FeedbackSaved==="1"){
+			const url = window.location.href;
+			console.log(url);
+			const urlobj = new URL(url);
+			urlobj.searchParams.delete("FeedbackSaved");
+			console.log(urlobj.toString());	
+			window.location.assign(urlobj.toString());
+		}
+		if(foodExist==="0"){
+			const url = window.location.href;
+			console.log(url);
+			const urlobj = new URL(url);
+			urlobj.searchParams.delete("foodExist");
+			console.log(urlobj.toString());	
+			window.location.assign(urlobj.toString());
+		}
+		
+	}
+	
+	setTimeout(delayPopup,2000)
+	</script>
 	<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js}" integrity="sha512-f8mwTB+Bs8a5c46DEm7HQLcJuHMBaH/UFlcgyetMqqkvTcYg4g5VXsYR71b3qC82lZytjNYvBj2pf0VekA9/FQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script type="text/javascript" th:src="@{/js/style.js}"></script>
 </body>

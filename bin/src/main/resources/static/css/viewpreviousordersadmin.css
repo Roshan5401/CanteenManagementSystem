@@ -6,6 +6,10 @@
 	font-family: 'Poppins', sans-serif;
 }
 
+
+.icon{
+	margin-right: 20px;
+}
 .userboard {
 	display: flex;
 	flex-direction: row;
