@@ -682,9 +682,9 @@ public class UserController {
 			OrderEntity order = totalDeliveredOrders.get(i);
 			int new_key = order.getFood().getID();
 			if (map.containsKey(new_key))
-				map.put(new_key, map.get(new_key) + 1);
+				map.put(new_key, map.get(new_key) + order.getQuantity());
 			else
-				map.put(new_key, 1);
+				map.put(new_key, order.getQuantity());
 		}
 
 		//food name and the count of the overall count for the food
