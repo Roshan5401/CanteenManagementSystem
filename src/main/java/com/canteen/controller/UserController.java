@@ -350,7 +350,8 @@ public class UserController {
 				return new RedirectView("/user/updateProfile");
 			}
 		}
-		
+		canteenUserRepository.save(current_user);
+		attributes.addAttribute("success", "1");
 		return new RedirectView("/user/updateProfile");
 	}
 
