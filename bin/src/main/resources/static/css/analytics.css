@@ -1,0 +1,150 @@
+@charset "UTF-8";
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Poppins', sans-serif;
+}
+
+.icon{
+	margin-right: 20px;
+}
+
+a{
+	text-decoration : none;
+}
+
+.userboard {
+	display: flex;
+	flex-direction: row;
+	height: 100vh;
+	width: 100%;
+}
+
+.menubar {
+	flex: 20;
+	height: 100vh;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	background-color: #272c48;
+}
+
+.menubar>a {
+	padding: 20px;
+	color: white;
+	text-decoration: none;
+	font-size: 1.2rem;
+	font-weight: bold;
+	margin-bottom: 20px;
+}
+
+.hellouser {
+	padding: 25px;
+	color: white;
+	background-color: #272c48;
+	font-size: 1.3rem;
+	font-weight: bold;
+	
+}
+
+.active{
+	background-color : white;
+	color:black !important;
+
+}
+
+.maincontent {
+	flex: 80;
+	width: 100%;
+	padding: 25px;
+	overflow-y : scroll;
+}
+
+.countstats{
+	background-color:#ffeee7;
+	padding:30px;
+	border-radius: 20px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.countstats>*{
+	background-color:white;
+	padding: 20px;
+	border-radius: 20px;
+}
+
+.title{
+	color:#f76c28;
+	font-weight: bold;
+}
+
+.value{
+	color:#272c48;
+	text-align: center;
+	font-weight: bold;
+}
+
+.button {
+	width: auto;
+	padding: 20px;
+	background: #f76c28;
+	border-radius: 15px;
+	border: none;
+	color: white;
+	margin-bottom: 20px;
+	margin-top: 20px;
+	margin-left : 15px;
+	font-weight: bold;
+}
+
+.logoutbutton{
+	position : absolute;
+	bottom: 0;
+	left :80px;
+	background-color: #fbded2;
+	padding : 15px;
+	color : black;
+	border : none;
+	border-radius: 5px;
+	margin : 25px;
+	z-index: 100;
+	font-weight: bold;
+}
+
+.chartone{
+	width:100%;
+	padding:20px;
+	display:grid;
+	grid-template-columns:2fr 1fr;
+	grid-gap:30px;
+	min-height:200px;
+}
+
+.charttwo{
+	padding:20px;
+	width:100%;
+	min-height: 200px;
+}
+
+
+
+.chartone .box{
+	padding:30px;
+	width:100%;
+	box-shadow: 0 7px 25px rgba(0, 0 , 0 , 0.08);
+	border-radius: 20px;
+}
+
+.charttwo .box{
+		padding:30px;
+	width:100%;
+	box-shadow: 0 7px 25px rgba(0, 0 , 0 , 0.08);
+	border-radius: 20px;
+	background:#272c48;
+}
+
+
+
+

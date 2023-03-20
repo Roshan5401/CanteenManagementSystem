@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Canteen Management Service</title>
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 <link rel="preconnect" th:href="@{https://fonts.googleapis.com}">
 <link rel="preconnect" th:href="@{https://fonts.gstatic.com}"
 	crossorigin>
@@ -74,7 +75,7 @@
 						<td th:text ="${order.orderDate}"></td>
 						<td th:text = "${order.orderId}"></td>
 						<td th:text = "${order.food.name}"></td>
-						<td th:text = "${order.food.price}"></td>
+						<td th:text = "${order.totalPrice}"></td>
 					</tr>
 					
 
