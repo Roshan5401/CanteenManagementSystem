@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Canteen Management Service</title>
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 <link rel="preconnect" th:href="@{https://fonts.googleapis.com}">
 <link rel="preconnect" th:href="@{https://fonts.gstatic.com}"
 	crossorigin>
@@ -37,10 +38,10 @@
 			<!-- <h3 class="hellouser">
 				Hello, <span th:text="${user.name}"></span>
 			</h3> -->
-			<a th:href="@{/user/bookOrder}"><i class ="fa-sharp fa-solid fa-burger"></i>     Book Order</a> <a
-				th:href="@{/user/viewPreviousOrders}"><i class ="fa-solid fa-backward"></i>   View Previous Order</a> <a
-				th:href="@{/user/addMoneyToWallet}" class="active"><i class = " fa-sharp fa-solid fa-wallet"></i>  Add Money to
-				Wallet</a> <a th:href="@{/user/updateProfile}"><i class = "fa-solid fa-user"></i>  Update Profile</a>
+			<a th:href="@{/user/bookOrder}"><i class ="fa-sharp fa-solid fa-burger icon"></i>     Book Order</a> <a
+				th:href="@{/user/viewPreviousOrders}"><i class ="fa-solid fa-backward icon"></i>   View Previous Order</a> <a
+				th:href="@{/user/addMoneyToWallet}" class="active"><i class = " fa-sharp fa-solid fa-wallet icon"></i>  Add Money to
+				Wallet</a> <a th:href="@{/user/updateProfile}"><i class = "fa-solid fa-user icon"></i>  Update Profile</a>
 				<a th:href="@{/user/useranalytics}"><i class="fa-sharp fa-solid fa-chart-simple icon"></i>  Analytics</a>
 		</div>
 		<div class="maincontent">
@@ -62,7 +63,7 @@
 						<input type="text" placeholder="Card holder name" name="accountHolderName" pattern="^([a-zA-Z]+)|([a-zA-Z]+([ '-][a-zA-Z]+)+)$" required/> 
                         <input type="text" placeholder="Enter your card number" name="cardNumber" minlength="16" maxlength="16" pattern="^([0-9]*)$" required/> 
                         <input type="text" placeholder="Enter your cvv" name="cvv" minlength="3" maxlength="3" pattern="^([0-9]*)$" required /> <input type="string"
-                            placeholder="Enter the amount" name="amount"  required/> <input type="text"
+                            placeholder="Enter the amount" name="amount" required/> <input type="text"
                             placeholder="Valid Upto - MM/YY" name="validUpto" minlength="5" maxlength="5" pattern="^(0[1-9]|1[0-2])\/([0-9]{2})$"required/> <input type="submit"
                             value="Add to wallet" class=button />
 					</form>

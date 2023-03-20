@@ -111,10 +111,15 @@ public class AdminController {
 	
 	//full validation done no edge cases left
 	@PostMapping("/admin/addfood")
-	public RedirectView addfood(@RequestParam("name")String name,@RequestParam("type")String type,@RequestParam("price")String price,@RequestParam("foodServedDate")String date, @RequestParam("itemImage")MultipartFile file    ,RedirectAttributes attributes ) throws IllegalStateException, IOException {
+	public RedirectView addfood(@RequestParam("name")String name,@RequestParam(name = "type", required = false) String type,@RequestParam("price")String price,@RequestParam("foodServedDate")String date, @RequestParam("itemImage")MultipartFile file    ,RedirectAttributes attributes ) throws IllegalStateException, IOException {
 		System.out.println("****");
 		menuCanteen menu=new menuCanteen();
-		
+		if(type==null || type.isEmpty())
+			return new RedirectView("/admin/addAndUpdateMenu");
+		if(date==null || date.length()==0 ||name.length()==0 || name==null)
+		{
+			return new RedirectView("/admin/addAndUpdateMenu");
+		}
 		long count1 = price.chars().filter(ch -> ch == '.').count();
 
 		long count2=price.chars().filter(ch->(ch>='a' && ch<='z') || (ch>='A' && ch<='Z') || (ch>=33 && ch<=45) || (ch>=58 && ch<=64) ||(ch>=91 && ch<=96) || (ch>=123 && ch<=126) || (ch==47)).count();
@@ -154,16 +159,15 @@ public class AdminController {
 		 * 
 		 * file.transferTo(new File(filePath));
 		 */
-		
+		System.out.println(file.getSize());
 		String filename = StringUtils.cleanPath(file.getOriginalFilename());
-		
-		if(filename.contains("..")) {
-			System.out.println("File is not supported");
-		}
-		menu.setImage(Base64.getEncoder().encodeToString(file.getBytes()));
-		
+		if (file.getSize() < 500000)
+			menu.setImage(Base64.getEncoder().encodeToString(file.getBytes()));
+			
 		menuRepository.save(menu);
 		attributes.addAttribute("Added",1);
+		
+		
 		return new RedirectView("/admin/addAndUpdateMenu");
 	}
 
@@ -659,9 +663,9 @@ public class AdminController {
 			int new_key = order.getFood().getID();
 
 			if (map.containsKey(new_key)) {
-				map.put(new_key, map.get(new_key) + 1);
+				map.put(new_key, map.get(new_key) + order.getQuantity());
 			} else {
-				map.put(new_key, 1);
+				map.put(new_key, order.getQuantity());
 			}
 		}
 

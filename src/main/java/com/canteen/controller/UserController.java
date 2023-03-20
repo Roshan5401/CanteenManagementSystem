@@ -84,8 +84,12 @@ public class UserController {
 		List<menuCanteen> finalFoodItemsByType = enabledFoodItems.stream()
 				.filter(item -> item.getFoodServedDate().getMonth() == month).collect(Collectors.toList());
 		List<menuCanteen> temp = finalFoodItemsByType;
+		
+		if(type.isEmpty()) {
+			
+		}
 
-		if (!type.equals("All")) {
+		else if(!type.equals("All")){
 			finalFoodItemsByType = finalFoodItemsByType.stream().filter(item -> item.getType().equals(type))
 					.collect(Collectors.toList());
 		}
@@ -102,6 +106,39 @@ public class UserController {
 		return "users/bookorder";
 
 	}
+	
+	@GetMapping("/user/bookOrderByName")
+	public String bookOrderByName(Model model , Principal principal,@RequestParam("foodItemName") String foodItemName) {
+		String userName = principal.getName();
+		CanteenUsers current_user = canteenUserRepository.findByEmail(userName);
+
+		// Viewing Menu Backend Implemantation
+
+		List<menuCanteen> foodItems = menuRepository.findAll();
+		List<menuCanteen> enabledFoodItems = foodItems.stream().filter(item -> item.isEnable() == true)
+				.collect(Collectors.toList());
+		
+		Date date = new Date();
+		@SuppressWarnings("deprecation")
+		int month = date.getMonth();
+		@SuppressWarnings("deprecation")
+		List<menuCanteen> finalFoodItems = enabledFoodItems.stream()
+				.filter(item -> item.getFoodServedDate().getMonth() == month).collect(Collectors.toList());
+
+		List<menuCanteen> searchedFoodItems = finalFoodItems.stream().filter(order->(order.getName().toLowerCase()).contains(foodItemName.toLowerCase())).collect(Collectors.toList());
+		
+		// Upcoming Orders backend Implemantation
+		int id = current_user.getId();
+		List<OrderEntity> orders = this.orderService.getAllOrders("Booked");
+		List<OrderEntity> userOrders = orders.stream().filter(order -> order.getCanteenUsers().getId() == id)
+				.collect(Collectors.toList());
+		System.out.println(current_user.getWallet());
+
+		model.addAttribute("foodItems", searchedFoodItems);
+		model.addAttribute("user", current_user);
+		model.addAttribute("user_orders", userOrders);
+		return "users/bookorder";
+	}
 
 	@GetMapping("/user/bookOrder")
 	public String bookOrder(Model model, Principal principal) {
@@ -113,6 +150,7 @@ public class UserController {
 		List<menuCanteen> foodItems = menuRepository.findAll();
 		List<menuCanteen> enabledFoodItems = foodItems.stream().filter(item -> item.isEnable() == true)
 				.collect(Collectors.toList());
+		
 		Date date = new Date();
 		@SuppressWarnings("deprecation")
 		int month = date.getMonth();
@@ -207,6 +245,8 @@ public class UserController {
 	}
 
 	// It will update current user wallet balance by taking input and again redirect
+	//not successfull alert required 
+	//amount edge case fixed
 	// to addmoneytowalletpage
 	@GetMapping("/user/addBalance")
 	public RedirectView addBalance(Model model, Principal principal, @ModelAttribute("amount") String amount,
@@ -221,13 +261,18 @@ public class UserController {
 		int qan = (int) cvv.chars().filter(Character::isDigit).count();
 		if (qan != 3)
 			return new RedirectView("/user/addMoneyToWallet");
-
+		long count1 = amount.chars().filter(ch -> ch == '.').count();
+		long count2=amount.chars().filter(ch->(ch>='a' && ch<='z') || (ch>='A' && ch<='Z') || (ch>=33 && ch<=45) || (ch>=58 && ch<=64) ||(ch>=91 && ch<=96) || (ch>=123 && ch<=126) || (ch==47)).count();
+		
+		if(count1>0 || count2>0) {
+			return new RedirectView("/user/addMoneyToWallet");
+		}
 		Double d = Double.valueOf(amount);
 		DecimalFormat defor = new DecimalFormat("0.00");
 		String val = defor.format(d);
 		Double finalVal = Double.valueOf(val);
 		CanteenUsers current_user = canteenUserRepository.findByEmail(userName);
-
+		
 		if (d < 0 || d > 5000) {
 			return new RedirectView("/user/addMoneyToWallet");
 		} else {
@@ -637,9 +682,9 @@ public class UserController {
 			OrderEntity order = totalDeliveredOrders.get(i);
 			int new_key = order.getFood().getID();
 			if (map.containsKey(new_key))
-				map.put(new_key, map.get(new_key) + 1);
+				map.put(new_key, map.get(new_key) + order.getQuantity());
 			else
-				map.put(new_key, 1);
+				map.put(new_key, order.getQuantity());
 		}
 
 		//food name and the count of the overall count for the food

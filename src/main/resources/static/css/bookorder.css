@@ -7,6 +7,14 @@
 	font-family: 'Poppins', sans-serif;
 }
 
+.seachHeader{
+	display: flex;
+	justify-content: space-between;
+}
+
+.icon{
+	margin-right: 20px;
+}
 a {
 	text-decoration: none;
 }
@@ -107,10 +115,10 @@ a {
 }
 
 .maincontent {
-	flex: 80;
+	flex: 83;
 	height: 100%;
 	width: 100%;
-	padding: 25px;
+	padding: 20px;
 	overflow-y: scroll;
 }
 
@@ -160,7 +168,7 @@ a {
 
 .button {
 	width: auto;
-	padding: 20px;
+	padding: 13px 15px;
 	background: #f76c28;
 	border-radius: 15px;
 	border: none;
@@ -223,13 +231,13 @@ input[type="radio"]:checked+label:before {
 	margin-bottom: 20px;
 	display: flex;
 	flex-wrap:wrap;
-	justify-content: center;
+	justify-content: flex-start;
 }
 
 .card {
 	margin: 30px;
-		transition: scale 0.5s;
-
+	transition: scale 0.5s;
+	flex-basis: auto;
 }
 
 .card:hover{
@@ -330,4 +338,20 @@ input[type="radio"]:checked+label:before {
 .cancleorderbtn {
 	font-weight: bold;
 	color: red;
+}
+
+input {
+	margin-bottom: 20px;
+	margin-top: 20px;
+	background: white;
+	border-radius: 15px;
+	border: none;
+	padding: 15px;
+	width: 400px;
+	background-color : #ffeee7;
+}
+
+input:focus{
+	border:none;
+	outline:none;
 }

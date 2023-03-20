@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Canteen Management Service</title>
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 <link rel="preconnect" th:href="@{https://fonts.googleapis.com}">
 <link rel="preconnect" th:href="@{https://fonts.gstatic.com}"
 	crossorigin>
@@ -38,8 +39,7 @@
 		<div class="maincontent">
 
 			<div class="menuInputForm">
-				<form th:action="@{/admin/addfood}" class="actualForm" method="post"
-					enctype="multipart/form-data">
+				<form th:action="@{/admin/addfood}" class="actualForm" method="post" onsubmit="return validateFileSize()" enctype="multipart/form-data">
 					<h1>Add a new Item</h1>
 					<input type="text" placeholder="Enter the item name"
 						class="inputField" name="name" required /> <input type="text"
@@ -56,7 +56,7 @@
 						</div>
 
 						<div id="file-upload">
-							<input type="file" name="itemImage" accept=".png, .jpg, .jpeg"/>
+							<input type="file" name="itemImage" accept=".png, .jpg, .jpeg" id = "fileInput"/>
 						</div>
 					</div>
 					<div class="submitButton">
@@ -202,6 +202,18 @@
 	sessionStorage.setItem('alreadyShow','already shown');
 	}
 	</script>
+	
+	<script th:inline="javascript">
+    function validateFileSize() {
+        var fileInput = document.getElementById('fileInput');
+        var maxSize = 100 * 1024; 
+        if (fileInput.files[0].size > maxSize) {
+            alert('File size must be less than 100KB');
+            return false;
+        }
+        return true;
+    }
+</script>
 </body>
 </html>
 
