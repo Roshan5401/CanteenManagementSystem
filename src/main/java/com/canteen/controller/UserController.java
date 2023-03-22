@@ -363,12 +363,13 @@ public class UserController {
 	}
 
 	@GetMapping("/user/savefeedback/{ID}")
-	public RedirectView saveFeedback(@PathVariable("ID") Integer Id, @ModelAttribute("feedbackdata") String feedback,
+	public RedirectView saveFeedback(@PathVariable("ID") Integer Id,@ModelAttribute("rating") Integer rating ,@ModelAttribute("feedbackdata") String feedback,
 			RedirectAttributes attributes) {
 		Optional<OrderEntity> optional = orderRepository.findById(Id);
 		OrderEntity orderEntity = optional.get();
 		System.out.println(Id);
 		orderEntity.setFeedback(feedback);
+		orderEntity.setRating(rating);
 		orderRepository.save(orderEntity);
 		attributes.addAttribute("FeedbackSaved", 1);
 		return new RedirectView("/user/viewPreviousOrders");
