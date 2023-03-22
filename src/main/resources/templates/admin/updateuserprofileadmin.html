@@ -15,7 +15,10 @@
 	rel="stylesheet"
 	integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
 	crossorigin="anonymous">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+	integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <link rel="stylesheet" th:href="@{/css/updateprofileadmin.css}" />
 <script
@@ -28,12 +31,18 @@
 	<div class="userboard">
 		<div class="menubar">
 			<h3 class="hellouser">Hello, Admin</h3>
-			<a th:href="@{/admin/updateUserProfile}" class="active"><i class="fa-solid fa-user icon"></i> Update
-				user profile</a> <a th:href="@{/admin/addAndUpdateMenu}"> <i class="fa-sharp fa-solid fa-bowl-food icon"></i> Add and
-				Update menu</a> <a th:href="@{/admin/viewPreviousOrders}"><i class="fa-solid fa-backward icon"></i> View
-				Previous orders</a> <a th:href="@{/admin/viewUpcomingOrders}"><i class="fa-solid fa-forward icon"></i> View
-				Upcoming orders</a> <a th:href="@{/admin/viewFeedbacks}"><i class="fa-solid fa-comment-dots icon"></i> View
-				Feedbacks</a><a th:href="@{/admin/analytics}"><i class="fa-sharp fa-solid fa-chart-simple icon"></i>  Analytics</a>
+			<a th:href="@{/admin/updateUserProfile}" class="active"><i
+				class="fa-solid fa-user icon"></i> Update user profile</a> <a
+				th:href="@{/admin/addAndUpdateMenu}"> <i
+				class="fa-sharp fa-solid fa-bowl-food icon"></i> Add and Update menu
+			</a> <a th:href="@{/admin/viewPreviousOrders}"><i
+				class="fa-solid fa-backward icon"></i> View Previous orders</a> <a
+				th:href="@{/admin/viewUpcomingOrders}"><i
+				class="fa-solid fa-forward icon"></i> View Upcoming orders</a> <a
+				th:href="@{/admin/viewFeedbacks}"><i
+				class="fa-solid fa-comment-dots icon"></i> View Feedbacks</a><a
+				th:href="@{/admin/analytics}"><i
+				class="fa-sharp fa-solid fa-chart-simple icon"></i> Analytics</a>
 		</div>
 		<div class="maincontent">
 			<h2>Update profile of any user</h2>
@@ -41,7 +50,7 @@
 			<form th:action="@{/admin/findUserProfile}" class="searchuserform">
 				<h3>Search for a user</h3>
 				<input type="email" placeholder="Enter the user email"
-					name="userEmail" class="userInput" required/> <input type="submit"
+					name="userEmail" class="userInput" required /> <input type="submit"
 					value="Search User" class="button" />
 			</form>
 
@@ -61,9 +70,23 @@
 
 					<div class="second">
 						<input type="password" placeholder="Enter new password"
-							name="newpassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" /> <input type="tel"
-							placeholder="Enter your phone number" name="phone" minlength="10" maxlength="10"  pattern="[6789][0-9]{9}" title="Must be valid Phone Number"
+							name="newpassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" />
+						<input type="tel" placeholder="Enter your phone number"
+							name="phone" minlength="10" maxlength="10"
+							pattern="[6789][0-9]{9}" title="Must be valid Phone Number"
 							th:value="${user.phone}" />
+						<div  th:if="${user.enable==true}" class="radioBtns inputField">
+							<input type="radio" id="true" name="enable" value="true" required
+								checked> <label for="true">Active</label> <input
+								type="radio" id="false" name="enable" value="false" required>
+							<label for="false">Inactive</label>
+						</div>
+						<div  th:unless="${user.enable==true}" class="radioBtns inputField">
+							<input type="radio" id="true" name="enable" value="true" required
+								> <label for="true">Active</label> <input
+								type="radio" id="false" name="enable" value="false" required checked>
+							<label for="false">Inactive</label>
+						</div>
 					</div>
 					<div class="buttondiv">
 						<input type="submit" value="Save Changes" class="button" />
