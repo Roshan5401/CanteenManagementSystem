@@ -62,10 +62,10 @@ public class CanteenUsers {
 	
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "canteenUsers")
 	private List<OrderEntity> orders=new ArrayList<>();
-	
 
+	@OneToMany
+	private List<menuCanteen> cart = new ArrayList<>();
 	
-
 	public int getId() {
 		return id;
 	}
@@ -120,8 +120,10 @@ public class CanteenUsers {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public CanteenUsers(int id, String name, String email, String password, String role, BigInteger phone,
-			Double wallet) {
+	public CanteenUsers(@NotNull int id, String name,
+			@Pattern(regexp = "^[\\w-\\.]+@[nrifintech|trainee.nrifintech]\\.com$", message = "Invalid email address") @NotNull String email,
+			@Size(min = 8, max = 60, message = "Password length must be between 8 and 60 characters") String password,
+			String role, BigInteger phone, Double wallet, List<OrderEntity> orders, List<menuCanteen> cart) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -130,11 +132,19 @@ public class CanteenUsers {
 		this.role = role;
 		this.phone = phone;
 		this.wallet = wallet;
+		this.orders = orders;
+		this.cart = cart;
 	}
 	@Override
 	public String toString() {
-		return "CateenUsers [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", role="
-				+ role + ", phone=" + phone + ", wallet=" + wallet + "]";
+		return "CanteenUsers [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", role="
+				+ role + ", phone=" + phone + ", wallet=" + wallet + ", cart=" + cart + "]";
+	}
+	public List<menuCanteen> getCart() {
+		return cart;
+	}
+	public void setCart(List<menuCanteen> cart) {
+		this.cart = cart;
 	}
 	
 	

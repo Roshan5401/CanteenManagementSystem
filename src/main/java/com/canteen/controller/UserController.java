@@ -68,7 +68,6 @@ public class UserController {
 
 	@GetMapping("/user/bookOrderByType")
 	public String bookOrderByType(@ModelAttribute("type") String type, Model model, Principal principal) {
-		System.out.println(type);
 		String userName = principal.getName();
 		CanteenUsers current_user = canteenUserRepository.findByEmail(userName);
 
@@ -132,7 +131,6 @@ public class UserController {
 		List<OrderEntity> orders = this.orderService.getAllOrders("Booked");
 		List<OrderEntity> userOrders = orders.stream().filter(order -> order.getCanteenUsers().getId() == id)
 				.collect(Collectors.toList());
-		System.out.println(current_user.getWallet());
 
 		model.addAttribute("foodItems", searchedFoodItems);
 		model.addAttribute("user", current_user);
@@ -163,7 +161,6 @@ public class UserController {
 		List<OrderEntity> orders = this.orderService.getAllOrders("Booked");
 		List<OrderEntity> userOrders = orders.stream().filter(order -> order.getCanteenUsers().getId() == id)
 				.collect(Collectors.toList());
-		System.out.println(current_user.getWallet());
 
 		model.addAttribute("foodItems", finalFoodItems);
 		model.addAttribute("user", current_user);
@@ -277,7 +274,6 @@ public class UserController {
 			return new RedirectView("/user/addMoneyToWallet");
 		} else {
 			Double oldBalance = current_user.getWallet();
-			System.out.println(oldBalance);
 			current_user.setWallet(oldBalance + finalVal);
 		}
 
@@ -322,7 +318,6 @@ public class UserController {
 	public String updateProfile(Model model, Principal principal) {
 		String userName = principal.getName();
 		CanteenUsers current_user = canteenUserRepository.findByEmail(userName);
-		System.out.println(current_user.getEmail());
 		model.addAttribute("user", current_user);
 		model.addAttribute("update_user", new CanteenUsers());
 		return "users/updateprofile";
@@ -339,7 +334,6 @@ public class UserController {
 		current_user.setName(users.getName());
 		current_user.setPhone(users.getPhone());
 		if (oldPassword.length() > 0 && newPasword.length() > 0) {
-			System.out.println();
 			if (bCryptPasswordEncoder.matches(oldPassword, current_user.getPassword())) {
 				current_user.setPassword(bCryptPasswordEncoder.encode(newPasword));
 				attributes.addAttribute("success", "1");
@@ -368,7 +362,6 @@ public class UserController {
 			RedirectAttributes attributes) {
 		Optional<OrderEntity> optional = orderRepository.findById(Id);
 		OrderEntity orderEntity = optional.get();
-		System.out.println(Id);
 		orderEntity.setFeedback(feedback);
 		orderEntity.setRating(rating);
 		orderRepository.save(orderEntity);
@@ -384,10 +377,9 @@ public class UserController {
 			RedirectAttributes attributes) {
 		OrderEntity order = orderRepository.findByOrderId(Integer.parseInt(orderid));
 		menuCanteen food = order.getFood();
-		System.out.println(food);
+
 
 		if (food.isEnable() == Boolean.parseBoolean("0")) {
-			System.out.println("Food has been deleted");
 			attributes.addAttribute("foodExist", 0);
 			return new RedirectView("/user/viewPreviousOrders");
 		}
@@ -425,8 +417,6 @@ public class UserController {
 			@ModelAttribute("quantityinput") Integer quantity, @ModelAttribute("foodId") String foodId,
 			@ModelAttribute("foodServedDate") String foodServedDate, RedirectAttributes attributes)
 			throws ParseException {
-		System.out.println(date);
-//		System.out.println(quantity);
 		LocalDate requestedDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
 		LocalDate foodservedDate = LocalDate.parse(foodServedDate, DateTimeFormatter.ISO_DATE);
 
@@ -443,8 +433,6 @@ public class UserController {
 		DayOfWeek requestedDayOfWeek = requestedDate.getDayOfWeek();
 		String day = requestedDayOfWeek.toString();
 
-		System.out.println(requestedDay);
-		System.out.println(servedDay);
 
 		int id = Integer.parseInt(foodId);
 		menuCanteen food = menuRepository.findById(id);
@@ -625,17 +613,17 @@ public class UserController {
 
 		// Fetching orders table and filtering all the feedbacks from the table and
 		// passing all the feedbacks in the page
-		System.out.println(foodID);
+
 		List<OrderEntity> allOrders = this.orderService.getAllOrders("Delivered");
-		System.out.println(allOrders);
+
 
 	  List<OrderEntity> foodSorting = allOrders.stream().filter(order ->
 	  (order.getFood().getID() )== id) .collect(Collectors.toList());
-	  System.out.println(foodSorting);
+
 
 		List<OrderEntity> finalFeedbacks = foodSorting.stream().filter(order -> order.getFeedback() != null)
 				.collect(Collectors.toList());
-		System.out.println(finalFeedbacks);
+
 
 		model.addAttribute("feedbacks", finalFeedbacks);
 		return "/users/itemfeedback";
