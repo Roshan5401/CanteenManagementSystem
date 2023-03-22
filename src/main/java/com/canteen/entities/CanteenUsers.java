@@ -107,6 +107,12 @@ public class CanteenUsers {
 	
 	
 	
+	public List<menuCanteen> getCart() {
+		return cart;
+	}
+	public void setCart(List<menuCanteen> cart) {
+		this.cart = cart;
+	}
 	public List<OrderEntity> getOrders() {
 		return orders;
 	}
