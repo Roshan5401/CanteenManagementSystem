@@ -2,8 +2,6 @@ package com.canteen.entities;
 
 import java.sql.Date;
 
-import javax.validation.constraints.Null;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,30 +42,11 @@ public class OrderEntity {
    @Column(name="feedback",length = 1000)
    private String feedback;
    
-   @Column(name="rating")
-   private Integer rating;
-   
 public OrderEntity() {
 	super();
 	// TODO Auto-generated constructor stub
 }
 
-
-
-
-
-
-
-
-
-public Integer getRating() {
-	return rating;
-}
-
-
-public void setRating(Integer rating) {
-	this.rating = rating;
-}
 
 
 
@@ -159,35 +138,8 @@ public void setFeedback(String feedback) {
 
 
 
-//public OrderEntity(int orderId, CanteenUsers canteenUsers, menuCanteen food, Date orderDate, int quantity,
-//		double totalPrice, String status, String feedback) {
-//	super();
-//	this.orderId = orderId;
-//	this.canteenUsers = canteenUsers;
-//	this.food = food;
-//	this.orderDate = orderDate;
-//	this.quantity = quantity;
-//	this.totalPrice = totalPrice;
-//	this.status = status;
-//	this.feedback = feedback;
-//}
-
-
-
-
-
-
-//  @Override public String toString() { return "OrderEntity [orderId=" + orderId
-//  + ", canteenUsers=" + canteenUsers + ", food=" + food + ", orderDate=" +
-//  orderDate + ", quantity=" + quantity + ", totalPrice=" + totalPrice +
-//  ", status=" + status + ", feedback=" + feedback + "]"; }
-
-
-
-
-
 public OrderEntity(int orderId, CanteenUsers canteenUsers, menuCanteen food, Date orderDate, int quantity,
-		double totalPrice, String status, String feedback, Integer rating) {
+		double totalPrice, String status, String feedback) {
 	super();
 	this.orderId = orderId;
 	this.canteenUsers = canteenUsers;
@@ -197,18 +149,16 @@ public OrderEntity(int orderId, CanteenUsers canteenUsers, menuCanteen food, Dat
 	this.totalPrice = totalPrice;
 	this.status = status;
 	this.feedback = feedback;
-	this.rating = rating;
 }
 
 
 
 
-@Override
-public String toString() {
-	return "OrderEntity [orderId=" + orderId + ", canteenUsers=" + canteenUsers + ", food=" + food + ", orderDate="
-			+ orderDate + ", quantity=" + quantity + ", totalPrice=" + totalPrice + ", status=" + status + ", feedback="
-			+ feedback + ", rating=" + rating + "]";
-}
+
+  @Override public String toString() { return "OrderEntity [orderId=" + orderId
+  + ", canteenUsers=" + canteenUsers + ", food=" + food + ", orderDate=" +
+  orderDate + ", quantity=" + quantity + ", totalPrice=" + totalPrice +
+  ", status=" + status + ", feedback=" + feedback + "]"; }
  
 
 
