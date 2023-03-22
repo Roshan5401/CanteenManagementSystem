@@ -235,6 +235,7 @@ public class AdminController {
 		CanteenUsers current_user = canteenUserRepository.findByEmail(tokenEmail);
 		current_user.setName(users.getName());
 		current_user.setPhone(users.getPhone());
+		current_user.setEnable(users.isEnable());
 		if (newPasword.length() > 0) {
 			current_user.setPassword(bCryptPasswordEncoder.encode(newPasword));
 		}

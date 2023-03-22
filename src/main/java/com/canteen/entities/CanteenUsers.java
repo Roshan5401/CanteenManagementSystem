@@ -66,6 +66,15 @@ public class CanteenUsers {
 	@OneToMany
 	private List<menuCanteen> cart = new ArrayList<>();
 	
+	@Column(name="enable")
+	private boolean enable;
+	
+	public boolean isEnable() {
+		return enable;
+	}
+	public void setEnable(boolean enable) {
+		this.enable = enable;
+	}
 	public int getId() {
 		return id;
 	}
