@@ -62,9 +62,9 @@ public class CanteenUsers {
 	
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "canteenUsers")
 	private List<OrderEntity> orders=new ArrayList<>();
-	
+
 	@OneToMany
-	private List<menuCanteen> cart;
+	private List<menuCanteen> cart = new ArrayList<>();
 	
 	public int getId() {
 		return id;
@@ -104,9 +104,6 @@ public class CanteenUsers {
 	}
 	
 	
-	
-	
-	
 	public List<OrderEntity> getOrders() {
 		return orders;
 	}
@@ -141,7 +138,13 @@ public class CanteenUsers {
 	@Override
 	public String toString() {
 		return "CanteenUsers [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", role="
-				+ role + ", phone=" + phone + ", wallet=" + wallet + ", orders=" + orders + ", cart=" + cart + "]";
+				+ role + ", phone=" + phone + ", wallet=" + wallet + ", cart=" + cart + "]";
+	}
+	public List<menuCanteen> getCart() {
+		return cart;
+	}
+	public void setCart(List<menuCanteen> cart) {
+		this.cart = cart;
 	}
 	
 	

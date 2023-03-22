@@ -112,7 +112,6 @@ public class AdminController {
 	//full validation done no edge cases left
 	@PostMapping("/admin/addfood")
 	public RedirectView addfood(@RequestParam("name")String name,@RequestParam(name = "type", required = false) String type,@RequestParam("price")String price,@RequestParam("foodServedDate")String date, @RequestParam("itemImage")MultipartFile file    ,RedirectAttributes attributes ) throws IllegalStateException, IOException {
-		System.out.println("****");
 		menuCanteen menu=new menuCanteen();
 		if(type==null || type.isEmpty())
 			return new RedirectView("/admin/addAndUpdateMenu");
@@ -159,7 +158,6 @@ public class AdminController {
 		 * 
 		 * file.transferTo(new File(filePath));
 		 */
-		System.out.println(file.getSize());
 		String filename = StringUtils.cleanPath(file.getOriginalFilename());
 		if (file.getSize() < 500000)
 			menu.setImage(Base64.getEncoder().encodeToString(file.getBytes()));
@@ -206,7 +204,6 @@ public class AdminController {
 	@GetMapping("/admin/viewUpcomingOrders")
 	public String viewUpcomingOrders(Model m) {
 		List<OrderEntity> orders = this.orderService.getAllOrders("Booked");
-		System.out.println(orders);
 		m.addAttribute("orders", orders);
 		m.addAttribute("date", "null");
 		m.addAttribute("id", "null");
@@ -223,7 +220,6 @@ public class AdminController {
 
 			model.addAttribute("user",currrent_users);
 			model.addAttribute("update_user",new CanteenUsers());
-			System.out.println("No email found");
 		}
 		else {
 		model.addAttribute("user", current_user);
@@ -236,12 +232,9 @@ public class AdminController {
 	public RedirectView updateUserProfile(Model model, Principal principal,
 			@ModelAttribute("newpassword") String newPasword, @ModelAttribute("update_user") CanteenUsers users,
 			@ModelAttribute("token_email") String tokenEmail, RedirectAttributes attributes) {
-		System.out.println("****");
-		System.out.println(tokenEmail);
 		CanteenUsers current_user = canteenUserRepository.findByEmail(tokenEmail);
 		current_user.setName(users.getName());
 		current_user.setPhone(users.getPhone());
-		System.out.println(users.getName());
 		if (newPasword.length() > 0) {
 			current_user.setPassword(bCryptPasswordEncoder.encode(newPasword));
 		}
@@ -255,13 +248,11 @@ public class AdminController {
 	public String previousOrdersByFilter(@ModelAttribute("vieworderbydate") String date,
 			@ModelAttribute("userId") String userId, Model m) throws ParseException {
 		if (date.length() == 0 && userId.length() != 0) {
-			System.out.println("Date is null and user id is not");
 			List<OrderEntity> orders = this.orderService.getAllOrdersByUserId("Delivered", userId);
 			m.addAttribute("orders", orders);
 			m.addAttribute("date", "null");
 			m.addAttribute("id", userId);
 		} else if (date.length() != 0 && userId.length() == 0) {
-			System.out.println("Date is not null and User id is null");
 			LocalDate date1 = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
 			List<OrderEntity> orders = this.orderService.getAllOrdersByStatusAndDate("Delivered", date1);
 			m.addAttribute("orders", orders);
@@ -275,7 +266,6 @@ public class AdminController {
 			m.addAttribute("id", userId);
 		} else {
 			List<OrderEntity> orders = this.orderService.getAllOrders("Delivered");
-			System.out.println(orders);
 			m.addAttribute("orders", orders);
 			m.addAttribute("date", "null");
 			m.addAttribute("id", "null");
@@ -290,13 +280,11 @@ public class AdminController {
 	public String upcomingOrdersByFilter(@ModelAttribute("vieworderbydate") String date,
 			@ModelAttribute("userId") String userId, Model m) {
 		if (date.length() == 0 && userId.length() != 0) {
-			System.out.println("Date is null and user id is not");
 			List<OrderEntity> orders = this.orderService.getAllOrdersByUserId("Booked", userId);
 			m.addAttribute("orders", orders);
 			m.addAttribute("date", "null");
 			m.addAttribute("id", userId);
 		} else if (date.length() != 0 && userId.length() == 0) {
-			System.out.println("Date is not null and User id is null");
 			LocalDate date1 = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
 			List<OrderEntity> orders = this.orderService.getAllOrdersByStatusAndDate("Booked", date1);
 			m.addAttribute("orders", orders);
@@ -310,7 +298,6 @@ public class AdminController {
 			m.addAttribute("id", userId);
 		} else {
 			List<OrderEntity> orders = this.orderService.getAllOrders("Booked");
-			System.out.println(orders);
 			m.addAttribute("orders", orders);
 			m.addAttribute("date", "null");
 			m.addAttribute("id", "null");
@@ -352,7 +339,6 @@ public class AdminController {
 		List<OrderEntity> allFeedBacks = this.orderService.getAllOrders("Delivered");
 		List<OrderEntity> finalFeedbacks = allFeedBacks.stream().filter(feed -> feed.getFeedback() != null)
 				.collect(Collectors.toList());
-		System.out.println(allFeedBacks.size());
 		model.addAttribute("feedbacks", finalFeedbacks);
 		model.addAttribute("food", "null");
 		return "admin/viewfeedbacksadmin";
@@ -360,7 +346,6 @@ public class AdminController {
 
 	@GetMapping("/admin/viewfeedbackbyname")
 	public String viewFeedbackResult(@ModelAttribute("food") String food, Model m) {
-		System.out.println(food);
 		List<OrderEntity> orders = this.orderService.getAllOrders("Delivered");
 		if (food == null || food.isBlank()) {
 			List<OrderEntity> finalFeedbacks = orders.stream().filter(feed -> feed.getFeedback() != null)
@@ -374,9 +359,9 @@ public class AdminController {
 		List<OrderEntity> finalFeedbacks = finalOrders.stream().filter(feed -> feed.getFeedback() != null)
 				.collect(Collectors.toList());
 		m.addAttribute("feedbacks", finalFeedbacks);
-		m.addAttribute("token", finalFeedbacks);
 		m.addAttribute("food", food);
 		return "/admin/viewfeedbacksadmin";
+
 
 	}
 
@@ -396,7 +381,6 @@ public class AdminController {
 			List<OrderEntity> finalFeedbacks = null;
 			if (food.equals("null")) {
 				finalFeedbacks = orders.stream().filter(feed -> feed.getFeedback() != null).collect(Collectors.toList());
-				System.out.println(finalFeedbacks);
 				m.addAttribute("feedbacks", finalFeedbacks);
 				m.addAttribute("food", "null");
 			}
@@ -421,7 +405,6 @@ public class AdminController {
 			List<OrderEntity> finalFeedbacks = null;
 			if (food.equals("null")) {
 				finalFeedbacks = orders.stream().filter(feed -> feed.getFeedback() != null).collect(Collectors.toList());
-				System.out.println(finalFeedbacks);
 				m.addAttribute("feedbacks", finalFeedbacks);
 				m.addAttribute("food", "null");
 			}
@@ -454,9 +437,7 @@ public class AdminController {
 
 	@GetMapping("/admin/deliveredOrder/{orderId}")
 	public RedirectView deliveredOrder(@PathVariable("orderId") int id,RedirectAttributes attributes) {
-		System.out.println(id);
 		OrderEntity order = this.orderService.getbyOrderId(id);
-		System.out.println(order);
 		order.setStatus("Delivered");
 		this.orderRepository.save(order);
 		String message="Order Delivered.\nUsername:"+order.getCanteenUsers().getEmail()+"\nfood name: "+order.getFood().getName()+"\nTotal Price:Rs"+order.getTotalPrice()+"\nOrder Date:"+order.getOrderDate();
@@ -478,21 +459,17 @@ public class AdminController {
 			String headerkey = "Content-Disposition";
 			String headervalue = "attachment; filename=PreviousOrders" + currentDateTime + ".pdf";
 			response.setHeader(headerkey, headervalue);
-			System.out.println(date);
-			System.out.println(id);
 			List<OrderEntity> ordersList = null;
 			if (date.equals("null") && id.equals("null")) {
 				ordersList = orderService.getAllOrders("Delivered");
 			}
 
 			else if (date.equals("null")) {
-				System.out.println("Date is null and user id is not");
 				ordersList = this.orderService.getAllOrdersByUserId("Delivered", id);
 				m.addAttribute("orders", ordersList);
 			}
 
 			else if (id.equals("null")) {
-				System.out.println("Date is not null and User id is null");
 				LocalDate date1 = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
 				ordersList = this.orderService.getAllOrdersByStatusAndDate("Delivered", date1);
 				m.addAttribute("orders", ordersList);
@@ -515,13 +492,11 @@ public class AdminController {
 			}
 
 			else if (date.equals("null")) {
-				System.out.println("Date is null and user id is not");
 				ordersList = this.orderService.getAllOrdersByUserId("Delivered", id);
 				m.addAttribute("orders", ordersList);
 			}
 
 			else if (id.equals("null")) {
-				System.out.println("Date is not null and User id is null");
 				LocalDate date1 = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
 				ordersList = this.orderService.getAllOrdersByStatusAndDate("Delivered", date1);
 				m.addAttribute("orders", ordersList);
@@ -553,17 +528,13 @@ public class AdminController {
 	        String headerkey = "Content-Disposition";
 	        String headervalue = "attachment; filename=UpcomingOrders_" + currentDateTime + ".pdf";
 	        response.setHeader(headerkey, headervalue);
-	        System.out.println(date);
-	        System.out.println(id);
 	        List<OrderEntity> ordersList = null;
 	        if (date.equals("null") && id.equals("null")) {
 	            ordersList = orderService.getAllOrders("Booked");
 	        } else if (date.equals("null")) {
-	            System.out.println("Date is null and user id is not");
 	            ordersList = this.orderService.getAllOrdersByUserId("Booked", id);
 	            m.addAttribute("orders", ordersList);
 	        } else if (id.equals("null")) {
-	            System.out.println("Date is not null and User id is null");
 	            LocalDate date1 = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
 	            ordersList = this.orderService.getAllOrdersByStatusAndDate("Booked", date1);
 	            m.addAttribute("orders", ordersList);
@@ -582,11 +553,9 @@ public class AdminController {
 	        if (date.equals("null") && id.equals("null")) {
 	            ordersList = orderService.getAllOrders("Booked");
 	        } else if (date.equals("null")) {
-	            System.out.println("Date is null and user id is not");
 	            ordersList = this.orderService.getAllOrdersByUserId("Booked", id);
 	            m.addAttribute("orders", ordersList);
 	        } else if (id.equals("null")) {
-	            System.out.println("Date is not null and User id is null");
 	            LocalDate date1 = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
 	            ordersList = this.orderService.getAllOrdersByStatusAndDate("Booked", date1);
 	            m.addAttribute("orders", ordersList);
@@ -647,7 +616,6 @@ public class AdminController {
 		@SuppressWarnings("deprecation")
 		List<menuCanteen> itemsThisMonth = items.stream()
 				.filter(order -> order.getFoodServedDate().getMonth() == currentMonth).collect(Collectors.toList());
-		System.out.println(itemsThisMonth);
 		int currentMonthItems = itemsThisMonth.size();
 
 		model.addAttribute("currentMonthItems", currentMonthItems);
