@@ -64,7 +64,7 @@ public class CanteenUsers {
 	private List<OrderEntity> orders=new ArrayList<>();
 	
 	@OneToMany
-	private List<menuCanteen> cart;
+	private List<menuCanteen> cart = new ArrayList<>();
 	
 	public int getId() {
 		return id;
