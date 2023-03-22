@@ -59,8 +59,16 @@
 			</div>
 			<div class="allfeedbacks" th:object="${feedbacks}">
 				<div class="feedback " th:each="f :  ${feedbacks}">
+				<!-- <p th:text="${f.rating}"></p> -->
+					<div th:switch="${f.rating}" class="rating-stars">
+						  <div th:case="1">★</div>
+						  <div th:case="2">★★</div>
+						  <div th:case="3">★★★</div>
+						  <div th:case="4">★★★★</div>
+						  <div th:case="5">★★★★★</div>
+						</div>
+		
 					<p th:text="${f.feedback}"></p>
-
 					<div class="below">
 						<h3>
 							<span th:text="${f.canteenUsers.name}" class="feedprovider"></span>
@@ -82,6 +90,7 @@
 	      <strong class="mr-auto">Feedback Deleted<strong>
 	    </div>
 	</div>
+	
 	<script type="text/javascript">
 	const queryString = window.location.search;
 	console.log(queryString);

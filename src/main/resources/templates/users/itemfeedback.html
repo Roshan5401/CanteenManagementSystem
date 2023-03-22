@@ -50,6 +50,13 @@
 			<div class="allfeedbacks">
 
 				<div class="feedback " th:each="f :  ${feedbacks}">
+					<div th:switch="${f.rating}" class="rating-stars">
+						  <div th:case="1">★</div>
+						  <div th:case="2">★★</div>
+						  <div th:case="3">★★★</div>
+						  <div th:case="4">★★★★</div>
+						  <div th:case="5">★★★★★</div>
+						</div>
 					<h3 th:text="${f.feedback}"></h3>
 					<h5  th:text="${f.canteenUsers.name}" class="feedprovider"></h5>
 				</div>
