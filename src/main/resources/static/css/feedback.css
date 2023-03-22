@@ -45,6 +45,7 @@ textarea{
 	border-radius :20px;
 	color:#f76c28;
 	font-weight: bold;
+	height:20vh;
 }
 
 h4{
@@ -125,6 +126,27 @@ span{
 		display: flex;
 		flex-direction: column;
 }
+.rating {
+  display: inline-block;
+}
+
+.star {
+  font-size: 24px;
+  color: gray;
+  cursor: pointer;
+}
+
+input[type="radio"] {
+  display: none;
+}
+
+input[type="radio"]:checked + .star {
+  color: gold;
+}
+
+
+
+
 
 
 
