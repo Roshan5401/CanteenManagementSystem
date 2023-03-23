@@ -38,15 +38,16 @@
 					<textarea id="feedbackdata" name="feedbackdata"  th:text="${order.feedback}"></textarea>
 					<div class="rating">
 					    <label>
-					      <input type="radio" name="rating" value="1" />
+					      <input type="radio" name="rating" value="1" required oninvalid="alert('Please Rate it')"
+       oninput="setCustomValidity('')"/>
 					      <span class="star">&#9733;</span>
 					    </label>
 					    <label>
-					      <input type="radio" name="rating" value="2" />
+					      <input type="radio" name="rating" value="2"/>
 					      <span class="star">&#9733;</span>
 					    </label>
 					    <label>
-					      <input type="radio" name="rating" value="3" />
+					      <input type="radio" name="rating" value="3"/>
 					      <span class="star">&#9733;</span>
 					    </label>
 					    <label>
