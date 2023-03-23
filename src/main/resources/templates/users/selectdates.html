@@ -52,7 +52,6 @@
 				<h1 style="margin-bottom:10px; margin-left:20px;">Add new date</h1>
 						<form class = "dateform" th:action="@{/user/addDateOfOrder}">
 							<input type="date" name="dateinput" class = "inputField" required/>
-							<input type="number" name="quantityinput"   class = "inputField" placeholder="Enter the quantity" min = "1" required/>
 							<input type="text"  name = "foodId" class = "inputField" th:value = "${food.ID}" style="display:none;"/>
 							<input type="text" name ="foodServedDate" th:value="${food.foodServedDate}" style="display:none;"/>
 							<input type="submit" value="Add Date"  class ="button"/>
@@ -61,18 +60,15 @@
 			
 			<div class="selecteddatesheader">
 				<h3>Dates</h3>
-				<h3>Quantity</h3>
 				<h3>Actions</h3>
 			</div>
 
 				<div class="showselecteddates" >
-				<form th:action="@{/user/updateQuantityOfOrder}" class = "selecteddates" th:each="key:${treeMap.keySet()}">
+				<form  class = "selecteddates" th:each="key:${treeMap.keySet()}">
 					<input type="text" th:value = "${key}" name="selecteddate" class = "transparentInput"  />
 					<input type="text" th:value="${food.ID}" name ="foodId" style="display:none;"/>
 					<input type="text" th:value="${food.price}" name ="price" style="display:none;"/>
-					<input type="number"  th:value="${treeMap.get(key)}" name ="selectedquantity" class = "transparentInput"  min = "1"/>
 					<div class="actions">
-								<input type="submit" value = "Update Quantity"  class = "button"/>
 					<a th:href="@{'/user/deleteDates/'+${key}+'/'+${food.ID}}" class = "button cancle">Cancel date</a>
 					</div>
 				</form>
