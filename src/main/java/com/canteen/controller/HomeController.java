@@ -84,7 +84,7 @@ public class HomeController {
 					canteenUsers.setEmail(signupEmail);
 					canteenUsers.setPassword(bCryptPasswordEncoder.encode(canteenUsers.getPassword()));
 					canteenUsers.setRole("ROLE_USER");
-					canteenUsers.setEnable(false);
+					canteenUsers.setEnable(true);
 					canteenUsers.setWallet(0.00);
 					try {
 					canteenUserRepository.save(canteenUsers);
