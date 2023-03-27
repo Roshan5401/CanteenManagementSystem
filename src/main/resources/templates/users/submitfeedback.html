@@ -37,27 +37,17 @@
 					<!-- <input type="number" name ="rating" placeholder="Rate on 1-5" min="0" max="5"> -->
 					<textarea id="feedbackdata" name="feedbackdata"  th:text="${order.feedback}"></textarea>
 					<div class="rating">
-					    <label>
-					      <input type="radio" name="rating" value="1" required oninvalid="alert('Please Rate it')"
+					   			<input type="radio" id="star5" name="rating" value="5" />
+						  <label class="star" for="star5" title="Awesome" aria-hidden="true"></label>
+						  		<input type="radio" id="star4" name="rating" value="4" />
+						  <label class="star" for="star4" title="Great" aria-hidden="true"></label>
+						  		<input type="radio" id="star3" name="rating" value="3" />
+						  <label class="star" for="star3" title="Very good" aria-hidden="true"></label>
+						  		<input type="radio" id="star2" name="rating" value="2" />
+						  <label class="star" for="star2" title="Good" aria-hidden="true"></label>
+						  		<input type="radio" id="star1" name="rating" value="1" required oninvalid="alert('Please Rate it')"
        oninput="setCustomValidity('')"/>
-					      <span class="star">&#9733;</span>
-					    </label>
-					    <label>
-					      <input type="radio" name="rating" value="2"/>
-					      <span class="star">&#9733;</span>
-					    </label>
-					    <label>
-					      <input type="radio" name="rating" value="3"/>
-					      <span class="star">&#9733;</span>
-					    </label>
-					    <label>
-					      <input type="radio" name="rating" value="4" />
-					      <span class="star">&#9733;</span>
-					    </label>
-					    <label>
-					      <input type="radio" name="rating" value="5" />
-					      <span class="star">&#9733;</span>
-					    </label>
+						  <label class="star" for="star1" title="Bad" aria-hidden="true"></label>
 					</div>
 					<input type="submit" value="Submit Feedback" class="button" />
 
