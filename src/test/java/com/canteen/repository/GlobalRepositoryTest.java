@@ -3,6 +3,7 @@ package com.canteen.repository;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -16,6 +17,8 @@ class GlobalRepositoryTest {
 	private GlobalRepository globalrepository = Mockito.mock(GlobalRepository.class);
 
 	private GlobalEmployees ge = new GlobalEmployees(1, "a@mail.com");
+
+	
 
 	@Test
 

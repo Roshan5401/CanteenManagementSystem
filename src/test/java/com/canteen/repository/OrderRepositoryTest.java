@@ -21,7 +21,7 @@ class OrderRepositoryTest {
 	OrderRepository orderrepo;
 
 	@Test
-	void test() {
+	void testfindByStatus() {
 
 		menuCanteen menu = new menuCanteen();
 
@@ -29,7 +29,7 @@ class OrderRepositoryTest {
 
 		java.sql.Date d = new java.sql.Date(2023 - 03 - 13);
 
-		OrderEntity order = new OrderEntity(1, canteen, menu, d, 4, 233, "Delivered", "Perfect");
+		OrderEntity order = new OrderEntity(1, canteen, menu, d, 4, 233, "Delivered", "Perfect",4);
 
 		orderrepo.save(order);
 
@@ -37,6 +37,7 @@ class OrderRepositoryTest {
 
 		List<OrderEntity> oe = orderrepo.findByStatus("Delivered");
 		verify(orderrepo).findByStatus("Delivered");
+		
 
 		List<OrderEntity> ord = orderrepo.findByStatusAndOrderDate("Delivered", ld);
 		verify(orderrepo).findByStatusAndOrderDate("Delivered", ld);
