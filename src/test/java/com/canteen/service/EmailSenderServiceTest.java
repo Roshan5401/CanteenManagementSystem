@@ -29,12 +29,12 @@ class EmailSenderServiceTest {
 			
 
 			@Test
-			void test() {
+			void testsendEmail() {
 				 
 				
 				String email ="shreyara@trainee.nrifintech.com";
 				String sub = "Notif";
-				String body ="You are receiving from caaaneen system ";
+				String body ="You are receiving from caanteen system ";
 
 				
 				  try

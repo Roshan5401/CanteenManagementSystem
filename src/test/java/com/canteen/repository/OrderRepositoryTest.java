@@ -21,7 +21,7 @@ class OrderRepositoryTest {
 	OrderRepository orderrepo;
 
 	@Test
-	void test() {
+	void testfindByStatus() {
 
 		menuCanteen menu = new menuCanteen();
 
@@ -37,6 +37,7 @@ class OrderRepositoryTest {
 
 		List<OrderEntity> oe = orderrepo.findByStatus("Delivered");
 		verify(orderrepo).findByStatus("Delivered");
+		
 
 		List<OrderEntity> ord = orderrepo.findByStatusAndOrderDate("Delivered", ld);
 		verify(orderrepo).findByStatusAndOrderDate("Delivered", ld);

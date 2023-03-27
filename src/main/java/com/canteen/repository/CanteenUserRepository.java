@@ -15,7 +15,7 @@ import com.canteen.entities.OrderEntity;
 public interface CanteenUserRepository extends JpaRepository<CanteenUsers, Integer>{
 
 	public CanteenUsers findByEmail(String email);
-	public CanteenUsers findByRole(String r);
+	
 	public List<OrderEntity> findOrdersByEmail(String email);
 	
 }

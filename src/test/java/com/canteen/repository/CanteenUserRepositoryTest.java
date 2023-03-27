@@ -7,6 +7,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -28,6 +29,9 @@ class CanteenUserRepositoryTest {
 
 	private CanteenUsers user=new CanteenUsers(4, "diana", "p@nrifintech.com", "1234", "ROLE_USER", bg, 0.0,ordr,b);
 
+	
+	
+	
 	@Test
 
 	public void testSaveUser() {
@@ -37,6 +41,8 @@ class CanteenUserRepositoryTest {
 	CanteenUsers savedUser = canteenrepo.save(user);
 
 	assertEquals(user, savedUser);
+	
+	
 
 	}
 
@@ -53,5 +59,21 @@ class CanteenUserRepositoryTest {
 	assertEquals(user, actualUser);
 
 	}
+	
+	
+	
+	@Test
+	public void testfindOrdersByEmail() {
+
+		String email = "p@nrifintech.com";
+
+		Mockito.when(canteenrepo.findOrdersByEmail(email)).thenReturn(ordr);
+
+		List<OrderEntity> actual = canteenrepo.findOrdersByEmail(email);
+
+		assertEquals(ordr, actual);
+
+		}
+	
 
 	}

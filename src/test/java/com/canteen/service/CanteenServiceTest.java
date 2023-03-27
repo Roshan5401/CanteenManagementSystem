@@ -24,7 +24,7 @@ class CanteenServiceTest {
 	}
 
 	@Test
-	void test() {
+	void testgetById() {
 		canteenservice.getById(1);
 		verify(canteenrepo).getById(1);
 	}
