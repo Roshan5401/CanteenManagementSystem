@@ -63,8 +63,6 @@ public class CanteenUsers {
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "canteenUsers")
 	private List<OrderEntity> orders=new ArrayList<>();
 
-	@OneToMany
-	private List<menuCanteen> cart = new ArrayList<>();
 	
 	@Column(name="enable")
 	private boolean enable;
@@ -132,7 +130,7 @@ public class CanteenUsers {
 	public CanteenUsers(@NotNull int id, String name,
 			@Pattern(regexp = "^[\\w-\\.]+@[nrifintech|trainee.nrifintech]\\.com$", message = "Invalid email address") @NotNull String email,
 			@Size(min = 8, max = 60, message = "Password length must be between 8 and 60 characters") String password,
-			String role, BigInteger phone, Double wallet, List<OrderEntity> orders, List<menuCanteen> cart) {
+			String role, BigInteger phone, Double wallet, List<OrderEntity> orders) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -142,19 +140,15 @@ public class CanteenUsers {
 		this.phone = phone;
 		this.wallet = wallet;
 		this.orders = orders;
-		this.cart = cart;
+
 	}
 	@Override
 	public String toString() {
 		return "CanteenUsers [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", role="
-				+ role + ", phone=" + phone + ", wallet=" + wallet + ", cart=" + cart + "]";
+				+ role + ", phone=" + phone + ", wallet=" + wallet + ", enable=" + enable + "]";
 	}
-	public List<menuCanteen> getCart() {
-		return cart;
-	}
-	public void setCart(List<menuCanteen> cart) {
-		this.cart = cart;
-	}
+	
+
 	
 	
 
