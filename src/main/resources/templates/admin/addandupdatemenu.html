@@ -87,7 +87,7 @@
 						<td th:text="${item.foodServedDate}"></td>
 						<td th:text="${item.name}"></td>
 						<td th:text="${item.type}"></td>
-						<td th:text="Rs +${item.Price}"></td>
+						<td th:text="'Rs' +' '+ ${item.Price} "></td>
 						<td><a th:href="@{'/admin/deletefood/'+${item.ID}}"
 							class="deletefooditem">Delete Food item</a></td>
 					</tr>
