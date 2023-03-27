@@ -4,143 +4,171 @@
 <meta charset="UTF-8">
 <title>Canteen Management Service</title>
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+	crossorigin="anonymous">
 
 <link rel="stylesheet" th:href="@{/css/selectdates.css}" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+	integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+	crossorigin="anonymous"></script>
 
 </head>
 <body>
 	<a th:href="@{/logout}" class="logoutbutton">Log out</a>
-	
+
 	<div class="navbar">
-		<div class="logo">NRI <span id = "diff">Canteen</span></div>
-	
+		<div class="logo">
+			NRI <span id="diff">Canteen</span>
+		</div>
+
 		<h3 class="hellouser">
-				 Hello, <span th:text="${user.name}"></span> 
-			</h3> 
+			Hello, <span th:text="${user.name}"></span>
+		</h3>
 	</div>
 	<div class="userboard">
 		<div class="menubar">
-			<a th:href="@{/user/bookOrder}" class="active"><i class ="fa-sharp fa-solid fa-burger icon"></i>     Book Order</a> <a
-				th:href="@{/user/viewPreviousOrders}"><i class ="fa-solid fa-backward icon"></i>   View Previous Order</a> <a
-				th:href="@{/user/addMoneyToWallet}" ><i class = " fa-sharp fa-solid fa-wallet icon"></i>  Add Money to
-				Wallet</a> <a th:href="@{/user/updateProfile}"><i class = "fa-solid fa-user icon"></i>  Update Profile</a>
-				<a th:href="@{/user/useranalytics}"><i class="fa-sharp fa-solid fa-chart-simple icon"></i>  Analytics</a>
+			<a th:href="@{/user/bookOrder}" class="active"><i
+				class="fa-sharp fa-solid fa-burger icon"></i> Book Order</a> <a
+				th:href="@{/user/viewPreviousOrders}"><i
+				class="fa-solid fa-backward icon"></i> View Previous Order</a> <a
+				th:href="@{/user/addMoneyToWallet}"><i
+				class=" fa-sharp fa-solid fa-wallet icon"></i> Add Money to Wallet</a> <a
+				th:href="@{/user/updateProfile}"><i
+				class="fa-solid fa-user icon"></i> Update Profile</a> <a
+				th:href="@{/user/useranalytics}"><i
+				class="fa-sharp fa-solid fa-chart-simple icon"></i> Analytics</a>
 		</div>
 		<div class="maincontent">
 			<div class="header">
 				<div class="itemdetails">
-		 			<h2>Item name - <span th:text=${food.name}></span></h2>
-					<h2 class = "margin">Price -  <span th:text=${food.price}></span></h2> 
-					<a th:href="@{'/user/confirmOrder/'+${food.ID}}" class = "button" >Confirm Order</a>
+					<h2>
+						Item name - <span th:text=${food.name}></span>
+					</h2>
+					<h2 class="margin">
+						Price - <span th:text=${food.price}></span>
+					</h2>
+					<a th:href="@{'/user/confirmOrder/'+${food.ID}}" class="button">Confirm
+						Order</a>
 				</div>
-				
-				<div class="walletDetails" >
-					<h2>Wallet Balance - <span th:text="${user.wallet}"></span></h2>
-					<h2 class = "orderTotal">Order Total - <span th:text="${ordersTotal}"></span></h2>
+
+				<div class="walletDetails">
+					<h2>
+						Wallet Balance - <span th:text="${user.wallet}"></span>
+					</h2>
+					<h2 class="orderTotal">
+						Order Total - <span th:text="${ordersTotal}"></span>
+					</h2>
 				</div>
-				
-				
-			</div>
-			
-			<div class="pageContent" th:classappend="${token == true} ? 'erase' : 'show'">
-			
-			
-			<div class="inputdate">
-				<h1 style="margin-bottom:10px; margin-left:20px;">Add new date</h1>
-						<form class = "dateform" th:action="@{/user/addDateOfOrder}">
-							<input type="date" name="dateinput" class = "inputField" required/>
-							<input type="text"  name = "foodId" class = "inputField" th:value = "${food.ID}" style="display:none;"/>
-							<input type="text" name ="foodServedDate" th:value="${food.foodServedDate}" style="display:none;"/>
-							<input type="submit" value="Add Date"  class ="button"/>
-						</form>
-				</div>
-			
-			<div class="selecteddatesheader">
-				<h3>Dates</h3>
-				<h3>Actions</h3>
+
+
 			</div>
 
-				<div class="showselecteddates" >
-				<form  class = "selecteddates" th:each="key:${treeMap.keySet()}">
-					<input type="text" th:value = "${key}" name="selecteddate" class = "transparentInput"  />
-					<input type="text" th:value="${food.ID}" name ="foodId" style="display:none;"/>
-					<input type="text" th:value="${food.price}" name ="price" style="display:none;"/>
-					<div class="actions">
-					<a th:href="@{'/user/deleteDates/'+${key}+'/'+${food.ID}}" class = "button cancle">Cancel date</a>
-					</div>
-				</form>
-				
-		</div>
-			
-				
+			<div class="pageContent"
+				th:classappend="${token == true} ? 'erase' : 'show'">
+
+
+				<div class="inputdate">
+					<h1 style="margin-bottom: 10px; margin-left: 20px;">Add new
+						date</h1>
+					<form class="dateform" th:action="@{/user/addDateOfOrder}">
+						<input type="date" name="dateinput" class="inputField" required />
+						<input type="text" name="foodId" class="inputField"
+							th:value="${food.ID}" style="display: none;" /> <input
+							type="text" name="foodServedDate"
+							th:value="${food.foodServedDate}" style="display: none;" /> <input
+							type="submit" value="Add Date" class="button" />
+					</form>
+				</div>
+
+				<div class="selecteddatesheader">
+					<h3>Dates</h3>
+					<h3>Actions</h3>
+				</div>
+
+				<div class="showselecteddates">
+					<form class="selecteddates" th:each="key:${treeMap.keySet()}">
+						<input type="text" th:value="${key}" name="selecteddate"
+							class="transparentInput" disabled /> <input type="text"
+							th:value="${food.ID}" name="foodId" style="display: none;" /> <input
+							type="text" th:value="${food.price}" name="price"
+							style="display: none;" />
+						<div class="actions">
+							<a th:href="@{'/user/deleteDates/'+${key}+'/'+${food.ID}}"
+								class="button cancle">Cancel date</a>
+						</div>
+					</form>
+
+				</div>
+
+
 			</div>
-			
-			</div>
-			
+
 		</div>
-	<div class="toast" id="lowBal" style="position: absolute; top: 10px; left: 50%;transform:translateX(-50%)">
-	    <div class="toast-header">
-	      <strong class="mr-auto">Wallet Balance low</strong>
-	    </div>
-	    <div class="toast-body">
-	     Add money first
-	    </div>
-	</div> 
-	<div class="toast" id="Saturday" style="position: absolute; top: 10px; left: 50%;transform:translateX(-50%)">
-	    <div class="toast-header">
-	      <strong class="mr-auto">Saturday is holiday</strong>
-	    </div>
-	    <div class="toast-body">
-	     Food is not served
-	    </div>
+
 	</div>
-	<div class="toast" id="Sunday" style="position: absolute; top: 10px; left: 50%;transform:translateX(-50%)">
-	    <div class="toast-header">
-	      <strong class="mr-auto">Sunday is holiday</strong>
-	    </div>
-	    <div class="toast-body">
-	     Food is not served
-	    </div>
+	<div class="toast" id="lowBal"
+		style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%)">
+		<div class="toast-header">
+			<strong class="mr-auto">Wallet Balance low</strong>
+		</div>
+		<div class="toast-body">Add money first</div>
 	</div>
-	<div class="toast" id="todayTimeOver" style="position: absolute; top: 10px; left: 50%;transform:translateX(-50%)">
-	    <div class="toast-header">
-	      <strong class="mr-auto">Time over for today</strong>
-	    </div>
-	    <div class="toast-body">
-	     Book for next day
-	    </div>
+	<div class="toast" id="Saturday"
+		style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%)">
+		<div class="toast-header">
+			<strong class="mr-auto">Saturday is holiday</strong>
+		</div>
+		<div class="toast-body">Food is not served</div>
 	</div>
-	<div class="toast" id="wrongMonth" style="position: absolute; top: 10px; left: 50%;transform:translateX(-50%)">
-	    <div class="toast-header">
-	      <strong class="mr-auto">Wrong Month</strong>
-	    </div>
-	    <div class="toast-body">
-	     You can only book for the current month
-	    </div>
+	<div class="toast" id="Sunday"
+		style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%)">
+		<div class="toast-header">
+			<strong class="mr-auto">Sunday is holiday</strong>
+		</div>
+		<div class="toast-body">Food is not served</div>
 	</div>
-	<div class="toast" id="datePassed" style="position: absolute; top: 10px; left: 50%;transform:translateX(-50%)">
-	    <div class="toast-header">
-	      <strong class="mr-auto">Date already passed</strong>
-	    </div>
-	    <div class="toast-body">
-	     No booking for this date
-	    </div>
+	<div class="toast" id="todayTimeOver"
+		style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%)">
+		<div class="toast-header">
+			<strong class="mr-auto">Time over for today</strong>
+		</div>
+		<div class="toast-body">Book for next day</div>
 	</div>
-	<div class="toast" id="foodServed" style="position: absolute; top: 10px; left: 50%;transform:translateX(-50%)">
-	    <div class="toast-header">
-	      <strong class="mr-auto">Cannot serve on this date</strong>
-	    </div>
-	    <div class="toast-body">
-	    	Food will be served from a later date
-	    </div>
+	<div class="toast" id="wrongMonth"
+		style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%)">
+		<div class="toast-header">
+			<strong class="mr-auto">Wrong Month</strong>
+		</div>
+		<div class="toast-body">You can only book for the current month
+		</div>
 	</div>
-	<div class="toast" id="dateExists" style="position: absolute; top: 10px; left: 50%;transform:translateX(-50%)">
-	    <div class="toast-header">
-	      <strong class="mr-auto">Date already exists</strong>
-	    </div>
+	<div class="toast" id="datePassed"
+		style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%)">
+		<div class="toast-header">
+			<strong class="mr-auto">Date already passed</strong>
+		</div>
+		<div class="toast-body">No booking for this date</div>
+	</div>
+	<div class="toast" id="foodServed"
+		style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%)">
+		<div class="toast-header">
+			<strong class="mr-auto">Cannot serve on this date</strong>
+		</div>
+		<div class="toast-body">Food will be served from a later date</div>
+	</div>
+	<div class="toast" id="dateExists"
+		style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%)">
+		<div class="toast-header">
+			<strong class="mr-auto">Date already exists</strong>
+		</div>
 	</div>
 	<script type="text/javascript">
 	const queryString = window.location.search;

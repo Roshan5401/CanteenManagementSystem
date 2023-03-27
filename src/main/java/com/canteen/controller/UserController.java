@@ -358,7 +358,7 @@ public class UserController {
 	}
 
 	@GetMapping("/user/savefeedback/{ID}")
-	public RedirectView saveFeedback(Model model,@PathVariable("ID") Integer Id,@ModelAttribute("rating") Integer rating ,@ModelAttribute("feedbackdata") String feedback,
+	public RedirectView saveFeedback(@PathVariable("ID") Integer Id,@ModelAttribute("rating") Integer rating ,@ModelAttribute("feedbackdata") String feedback,
 			RedirectAttributes attributes) {
 		Optional<OrderEntity> optional = orderRepository.findById(Id);
 		OrderEntity orderEntity = optional.get();
@@ -419,10 +419,10 @@ public class UserController {
 			throws ParseException {
 		LocalDate requestedDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
 		LocalDate foodservedDate = LocalDate.parse(foodServedDate, DateTimeFormatter.ISO_DATE);
+		
 		String email = principal.getName();
 		CanteenUsers canteenUser = canteenUserRepository.findByEmail(email);
-		List<OrderEntity> currentUserOrders=canteenUser.getOrders();
-		System.out.println(currentUserOrders);
+
 		// Check if user is ordering for previous days or next month
 		LocalDate today = LocalDate.now();
 		Month currentMonth = today.getMonth();
@@ -447,11 +447,12 @@ public class UserController {
 
 		time1 = LocalTime.of(localTime.getHour(), localTime.getMinute(), localTime.getMinute());
 		time2 = LocalTime.of(15, 00, 00);
+		List<OrderEntity> currentUserOrders=canteenUser.getOrders();
+		List<OrderEntity> finalCurrentUsersOrders = currentUserOrders.stream().filter(order->order.getStatus().equals("Booked")).collect(Collectors.toList());
 
-		
 		Date date2=java.sql.Date.valueOf(requestedDate);
 		System.out.println(date2);
-		for (OrderEntity order: currentUserOrders) {
+		for (OrderEntity order: finalCurrentUsersOrders) {
 			if(order.getOrderDate().equals(date2))
 			{
 				
@@ -461,24 +462,22 @@ public class UserController {
 				model.addAttribute("ordersTotal", ordersTotal);
 
 
-				model.addAttribute("user", canteenUser);
+				model.addAttribute("user", finalCurrentUsersOrders);
 
 				return "/users/selectdates";
 			}
 		}
-		
-		
+
+
 		if (requestedMonth == currentMonth && requestedDay >= currentDay && requestedDay >= servedDay
 				&& (!day.equals("SATURDAY")) && (!day.equals("SUNDAY"))) {
 			if (requestedDay == currentDay && time1.compareTo(time2) > 0) {
 
-			}
-			else {
+			} else {
 
 				if (treeMap.containsKey(requestedDate)) {
 					model.addAttribute("dateExists", "1");
-				}
-				else {
+				} else {
 					treeMap.put(requestedDate, 1);
 					ordersTotal += (food.getPrice());
 				}
@@ -489,7 +488,7 @@ public class UserController {
 		model.addAttribute("food", food);
 		model.addAttribute("treeMap", treeMap);
 		model.addAttribute("ordersTotal", ordersTotal);
-
+	
 
 		model.addAttribute("user", canteenUser);
 
