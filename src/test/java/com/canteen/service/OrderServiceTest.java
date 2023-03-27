@@ -42,7 +42,7 @@ class OrderServiceTest {
 
 		java.sql.Date d = new java.sql.Date(2023 - 03 - 12);
 
-		OrderEntity order = new OrderEntity(1, canteen, menu, d, 2, 233, "Delivered", "Good");
+		OrderEntity order = new OrderEntity(1, canteen, menu, d, 2, 233, "Delivered", "Good",4);
 
 		orderrepo.save(order);
 
@@ -74,7 +74,7 @@ class OrderServiceTest {
 
 		java.sql.Date dd = new java.sql.Date(2023 - 03 - 12);
 
-		OrderEntity order2 = new OrderEntity(2, canteen2, menu2, dd, 3, 300, "Delivered", "okay");
+		OrderEntity order2 = new OrderEntity(2, canteen2, menu2, dd, 3, 300, "Delivered", "okay",5);
 
 		orderrepo.save(order2);
 
@@ -94,7 +94,7 @@ class OrderServiceTest {
 
 		java.sql.Date dds = new java.sql.Date(2023 - 03 - 14);
 
-		OrderEntity order3 = new OrderEntity(3, canteen3, menu3, dds, 3, 300, "Delivered", "fine");
+		OrderEntity order3 = new OrderEntity(3, canteen3, menu3, dds, 3, 300, "Delivered", "fine",2);
 
 		LocalDate dr = dds.toLocalDate();
 

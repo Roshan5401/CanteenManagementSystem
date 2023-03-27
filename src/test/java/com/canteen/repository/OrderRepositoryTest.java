@@ -29,7 +29,7 @@ class OrderRepositoryTest {
 
 		java.sql.Date d = new java.sql.Date(2023 - 03 - 13);
 
-		OrderEntity order = new OrderEntity(1, canteen, menu, d, 4, 233, "Delivered", "Perfect");
+		OrderEntity order = new OrderEntity(1, canteen, menu, d, 4, 233, "Delivered", "Perfect",4);
 
 		orderrepo.save(order);
 

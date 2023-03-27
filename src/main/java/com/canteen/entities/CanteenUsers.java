@@ -130,7 +130,7 @@ public class CanteenUsers {
 	public CanteenUsers(@NotNull int id, String name,
 			@Pattern(regexp = "^[\\w-\\.]+@[nrifintech|trainee.nrifintech]\\.com$", message = "Invalid email address") @NotNull String email,
 			@Size(min = 8, max = 60, message = "Password length must be between 8 and 60 characters") String password,
-			String role, BigInteger phone, Double wallet, List<OrderEntity> orders) {
+			String role, BigInteger phone, Double wallet, List<OrderEntity> orders,boolean enable) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -140,6 +140,7 @@ public class CanteenUsers {
 		this.phone = phone;
 		this.wallet = wallet;
 		this.orders = orders;
+		this.enable=enable;
 
 	}
 	@Override
