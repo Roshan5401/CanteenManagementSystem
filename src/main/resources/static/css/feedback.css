@@ -127,23 +127,40 @@ span{
 		flex-direction: column;
 }
 .rating {
+  margin-top: 40px;
+  border: none;
+  float: left;
+}
+
+.rating > label {
+  color: #90A0A3;
+  float: right;
+}
+
+.rating > label:before {
+  margin: 5px;
+  font-size: 2em;
+  font-family: FontAwesome;
+  content: "\f005";
   display: inline-block;
 }
 
-.star {
-  font-size: 24px;
-  color: gray;
-  cursor: pointer;
-}
-
-input[type="radio"] {
+.rating > input {
   display: none;
 }
 
-input[type="radio"]:checked + .star {
-  color: gold;
+.rating > input:checked ~ label,
+.rating:not(:checked) > label:hover,
+.rating:not(:checked) > label:hover ~ label {
+  color: #F79426;
 }
 
+.rating > input:checked + label:hover,
+.rating > input:checked ~ label:hover,
+.rating > label:hover ~ input:checked ~ label,
+.rating > input:checked ~ label:hover ~ label {
+  color: #FECE31;
+}
 
 
 
